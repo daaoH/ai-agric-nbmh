@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hszn.nbmh.prevent.mapper.NbmhInspectMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hszn.nbmh.prevent.api.entity.NbmhInspect">
+        <id column="id" property="id"/>
+        <result column="inspect_number" property="inspectNumber"/>
+        <result column="inspect_prove_url" property="inspectProveUrl"/>
+        <result column="ear_no" property="earNo"/>
+        <result column="vaccin_id" property="vaccinId"/>
+        <result column="submit_by" property="submitBy"/>
+        <result column="submit_by_phone" property="submitByPhone"/>
+        <result column="destination" property="destination"/>
+        <result column="place_consigned" property="placeConsigned"/>
+        <result column="user_id" property="userId"/>
+        <result column="user_name" property="userName"/>
+        <result column="user_avatar_url" property="userAvatarUrl"/>
+        <result column="animal_id" property="animalId"/>
+        <result column="animal_status" property="animalStatus"/>
+        <result column="animal_type" property="animalType"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="status" property="status"/>
+        <result column="station_id" property="stationId"/>
+        <result column="buyer_name" property="buyerName"/>
+        <result column="buyer_phone" property="buyerPhone"/>
+        <result column="buyer_card" property="buyerCard"/>
+        <result column="report_number" property="reportNumber"/>
+    </resultMap>
+
+</mapper>

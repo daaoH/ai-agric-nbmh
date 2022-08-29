@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hszn.nbmh.prevent.mapper.NbmhEarRecordMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hszn.nbmh.prevent.api.entity.NbmhEarRecord">
+        <id column="id" property="id" />
+        <result column="animal_id" property="animalId" />
+        <result column="ear_no" property="earNo" />
+        <result column="animal_age" property="animalAge" />
+        <result column="animal_weight" property="animalWeight" />
+        <result column="user_id" property="userId" />
+        <result column="user_name" property="userName" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="status" property="status" />
+    </resultMap>
+
+</mapper>

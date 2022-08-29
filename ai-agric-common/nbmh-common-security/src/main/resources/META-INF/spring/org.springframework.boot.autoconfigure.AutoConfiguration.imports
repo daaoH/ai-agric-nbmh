@@ -1,0 +1,7 @@
+com.hszn.nbmh.common.security.service.UserDetailsServiceImpl
+com.hszn.nbmh.common.security.service.AppUserDetailsServiceImpl
+com.hszn.nbmh.common.security.service.RedisOAuth2AuthorizationConsentService
+com.hszn.nbmh.common.security.service.RedisOAuth2AuthorizationService
+com.hszn.nbmh.common.security.component.SecurityInnerAspect
+com.hszn.nbmh.common.security.component.SecurityMessageSourceConfiguration
+com.hszn.nbmh.common.security.service.RemoteRegisteredClientRepository

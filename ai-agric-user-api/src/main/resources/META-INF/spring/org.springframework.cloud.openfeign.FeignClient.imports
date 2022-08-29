@@ -1,0 +1,3 @@
+com.hszn.nbmh.user.api.feign.RemoteClientDetailsService
+com.hszn.nbmh.user.api.feign.RemoteUserService
+com.hszn.nbmh.user.api.feign.RemoteLogService

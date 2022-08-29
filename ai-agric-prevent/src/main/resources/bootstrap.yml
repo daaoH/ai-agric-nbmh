@@ -1,0 +1,65 @@
+server:
+  port: 11000
+spring:
+  application:
+    name: prevent-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.0.35:8848
+        ip: localhost
+      config:
+        server-addr: 192.168.0.35:8848
+        file-extension: yml
+        shared-dataids: application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+  profiles:
+    active: local
+  servlet:
+    multipart:
+      enabled: false
+  redis:
+    host: 127.0.0.1
+    port: 6379
+
+  main:
+    allow-bean-definition-overriding: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: ALWAYS
+feign:
+  hystrix:
+    enabled: true
+  okhttp:
+    enabled: true
+  httpclient:
+    enabled: false
+  client:
+    config:
+      default:
+        connectTimeout: 20000
+        readTimeout: 20000
+  compression:
+    request:
+      enabled: true
+    response:
+      enabled: true
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          strategy: SEMAPHORE
+          thread:
+            timeoutInMilliseconds: 60000
+  shareSecurityContext: true
+
+ribbon:
+  ReadTimeout: 10000
+  ConnectTimeout: 10000

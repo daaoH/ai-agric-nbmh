@@ -1,0 +1,113 @@
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true #使用小写service-id
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOriginPatterns: "*"   #注意这个设置只对 spring boot 2.4+ 有效，低版本 使用  allowedOrigins: "*" 属性
+            allowed-methods: "*"
+            allowed-headers: "*"
+            allow-credentials: true
+            exposedHeaders: "Content-Disposition,Content-Type,Cache-Control"
+      routes: #配置路由路径
+        #用户服务
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/user/**
+        #鉴权服务
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/auth/**
+        #第三方服务
+        - id: third-service
+          uri: lb://third-service
+          predicates:
+            - Path=/third/**
+        #电商服务
+        - id: shop-service
+          uri: lb://shop-service
+          predicates:
+            - Path=/shop/**
+        #搜索服务
+        - id: search-service
+          uri: lb://search-service
+          predicates:
+            - Path=/search/**
+        #订单服务
+        - id: order-service
+          uri: lb://order-service
+          predicates:
+            - Path=/order/**
+        #商品服务
+        - id: goods-service
+          uri: lb://goods-service
+          predicates:
+            - Path=/goods/**
+        #财务服务
+        - id: finance-service
+          uri: lb://finance-service
+          predicates:
+            - Path=/finance/**
+        #内容管理服务
+        - id: cms-service
+          uri: lb://cms-service
+          predicates:
+            - Path=/cms/**
+        #支付服务
+        - id: pay-service
+          uri: lb://pay-service
+          predicates:
+            - Path=/pay/**
+        #防疫站服务
+        - id: prevent-service
+          uri: lb://prevent-service
+          predicates:
+            - Path=/prevent/**
+        #营销服务
+        - id: marketing-service
+          uri: lb://marketing-service
+          predicates:
+            - Path=/marketing/**
+        #app　接口
+        - id: app-service
+          uri: lb://app-service
+          predicates:
+            - Path=/app/**
+        # 固定路由转发配置
+        - id: openapi
+          uri: lb://gateway-service
+          predicates:
+            - Path=/v3/api-docs/**
+          filters:
+            - RewritePath=/v3/api-docs/(?<path>.*), /$\{path}/$\{path}/v3/api-docs
+
+# 加解密根密码
+jasypt:
+  encryptor:
+    password: nbmh #根密码
+
+gateway:
+  encode-key: 'hello,hszn-nbmh!'
+  ignore-clients:
+    - test
+    - client
+    - app
+
+# swagger 配置
+swagger:
+  enabled: true
+  title: NBMH Swagger API
+  gateway: http://localhost:11200
+  token-url: ${swagger.gateway}/auth/oauth2/token
+  scope: server
+  services:
+    prevent-service: prevent
+    app-service: app
+    user-service: user
+    goods-service: goods

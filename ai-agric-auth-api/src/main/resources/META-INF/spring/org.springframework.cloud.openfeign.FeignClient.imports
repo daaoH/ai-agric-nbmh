@@ -1,0 +1,2 @@
+com.hszn.nbmh.auth.api.feign.Oauth2Api
+com.hszn.nbmh.auth.api.feign.AuthTestApi

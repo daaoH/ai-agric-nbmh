@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hszn.nbmh.good.mapper.NbmhCommentMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hszn.nbmh.good.api.entity.NbmhComment">
+        <id column="id" property="id" />
+        <result column="thing_id" property="thingId" />
+        <result column="type" property="type" />
+        <result column="content" property="content" />
+        <result column="admin_content" property="adminContent" />
+        <result column="user_id" property="userId" />
+        <result column="user_name" property="userName" />
+        <result column="user_avar" property="userAvar" />
+        <result column="ip" property="ip" />
+        <result column="has_picture" property="hasPicture" />
+        <result column="pic_urls" property="picUrls" />
+        <result column="star" property="star" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="status" property="status" />
+    </resultMap>
+
+</mapper>

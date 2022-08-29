@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>ai-agric-parent</artifactId>
+        <groupId>com.hszn.nbmh</groupId>
+        <version>1.0</version>
+    </parent>
+    <groupId>com.hszn.nbmh.common</groupId>
+    <artifactId>ai-agric-common</artifactId>
+    <version>1.0</version>
+    <name>ai-agric-common</name>
+    <description>农宝牧盒功能模块</description>
+    <packaging>pom</packaging>
+
+    <properties>
+        <java.version>11</java.version>
+    </properties>
+
+    <modules>
+        <module>nbmh-common-core</module>
+        <module>nbmh-common-log</module>
+        <module>nbmh-common-mybatis</module>
+        <module>nbmh-common-redis</module>
+        <module>nbmh-common-mq</module>
+        <module>nbmh-common-swagger</module>
+        <module>nbmh-common-feign</module>
+        <module>nbmh-common-security</module>
+    </modules>
+
+</project>

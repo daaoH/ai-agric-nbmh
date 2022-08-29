@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hszn.nbmh.user.mapper.NbmhUserExtraInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hszn.nbmh.user.api.entity.NbmhUserExtraInfo">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="parent_id" property="parentId" />
+        <result column="type" property="type" />
+        <result column="type_desc" property="typeDesc" />
+        <result column="auth_status" property="authStatus" />
+        <result column="id_card" property="idCard" />
+        <result column="real_name" property="realName" />
+        <result column="id_card_front" property="idCardFront" />
+        <result column="id_card_back" property="idCardBack" />
+        <result column="certificate" property="certificate" />
+        <result column="serial_num" property="serialNum" />
+        <result column="work_year" property="workYear" />
+        <result column="skill_desc" property="skillDesc" />
+        <result column="province" property="province" />
+        <result column="city" property="city" />
+        <result column="town" property="town" />
+        <result column="address" property="address" />
+        <result column="qrcode" property="qrcode" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="status" property="status" />
+        <result column="business_license" property="businessLicense" />
+    </resultMap>
+
+</mapper>

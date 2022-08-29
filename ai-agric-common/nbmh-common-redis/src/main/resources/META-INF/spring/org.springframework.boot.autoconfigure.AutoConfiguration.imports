@@ -1,0 +1,2 @@
+com.hszn.nbmh.common.redis.config.JacksonConfiguration
+com.hszn.nbmh.common.redis.config.RedisTemplateConfiguration

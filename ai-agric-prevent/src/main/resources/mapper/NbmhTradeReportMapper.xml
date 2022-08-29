@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hszn.nbmh.prevent.mapper.NbmhTradeReportMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hszn.nbmh.prevent.api.entity.NbmhTradeReport">
+        <id column="id" property="id" />
+        <result column="prevent_station_id" property="preventStationId" />
+        <result column="report_number" property="reportNumber" />
+        <result column="farmer_id" property="farmerId" />
+        <result column="farmer_name" property="farmerName" />
+        <result column="farmer_phone" property="farmerPhone" />
+        <result column="farmer_avatar" property="farmerAvatar" />
+        <result column="farmer_address" property="farmerAddress" />
+        <result column="buyer_id" property="buyerId" />
+        <result column="buyer_name" property="buyerName" />
+        <result column="buyer_card" property="buyerCard" />
+        <result column="buyer_phone" property="buyerPhone" />
+        <result column="sell_where" property="sellWhere" />
+        <result column="ear_no" property="earNo" />
+        <result column="supple_ear_no" property="suppleEarNo" />
+        <result column="trans_address" property="transAddress" />
+        <result column="arrival_address" property="arrivalAddress" />
+        <result column="longitude" property="longitude" />
+        <result column="latitude" property="latitude" />
+        <result column="animal_num" property="animalNum" />
+        <result column="animal_id" property="animalId" />
+        <result column="animal_type" property="animalType" />
+        <result column="animal_pics" property="animalPics" />
+        <result column="remark" property="remark" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="status" property="status" />
+    </resultMap>
+
+</mapper>

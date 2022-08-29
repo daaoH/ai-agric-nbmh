@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hszn.nbmh.cms.mapper.NbmhArticleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hszn.nbmh.cms.api.entity.NbmhArticle">
+        <id column="id" property="id" />
+        <result column="show_pic" property="showPic" />
+        <result column="title" property="title" />
+        <result column="content" property="content" />
+        <result column="display" property="display" />
+        <result column="src" property="src" />
+        <result column="article_type_id" property="articleTypeId" />
+        <result column="recommend" property="recommend" />
+        <result column="sort" property="sort" />
+        <result column="user_id" property="userId" />
+        <result column="click_count" property="clickCount" />
+        <result column="abstracts" property="abstracts" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="status" property="status" />
+    </resultMap>
+
+</mapper>

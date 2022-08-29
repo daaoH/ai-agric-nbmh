@@ -1,0 +1,67 @@
+server:
+  port: 9050
+spring:
+  application:
+    name: third-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 47.108.134.197:8848
+        ip: 47.108.134.197:8500
+      config:
+        server-addr: 47.108.134.197:8848
+        file-extension: yml
+        shared-dataids: application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+  profiles:
+    active: dev
+  servlet:
+    multipart:
+      max-file-size: 1000MB
+      max-request-size: 1000MB
+#      enabled: false
+  redis:
+    host: 127.0.0.1
+    port: 6379
+#    password: 123456
+  main:
+    allow-bean-definition-overriding: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: ALWAYS
+feign:
+  hystrix:
+    enabled: true
+  okhttp:
+    enabled: true
+  httpclient:
+    enabled: false
+  client:
+    config:
+      default:
+        connectTimeout: 20000
+        readTimeout: 20000
+  compression:
+    request:
+      enabled: true
+    response:
+      enabled: true
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          strategy: SEMAPHORE
+          thread:
+            timeoutInMilliseconds: 60000
+  shareSecurityContext: true
+
+ribbon:
+  ReadTimeout: 10000
+  ConnectTimeout: 10000

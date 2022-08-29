@@ -1,0 +1,3 @@
+com.hszn.nbmh.common.feign.CustomFeignAutoConfiguration
+com.hszn.nbmh.common.feign.sentinel.SentinelAutoConfiguration
+com.hszn.nbmh.common.feign.sentinel.handle.GlobalBizExceptionHandler

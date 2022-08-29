@@ -1,0 +1,102 @@
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true #使用小写service-id
+      routes: #配置路由路径
+        #用户服务
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/api/user-service/**
+          filters:
+            - StripPrefix=2
+        #鉴权服务
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/api/auth-service/**
+          filters:
+            - StripPrefix=2
+        #第三方服务
+        - id: third-service
+          uri: lb://third-service
+          predicates:
+            - Path=/api/third-service/**
+          filters:
+            - StripPrefix=2
+        #电商服务
+        - id: shop-service
+          uri: lb://shop-service
+          predicates:
+            - Path=/api/shop-service/**
+          filters:
+            - StripPrefix=2
+        #搜索服务
+        - id: search-service
+          uri: lb://search-service
+          predicates:
+            - Path=/api/search-service/**
+          filters:
+            - StripPrefix=2
+        #订单服务
+        - id: order-service
+          uri: lb://order-service
+          predicates:
+            - Path=/api/order-service/**
+          filters:
+            - StripPrefix=2
+        #商品服务
+        - id: goods-service
+          uri: lb://goods-service
+          predicates:
+            - Path=/api/goods-service/**
+          filters:
+            - StripPrefix=2
+        #财务服务
+        - id: finance-service
+          uri: lb://finance-service
+          predicates:
+            - Path=/api/finance-service/**
+          filters:
+            - StripPrefix=2
+        #内容管理服务
+        - id: cms-service
+          uri: lb://cms-service
+          predicates:
+            - Path=/api/cms-service/**
+          filters:
+            - StripPrefix=2
+        #支付服务
+        - id: pay-service
+          uri: lb://pay-service
+          predicates:
+            - Path=/api/pay-service/**
+          filters:
+            - StripPrefix=2
+        #防疫站服务
+        - id: prevent-service
+          uri: lb://prevent-service
+          predicates:
+            - Path=/api/prevent-service/**
+          filters:
+            - StripPrefix=2
+        #营销服务
+        - id: marketing-service
+          uri: lb://marketing-service
+          predicates:
+            - Path=/api/marketing-service/**
+          filters:
+            - StripPrefix=2
+
+# swagger 配置
+swagger:
+  enabled: true
+  title: NBMH Swagger API
+  gateway: http://gateway-service:11200
+  token-url: ${swagger.gateway}/auth/oauth2/token
+  scope: server
+  services:
+    prevent-service: prevent-service

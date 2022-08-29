@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hszn.nbmh.prevent.mapper.NbmhFarmMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hszn.nbmh.prevent.api.entity.NbmhFarm">
+        <id column="id" property="id" />
+        <result column="prevent_station_id" property="preventStationId" />
+        <result column="farmer_id" property="farmerId" />
+        <result column="farm_name" property="farmName" />
+        <result column="manage_year" property="manageYear" />
+        <result column="manage_scope" property="manageScope" />
+        <result column="team_num" property="teamNum" />
+        <result column="farm_address" property="farmAddress" />
+        <result column="user_id" property="userId" />
+        <result column="user_name" property="userName" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="status" property="status" />
+        <result column="farm_scale" property="farmScale" />
+        <result column="farm_animal_json" property="farmAnimalJson" />
+        <result column="longitude" property="longitude" />
+        <result column="latitude" property="latitude" />
+    </resultMap>
+
+</mapper>
