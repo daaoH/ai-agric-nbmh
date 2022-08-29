@@ -81,9 +81,10 @@ public class NbmhAnimalController {
 
 
     @GetMapping("getByEarNo/{earNo}")
-    @Operation(summary="根据耳标查询动物信息")
+    @Operation(summary="根据耳标查询动物信息(包含检疫-防疫等信息)")
     @Parameters({@Parameter(description="耳标", name="earNo")})
     public Result getByEarNo(@PathVariable("earNo") String earNo) {
+
         return Result.ok(nbmhAnimalService.getByEarNo(earNo));
     }
 

@@ -6,6 +6,7 @@ import com.hszn.nbmh.common.core.mould.QueryRequest;
 import com.hszn.nbmh.prevent.api.entity.NbmhAnimal;
 import com.hszn.nbmh.prevent.api.params.input.AnimalParam;
 import com.hszn.nbmh.prevent.api.params.input.VaccinParam;
+import com.hszn.nbmh.prevent.api.params.out.AnimalDetailsResult;
 import com.hszn.nbmh.prevent.api.params.out.StatisticsResult;
 
 import java.util.List;
@@ -45,7 +46,7 @@ public interface INbmhAnimalService extends IService<NbmhAnimal> {
      * @param earNo
      * @return NbmhAnimal
      */
-    NbmhAnimal getByEarNo(String earNo);
+    AnimalDetailsResult getByEarNo(String earNo);
 
     /**
      * 添加返回id

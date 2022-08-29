@@ -8,16 +8,18 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hszn.nbmh.common.core.mould.QueryRequest;
 import com.hszn.nbmh.common.core.utils.SortUtil;
-import com.hszn.nbmh.prevent.api.entity.AnimalJsonEntity;
-import com.hszn.nbmh.prevent.api.entity.NbmhAnimal;
-import com.hszn.nbmh.prevent.api.entity.NbmhFarm;
+import com.hszn.nbmh.prevent.api.entity.*;
 import com.hszn.nbmh.prevent.api.params.input.AnimalParam;
 import com.hszn.nbmh.prevent.api.params.input.VaccinParam;
+import com.hszn.nbmh.prevent.api.params.out.AnimalDetailsResult;
 import com.hszn.nbmh.prevent.api.params.out.StatisticsResult;
 import com.hszn.nbmh.prevent.mapper.NbmhAnimalMapper;
 import com.hszn.nbmh.prevent.mapper.NbmhFarmMapper;
+import com.hszn.nbmh.prevent.mapper.NbmhInspectMapper;
+import com.hszn.nbmh.prevent.mapper.NbmhVaccinMapper;
 import com.hszn.nbmh.prevent.service.INbmhAnimalService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hszn.nbmh.user.api.entity.NbmhUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -43,16 +45,10 @@ public class NbmhAnimalServiceImpl extends ServiceImpl<NbmhAnimalMapper, NbmhAni
 
     private final NbmhFarmMapper nbmhFarmMapper;
 
-    /**
-     * 根据多参数获取数据集
-     *
-     * @param params
-     * @return
-     */
-    public List<NbmhAnimal> ByParams(NbmhAnimal params) {
-        LambdaQueryWrapper<NbmhAnimal> lambdaQueryWrapper=Wrappers.lambdaQuery(params);
-        return baseMapper.selectList(lambdaQueryWrapper);
-    }
+
+    private final NbmhInspectMapper inspectMapper;
+
+    private final NbmhVaccinMapper vaccinMapper;
 
 
     /**
@@ -179,8 +175,15 @@ public class NbmhAnimalServiceImpl extends ServiceImpl<NbmhAnimalMapper, NbmhAni
      * @return
      */
     @Override
-    public NbmhAnimal getByEarNo(String earNo) {
-        return this.ByParams(new NbmhAnimal().setEarNo(earNo)).get(0);
+    public AnimalDetailsResult getByEarNo(String earNo) {
+        AnimalDetailsResult animalDetailsResult=new AnimalDetailsResult();
+        NbmhAnimal animal=baseMapper.selectOne(Wrappers.<NbmhAnimal>query().lambda().eq(NbmhAnimal::getEarNo, earNo));
+        if (ObjectUtils.isNotEmpty(animal)) {
+            animalDetailsResult.setAnimal(animal);
+            animalDetailsResult.setInspect(inspectMapper.selectOne(Wrappers.<NbmhInspect>query().lambda().eq(NbmhInspect::getEarNo, earNo)));
+            animalDetailsResult.setVaccinList(vaccinMapper.selectList(Wrappers.<NbmhVaccin>query().lambda().eq(NbmhVaccin::getAnimalId, animal.getId())));
+        }
+        return animalDetailsResult;
     }
 
     /**
