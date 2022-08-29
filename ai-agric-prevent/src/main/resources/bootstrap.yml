@@ -6,20 +6,21 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 192.168.0.35:8848
+        server-addr: 127.0.0.1:8848
         ip: localhost
       config:
-        server-addr: 192.168.0.35:8848
+        server-addr: 127.0.0.1:8848
         file-extension: yml
         shared-dataids: application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
   profiles:
-    active: local
+    active: dev
   servlet:
     multipart:
       enabled: false
   redis:
     host: 127.0.0.1
     port: 6379
+    password: 123456
 
   main:
     allow-bean-definition-overriding: true
@@ -63,3 +64,12 @@ hystrix:
 ribbon:
   ReadTimeout: 10000
   ConnectTimeout: 10000
+
+swagger:
+  enabled: true
+  title: NBMH Swagger API
+  gateway: http://localhost:11200
+  token-url: ${swagger.gateway}/auth/oauth2/token
+  scope: server
+  services:
+    prevent-service: prevent
