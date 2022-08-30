@@ -26,18 +26,18 @@ public class AuthUser extends User implements OAuth2AuthenticatedPrincipal {
     @Getter
     private final String phone;
 
-    @Setter
     @Getter
-    private Boolean mutilRole;
+    private final boolean mutilRole;
 
-    @Setter
     @Getter
-    private List<Integer> roles = new ArrayList<>();
+    private final List<Integer> userRoles;
 
-    public AuthUser(Long id, String username,  String password, String phone, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
+    public AuthUser(Long id, String username,  String password, String phone, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities, boolean mutilRole, List<Integer> userRoles) {
         super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
         this.id = id;
         this.phone = phone;
+        this.userRoles = userRoles;
+        this.mutilRole = mutilRole;
     }
 
 

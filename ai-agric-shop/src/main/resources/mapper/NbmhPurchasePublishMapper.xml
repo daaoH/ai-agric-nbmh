@@ -25,7 +25,7 @@
         <result column="status" property="status" />
     </resultMap>
 
-    <resultMap id="PublishResultMap" type="com.hszn.nbmh.shop.api.entity.NbmhPurchasePublish">
+    <resultMap id="PublishResultMap" type="com.hszn.nbmh.shop.api.params.out.PublishListReturn">
         <id column="id" property="id" />
         <result column="user_id" property="userId" />
         <result column="product_type" property="productType" />

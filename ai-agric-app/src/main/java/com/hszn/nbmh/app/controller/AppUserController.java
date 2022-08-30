@@ -1,5 +1,6 @@
 package com.hszn.nbmh.app.controller;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.hszn.nbmh.app.params.input.LoginParam;
 import com.hszn.nbmh.app.params.input.SmsLoginParam;
@@ -27,11 +28,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -64,7 +68,7 @@ public class AppUserController {
         String password = param.getPassword();
         //判断用户是否存在
         Result existRet = userService.checkUserExist(userName, SecurityConstants.FROM_IN);
-        boolean exist = (boolean)existRet.getData();
+        boolean exist = (boolean) existRet.getData();
         if (exist) {
             //用户存在，去登录
             MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
@@ -105,16 +109,10 @@ public class AppUserController {
 
                 UserInfoVo userInfo = token.getUser_info();
                 if (ObjectUtils.isNotEmpty(userInfo)) {
-                    //查询当前登录用户信息
-                    Result<CurUserInfo> curUserRet = userService.queryCurUserInfo(userInfo.getId(), null);
-                    if(curUserRet.getCode() == 200){
-                        CurUserInfo curUser = curUserRet.getData();
-                        retData.setMutilRole(curUser.getMutilRole());
-                        retData.setRoles(curUser.getRoles());
-                        retData.setUserInfo(curUser);
-                    }else{
-                        Result.failed("获取用户信息失败");
-                    }
+                    retData.setMutilRole(userInfo.isMutilRole());
+                    retData.setRoles(userInfo.getUserRoles());
+                    retData.setUserInfo(userInfo);
+
                 } else {
                     return Result.failed("用户数据为空");
                 }
@@ -133,25 +131,25 @@ public class AppUserController {
     public Result smsLogin(@RequestBody SmsLoginParam param) {
         String phone = param.getPhone();
         String code = param.getCode();
-        if(StringUtils.isBlank(phone)){
+        if (StringUtils.isBlank(phone)) {
             return Result.failed("手机号不能为空");
         }
         //验证验证码
         Result validateRet = smsService.validateCode(phone, code);
-        if(validateRet.getCode() == 200){
+        if (validateRet.getCode() == 200) {
             Map<String, Object> validateEntity = (LinkedHashMap) validateRet.getData();
-            if((boolean)validateEntity.get("validateResult")){
+            if (!(boolean) validateEntity.get("validateResult")) {
                 //验证码验证正确，检查手机号是否存在
                 Result existRet = userService.checkUserExist(phone, SecurityConstants.FROM);
-                if(existRet.getCode() == 200){
-                    Boolean exist = (Boolean)existRet.getData();
-                    if(!exist){
+                if (existRet.getCode() == 200) {
+                    Boolean exist = (Boolean) existRet.getData();
+                    if (!exist) {
                         //用户不存在，新建用户信息
                         RegisterParam registerParam = new RegisterParam();
                         registerParam.setUserName(phone);
                         registerParam.setLoginType(CredentialType.SMS.getCode());
                         Result register = userService.registerUser(registerParam);
-                        if(register.getCode() != 200){
+                        if (register.getCode() != 200) {
                             return Result.failed(CommonEnum.DATA_ADD_FAILED.getMsg());
                         }
                     }
@@ -168,16 +166,16 @@ public class AppUserController {
                     try {
                         String rets = oauth2Api.postAccessToken(body, headers);
                         return getUserResult(rets);
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         return Result.failed(e.getMessage());
                     }
-                }else{
+                } else {
                     return Result.failed(CommonEnum.DATA_NOT_EXIST.getMsg());
                 }
-            }else{
+            } else {
                 return Result.failed(CommonEnum.SMS_VALIDATE_FAIL.getMsg());
             }
-        }else{
+        } else {
             return validateRet;
         }
     }

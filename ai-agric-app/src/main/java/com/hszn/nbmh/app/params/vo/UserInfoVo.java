@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @Author：袁德民
@@ -26,4 +27,6 @@ public class UserInfoVo implements Serializable {
     private String phone;
     private String name;
     private String attributes;
+    private boolean mutilRole;
+    private List<Integer> userRoles;
 }

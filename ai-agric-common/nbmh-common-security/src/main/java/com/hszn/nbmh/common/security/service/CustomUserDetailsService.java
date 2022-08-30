@@ -17,10 +17,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public interface CustomUserDetailsService extends UserDetailsService, Ordered {
@@ -52,31 +49,25 @@ public interface CustomUserDetailsService extends UserDetailsService, Ordered {
 
 		Set<String> dbAuthsSet = new HashSet<>();
 
-		if (ArrayUtil.isNotEmpty(info.getRoles())) {
-			// 获取角色
-			Arrays.stream(info.getRoles()).forEach(role -> dbAuthsSet.add(SecurityConstants.ROLE + role));
-			// 获取资源
-			dbAuthsSet.addAll(Arrays.asList(info.getPermissions()));
-
-		}
-
 		Collection<GrantedAuthority> authorities = AuthorityUtils
 				.createAuthorityList(dbAuthsSet.toArray(new String[0]));
 		NbmhUser user = info.getUser();
 
+		boolean mutilRole = false;
+		List<Integer> userRoles = new ArrayList<>();
+		if(CollectionUtil.isNotEmpty(info.getExtraInfo())){
+			if (info.getExtraInfo().size() > 1) {
+				mutilRole = true;
+			}
+			userRoles.addAll(info.getExtraInfo().stream().map(e -> e.getType()).collect(Collectors.toList()));
+		}
+
 		// 构造security用户
 		AuthUser authUser = new AuthUser(user.getId(), user.getUserName(),
 				SecurityConstants.BCRYPT + user.getPassword(), user.getPhone(), true, true, true,
-				StrUtil.equals(user.getStatus().toString(), CommonConstant.STATUS_NORMAL), authorities);
+				StrUtil.equals(user.getStatus().toString(), CommonConstant.STATUS_NORMAL), authorities, mutilRole, userRoles);
 
-		if(CollectionUtil.isNotEmpty(info.getExtraInfo())){
-			if (info.getExtraInfo().size() > 1) {
-				authUser.setMutilRole(true);
-				authUser.setRoles(info.getExtraInfo().stream().map(e -> e.getType()).collect(Collectors.toList()));;
-			} else {
-				authUser.setMutilRole(false);
-			}
-		}
+
 		return authUser;
 	}
 

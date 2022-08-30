@@ -134,17 +134,32 @@ public class NbmhUserController {
         Integer loginType = param.getLoginType();
 
         NbmhUser user = this.assembleUserInfo(userName);
+        //存储基本用户信息
         boolean userSave = userService.save(user);
         if (!userSave) {
-            return Result.failed(CommonEnum.DATA_ADD_FAILED.getMsg());
+            return Result.failed("用户信息保存失败");
         }
+        //存储登录信息
         NbmhUserCredentials userCredentials = new NbmhUserCredentials();
         userCredentials.setUserName(userName);
         userCredentials.setType(loginType);
         userCredentials.setUserId(user.getId());
         boolean credentialSave = userCredentialsService.save(userCredentials);
         if (!credentialSave) {
-            return Result.failed(CommonEnum.DATA_ADD_FAILED.getMsg());
+            return Result.failed("用户登录认证信息存储失败");
+        }
+
+        //存储扩展信息
+        NbmhUserExtraInfo extraInfo = new NbmhUserExtraInfo();
+        extraInfo.setId(snowFlakeId.nextId());
+        extraInfo.setUserId(user.getId());
+        extraInfo.setStatus(0);
+        extraInfo.setType(1);
+        extraInfo.setCreateTime(new Date());
+        extraInfo.setUpdateTime(new Date());
+        boolean extraSave = extraInfoService.save(extraInfo);
+        if(!extraSave){
+            return Result.failed("用户扩展信息存储失败");
         }
 
         return Result.ok();

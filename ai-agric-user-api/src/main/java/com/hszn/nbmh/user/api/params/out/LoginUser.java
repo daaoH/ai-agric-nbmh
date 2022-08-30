@@ -26,29 +26,4 @@ public class LoginUser implements Serializable {
     @Schema(description = "用户扩展数据")
     private List<NbmhUserExtraInfo> extraInfo;
 
-    /**
-     * 权限标识集合
-     */
-    private String[] permissions;
-
-    /**
-     * 角色集合
-     */
-    private Long[] roles;
-
-    /**
-     * 角色集合
-     */
-    private List<SysRole> roleList;
-
-    /**
-     * 岗位集合
-     */
-    private Long[] posts;
-
-    /**
-     * 岗位集合
-     */
-    private List<SysPost> postList;
-
 }
