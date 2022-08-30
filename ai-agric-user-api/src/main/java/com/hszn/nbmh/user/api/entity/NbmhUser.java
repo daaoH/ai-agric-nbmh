@@ -21,15 +21,15 @@ import java.util.Date;
  * @since 2022-08-15
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper=false)
 public class NbmhUser implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID=1L;
 
     /**
      * 主键id
      */
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value="id", type=IdType.AUTO)
     private Long id;
 
     /**
@@ -40,7 +40,7 @@ public class NbmhUser implements Serializable {
     /**
      * 手机号码
      */
-    @DataMasking(maskEnum = DataMaskingEnum.HALF_MASK)
+    @DataMasking(maskEnum=DataMaskingEnum.HALF_MASK)
     private String phone;
 
     /**
@@ -49,7 +49,7 @@ public class NbmhUser implements Serializable {
     private String password;
 
     /**
-     *  头像
+     * 头像
      */
     private String avatarUrl;
 
@@ -66,7 +66,7 @@ public class NbmhUser implements Serializable {
     /**
      * 积分
      */
-    private Integer integral;
+    private int integral;
 
     /**
      * 创建时间

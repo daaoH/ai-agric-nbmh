@@ -1,7 +1,5 @@
 package com.hszn.nbmh.user.api.params.input;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -31,7 +29,6 @@ public class NbmhBaseConfigParam implements Serializable {
     /**
      * id
      */
-    @TableId(value="id", type=IdType.AUTO)
     @Schema(name="id", description="id")
     private Long id;
 

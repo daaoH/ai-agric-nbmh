@@ -21,6 +21,11 @@ import lombok.experimental.Accessors;
 @Schema(description="基础注册参数对象")
 public class RegisterParam {
 
+    @Schema(description="是否为站长", name="isStationmaster")
+    private boolean isStationMaster;
+
+    @Schema(description="邀请人ID", name="inviteBy")
+    private Long inviteBy;
 
     @Schema(description="手机号或用户名", name="userName")
     private String userName;
