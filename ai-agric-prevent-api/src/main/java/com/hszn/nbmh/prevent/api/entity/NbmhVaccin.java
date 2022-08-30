@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -81,6 +80,21 @@ public class NbmhVaccin implements Serializable {
     @Schema(name="animalId", description="动物id")
     private Long animalId;
 
+
+    /**
+     * 耳标
+     */
+    @Schema(name="earNo", description="耳标")
+    private String earNo;
+
+
+    /**
+     * 动物图片
+     */
+    @Schema(name="animalUrl", description="动物图片")
+    private String animalUrl;
+
+
     /**
      * 动物月龄
      */
@@ -153,6 +167,12 @@ public class NbmhVaccin implements Serializable {
      */
     @Schema(name="animalType", description="动物类型(种类 0猪 1牛)")
     private Integer animalType;
+
+    /**
+     * 防疫站id
+     */
+    @Schema(name="preventStationId", description="防疫站id")
+    private Long preventStationId;
 
 
 }

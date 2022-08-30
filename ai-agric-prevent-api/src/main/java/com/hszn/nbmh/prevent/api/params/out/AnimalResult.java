@@ -27,4 +27,10 @@ public class AnimalResult extends NbmhAnimal implements Serializable {
      */
     @Schema(name="preventTime", description="防疫时间")
     private Date preventTime;
+
+    /**
+     * 动物图片
+     */
+    @Schema(name="animalUrl", description="动物图片")
+    private String animalUrl;
 }

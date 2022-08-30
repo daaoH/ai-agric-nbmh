@@ -170,7 +170,7 @@ public class NbmhUserController {
         /**
          * 校验用户附属信息
          */
-        NbmhUserExtraInfo userExtraInfo = checkUserExtraInfo(param.getInviteType(), user.getId());
+        NbmhUserExtraInfo userExtraInfo = this.getUserExtraInfo(param.getInviteType(), user.getId());
         if (ObjectUtils.isEmpty(userExtraInfo)) {
             NbmhUserExtraInfo extraInfo = this.assembleUserExtraInfo(param.getExtraInfo());
             extraInfo.setUserId(user.getId());
@@ -233,7 +233,7 @@ public class NbmhUserController {
             /**
              * 校验用户附属信息
              */
-            NbmhUserExtraInfo userExtraInfo = checkUserExtraInfo(param.getInviteType(), user.getId());
+            NbmhUserExtraInfo userExtraInfo =  this.getUserExtraInfo(param.getInviteType(), user.getId());
             if (ObjectUtils.isEmpty(userExtraInfo)) {
                 NbmhUserExtraInfo extraInfo = this.assembleUserExtraInfo(param.getExtraInfo());
                 extraInfo.setUserId(user.getId());
@@ -247,6 +247,47 @@ public class NbmhUserController {
             }
         }
 
+        return Result.ok();
+    }
+
+
+
+    @Transactional
+    @Operation(summary="防疫站站长-修改旗下人员")
+    @PutMapping("/psUpdateUser")
+    public Result psUpdateUser(@RequestBody NbmhUserExtraInfo param) {
+        if (ObjectUtils.isEmpty(param)) {
+            return Result.failed(CommonEnum.PARAM_MISS.getMsg());
+        }
+        //存在则解锁原账号状态
+        NbmhUser user=userService.getOne(Wrappers.<NbmhUser>query().lambda().eq(NbmhUser::getId, param.getUserId()));
+        NbmhUserExtraInfo userExtraInfo=extraInfoService.getById(param.getId());
+        if (ObjectUtils.isEmpty(user) || ObjectUtils.isEmpty(userExtraInfo)) {
+            return Result.failed(CommonEnum.DATA_UPDATE_FAILED.getMsg());
+        }
+        extraInfoService.updateById(userExtraInfo);
+        return Result.ok();
+    }
+
+
+    @Transactional
+    @Operation(summary="防疫站站长删除旗下人员")
+    @PutMapping("/psDeleteUser")
+    public Result psDeleteUser(@RequestBody RegisterParam param) {
+        if (ObjectUtils.isEmpty(param.getUserName()) || ObjectUtils.isEmpty(param.getExtraInfo())) {
+            return Result.failed(CommonEnum.PARAM_MISS.getMsg());
+        }
+        //TODO 积分清空
+        //TODO 删除对应角色
+        //TODO 清空附属
+
+        //存在则解锁原账号状态
+        NbmhUser user=userService.getOne(Wrappers.<NbmhUser>query().lambda().eq(NbmhUser::getUserName, param.getUserName()));
+        NbmhUserExtraInfo userExtraInfo=extraInfoService.getById(param.getExtraInfo().getId());
+        if (ObjectUtils.isEmpty(user) || ObjectUtils.isEmpty(userExtraInfo)) {
+            return Result.failed(CommonEnum.DATA_UPDATE_FAILED.getMsg());
+        }
+        extraInfoService.updateById(userExtraInfo);
         return Result.ok();
     }
 
@@ -339,7 +380,7 @@ public class NbmhUserController {
      * @param userId
      * @param type
      */
-    private NbmhUserExtraInfo checkUserExtraInfo(int type, Long userId) {
+    private NbmhUserExtraInfo getUserExtraInfo(int type, Long userId) {
         //添加条件
         LambdaQueryWrapper<NbmhUserExtraInfo> queryWrapper = new LambdaQueryWrapper<>();
         //类型

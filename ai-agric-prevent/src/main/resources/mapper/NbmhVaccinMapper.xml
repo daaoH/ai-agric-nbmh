@@ -4,27 +4,29 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.hszn.nbmh.prevent.api.entity.NbmhVaccin">
-        <id column="id" property="id" />
-        <result column="vaccin_no" property="vaccinNo" />
-        <result column="farmer_id" property="farmerId" />
-        <result column="farmer_name" property="farmerName" />
-        <result column="farmer_phone" property="farmerPhone" />
-        <result column="farmer_avatar" property="farmerAvatar" />
-        <result column="farmer_id_no" property="farmerIdNo" />
-        <result column="farmer_address" property="farmerAddress" />
-        <result column="animal_id" property="animalId" />
-        <result column="animal_age" property="animalAge" />
-        <result column="animal_weight" property="animalWeight" />
-        <result column="animal_pics" property="animalPics" />
-        <result column="vaccin_type" property="vaccinType" />
-        <result column="vaccin_time" property="vaccinTime" />
-        <result column="vaccin_user_id" property="vaccinUserId" />
-        <result column="vaccin_user" property="vaccinUser" />
-        <result column="remark" property="remark" />
-        <result column="create_time" property="createTime" />
-        <result column="update_time" property="updateTime" />
-        <result column="status" property="status" />
-        <result column="animal_type" property="animalType" />
+        <id column="id" property="id"/>
+        <result column="vaccin_no" property="vaccinNo"/>
+        <result column="farmer_id" property="farmerId"/>
+        <result column="farmer_name" property="farmerName"/>
+        <result column="farmer_phone" property="farmerPhone"/>
+        <result column="farmer_avatar" property="farmerAvatar"/>
+        <result column="farmer_id_no" property="farmerIdNo"/>
+        <result column="farmer_address" property="farmerAddress"/>
+        <result column="animal_id" property="animalId"/>
+        <result column="animal_age" property="animalAge"/>
+        <result column="animal_weight" property="animalWeight"/>
+        <result column="animal_pics" property="animalPics"/>
+        <result column="vaccin_type" property="vaccinType"/>
+        <result column="vaccin_time" property="vaccinTime"/>
+        <result column="vaccin_user_id" property="vaccinUserId"/>
+        <result column="vaccin_user" property="vaccinUser"/>
+        <result column="remark" property="remark"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="status" property="status"/>
+        <result column="animal_type" property="animalType"/>
+        <result column="prevent_station_id" property="preventStationId"/>
+        <result column="ear_no" property="ear_no"/>
+        <result column="animal_url" property="animalUrl"/>
     </resultMap>
-
 </mapper>
