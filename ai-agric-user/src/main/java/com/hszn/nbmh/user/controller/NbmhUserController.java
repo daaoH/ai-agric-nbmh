@@ -14,8 +14,10 @@ import com.hszn.nbmh.common.security.annotation.Inner;
 import com.hszn.nbmh.user.api.entity.NbmhUser;
 import com.hszn.nbmh.user.api.entity.NbmhUserCredentials;
 import com.hszn.nbmh.user.api.entity.NbmhUserExtraInfo;
+import com.hszn.nbmh.user.api.feign.RemotePreventService;
 import com.hszn.nbmh.user.api.feign.RemoteThirdService;
 import com.hszn.nbmh.user.api.params.input.NbmhBaseConfigParam;
+import com.hszn.nbmh.user.api.params.input.NbmhPreventStationParam;
 import com.hszn.nbmh.user.api.params.input.RegisterParam;
 import com.hszn.nbmh.user.api.params.out.CurUserInfo;
 import com.hszn.nbmh.user.api.params.out.LoginUser;
@@ -61,6 +63,8 @@ public class NbmhUserController {
     private final INbmhUserCredentialsService userCredentialsService;
 
     private final RemoteThirdService thirdService;
+
+    private final RemotePreventService remotePreventService;
 
     SnowFlakeIdUtil snowFlakeId=new SnowFlakeIdUtil(1L, 1L);
 
@@ -194,8 +198,17 @@ public class NbmhUserController {
             if (!extraInfoService.save(extraInfo)) {
                 return Result.failed(CommonEnum.DATA_ADD_FAILED.getMsg());
             }
+            NbmhPreventStationParam preventStationParam=new NbmhPreventStationParam();
+            preventStationParam.setStationName(param.getPreventStationName());
+            preventStationParam.setMasterId(user.getId());
+            preventStationParam.setStatus(-1);
+            preventStationParam.setStationMaster(param.getUserName());
+            preventStationParam.setStationPhone(param.getUserName());
+            preventStationParam.setCreateTime(new Date());
+            preventStationParam.setCertificate(param.getExtraInfo().getCertificate());
+            remotePreventService.add(preventStationParam);
         } else {
-            userExtraInfo.setStatus(0);
+            userExtraInfo.setStatus(-1);
             extraInfoService.updateById(userExtraInfo);
         }
         return Result.ok();

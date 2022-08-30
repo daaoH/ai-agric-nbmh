@@ -24,6 +24,22 @@ spring:
   #连接超时时间
   timeout: 5000
 
+# spring security 配置
+security:
+  oauth2:
+    # 通用放行URL，服务个性化，请在对应配置文件覆盖
+    ignore:
+      urls:
+        - /v3/api-docs
+        - /actuator/**
+        - /app-user/pwd-login
+        - /cloud-oss/**
+        - /nbmh-user/psRegisterUser
+        - /nbmh-user/stationMasterRegister
+        - /nbmh-base-config/getBySubject/**
+        - /nbmh-prevent-station/add
+        - /cloud-qrcode/generate
+
 mybatis-plus:
   type-aliases-package: com.hszn.nbmh.prevent.api.entity
   mapper-locations: classpath:mapper/*.xml

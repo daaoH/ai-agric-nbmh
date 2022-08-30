@@ -4,6 +4,7 @@ import com.hszn.nbmh.common.core.constant.ServiceNameConstant;
 import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.user.api.fallback.PreventServiceFallback;
 import com.hszn.nbmh.user.api.params.input.NbmhPreventStationParam;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,8 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(value=ServiceNameConstant.PREVENT_SERVICE, fallback=PreventServiceFallback.class)
 public interface RemotePreventService {
 
-    @PostMapping("/add")
+    @Operation(summary="新增防疫站信息", method="POST")
+    @PostMapping("/nbmh-prevent-station/add")
     Result add(@RequestBody NbmhPreventStationParam entity);
-
-
 }
