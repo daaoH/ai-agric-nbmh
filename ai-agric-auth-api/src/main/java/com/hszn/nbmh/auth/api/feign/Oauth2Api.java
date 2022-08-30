@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Map;
 
-@FeignClient(value = ServiceNameConstant.AUTH_SERVICE, url = "http://192.168.0.34:13000", fallback = Oauth2ApiFallback.class)
+@FeignClient(value = ServiceNameConstant.AUTH_SERVICE, url = "http://192.168.0.29:13000", fallback = Oauth2ApiFallback.class)
 public interface Oauth2Api {
 
     /**

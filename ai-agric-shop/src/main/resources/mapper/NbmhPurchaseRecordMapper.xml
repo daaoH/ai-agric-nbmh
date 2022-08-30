@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hszn.nbmh.shop.mapper.NbmhPurchaseRecordMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hszn.nbmh.shop.api.entity.NbmhPurchaseRecord">
+        <id column="id" property="id" />
+        <result column="purch_id" property="purchId" />
+        <result column="user_id" property="userId" />
+        <result column="quote_id" property="quoteId" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="status" property="status" />
+        <result column="price" property="price" />
+    </resultMap>
+
+</mapper>

@@ -25,13 +25,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -126,6 +126,8 @@ public class AppUserController {
         }
     }
 
+    @Inner(false)
+    @Transactional
     @Operation(summary = "验证码登录", description = "验证码登录")
     @PostMapping("/sms-login")
     public Result smsLogin(@RequestBody SmsLoginParam param) {
@@ -137,18 +139,20 @@ public class AppUserController {
         //验证验证码
         Result validateRet = smsService.validateCode(phone, code);
         if(validateRet.getCode() == 200){
-            SmsValidateEntity validateEntity = (SmsValidateEntity) validateRet.getData();
-            if(validateEntity.isValidateResult()){
+            Map<String, Object> validateEntity = (LinkedHashMap) validateRet.getData();
+            if((boolean)validateEntity.get("validateResult")){
                 //验证码验证正确，检查手机号是否存在
                 Result existRet = userService.checkUserExist(phone, SecurityConstants.FROM);
                 if(existRet.getCode() == 200){
                     Boolean exist = (Boolean)existRet.getData();
                     if(!exist){
                         //用户不存在，新建用户信息
-                        RegisterParam registerParam = new RegisterParam(phone, CredentialType.SMS.getCode());
+                        RegisterParam registerParam = new RegisterParam();
+                        registerParam.setUserName(phone);
+                        registerParam.setLoginType(CredentialType.SMS.getCode());
                         Result register = userService.registerUser(registerParam);
                         if(register.getCode() != 200){
-                            return Result.failed(CommonEnum.DATA_ADD_FAILED);
+                            return Result.failed(CommonEnum.DATA_ADD_FAILED.getMsg());
                         }
                     }
 

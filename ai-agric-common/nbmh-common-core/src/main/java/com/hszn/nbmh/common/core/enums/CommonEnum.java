@@ -27,6 +27,7 @@ public enum CommonEnum {
     DATA_UPDATE_FAILED(524, "数据更新失败"),
     DATA_DELETE_FAILED(525, "数据删除失败"),
     DATA_QUERY_FAILED(526, "数据查询失败"),
+    DATA_SUBMIT_FAILED(527, "数据提交失败"),
 
     FALL_BACK_MSG(555, "服务繁忙，请稍后再试"),
 

@@ -42,7 +42,7 @@ public class AppUserDetailsServiceImpl implements CustomUserDetailsService {
 	 */
 	@Override
 	public UserDetails loadUserByUser(AuthUser user) {
-		return this.loadUserByUsername(user.getPhone());
+		return this.loadUserByUsername(user.getName());
 	}
 
 	/**

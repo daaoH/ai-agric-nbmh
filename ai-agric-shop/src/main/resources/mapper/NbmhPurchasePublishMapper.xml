@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hszn.nbmh.shop.mapper.NbmhPurchasePublishMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hszn.nbmh.shop.api.entity.NbmhPurchasePublish">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="product_type" property="productType" />
+        <result column="purch_cycle" property="purchCycle" />
+        <result column="purch_unit" property="purchUnit" />
+        <result column="purch_num" property="purchNum" />
+        <result column="specs" property="specs" />
+        <result column="receive_province" property="receiveProvince" />
+        <result column="receive_city" property="receiveCity" />
+        <result column="receive_town" property="receiveTown" />
+        <result column="receive_address" property="receiveAddress" />
+        <result column="deliver_province" property="deliverProvince" />
+        <result column="deliver_city" property="deliverCity" />
+        <result column="deliver_town" property="deliverTown" />
+        <result column="deliver_address" property="deliverAddress" />
+        <result column="remark" property="remark" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="status" property="status" />
+    </resultMap>
+
+    <resultMap id="PublishResultMap" type="com.hszn.nbmh.shop.api.entity.NbmhPurchasePublish">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="product_type" property="productType" />
+        <result column="purch_cycle" property="purchCycle" />
+        <result column="purch_unit" property="purchUnit" />
+        <result column="purch_num" property="purchNum" />
+        <result column="specs" property="specs" />
+        <result column="receive_province" property="receiveProvince" />
+        <result column="receive_city" property="receiveCity" />
+        <result column="receive_town" property="receiveTown" />
+        <result column="receive_address" property="receiveAddress" />
+        <result column="deliver_province" property="deliverProvince" />
+        <result column="deliver_city" property="deliverCity" />
+        <result column="deliver_town" property="deliverTown" />
+        <result column="deliver_address" property="deliverAddress" />
+        <result column="remark" property="remark" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="status" property="status" />
+        <result column="user_type" property="userType" />
+        <result column="time_interval" property="timeInterval" />
+        <result column="auth_status" property="authStatus" />
+    </resultMap>
+
+    <sql id="Base_Column">
+        pp.id, pp.user_id, pp.product_type, pp.purch_cycle, pp.purch_unit, pp.purch_num, pp.specs,
+        pp.receive_province, pp.receive_city, pp.receive_town, pp.receive_address, pp.deliver_province,
+        pp.deliver_city, pp.deliver_town, pp.deliver_address, pp.remark, pp.create_time, pp.update_time,
+        pp.status, ue.type user_type, ue.auth_status, TimeStampDiff(HOUR, pp.create_time, CURDATE()) time_interval
+    </sql>
+
+    <select id="queryPublishPageList" resultMap="PublishResultMap">
+        SELECT
+        <include refid="Base_Column" />
+        FROM nbmh_purchase_publish pp LEFT JOIN nbmh_user_extra_info ue ON pp.user_id = ue.user_id
+        WHERE pp.user_id = #{params.userId}
+        <if test="params.type != null">
+            AND pp.product_type = #{params.type}
+        </if>
+        <if test="params.deliverProvince != null and params.deliverProvince != ''">
+            AND pp.deliver_province = #{params.deliverProvince}
+        </if>
+        <if test="params.deliverCity != null and params.deliverCity != ''">
+            AND pp.deliver_city = #{params.deliverCity}
+        </if>
+        <if test="params.deliverTown != null and params.deliverTown != ''">
+            AND pp.deliver_town = #{params.deliverTown}
+        </if>
+        <if test="params.receiveProvince != null and params.receiveProvince != ''">
+            AND pp.receive_province = #{params.receiveProvince}
+        </if>
+        <if test="params.receiveCity != null and params.receiveCity != ''">
+            AND pp.receive_city = #{params.receiveCity}
+        </if>
+        <if test="params.receiveTown != null and params.receiveTown != ''">
+            AND pp.receive_town = #{params.receiveTown}
+        </if>
+        ORDER BY pp.create_time DESC
+    </select>
+</mapper>

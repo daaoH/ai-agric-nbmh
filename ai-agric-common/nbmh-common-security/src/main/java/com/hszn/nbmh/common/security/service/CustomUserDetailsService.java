@@ -1,5 +1,6 @@
 package com.hszn.nbmh.common.security.service;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import com.hszn.nbmh.common.core.constant.CommonConstant;
@@ -14,11 +15,13 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public interface CustomUserDetailsService extends UserDetailsService, Ordered {
 
@@ -62,9 +65,19 @@ public interface CustomUserDetailsService extends UserDetailsService, Ordered {
 		NbmhUser user = info.getUser();
 
 		// 构造security用户
-		return new AuthUser(user.getId(), user.getUserName(),
+		AuthUser authUser = new AuthUser(user.getId(), user.getUserName(),
 				SecurityConstants.BCRYPT + user.getPassword(), user.getPhone(), true, true, true,
 				StrUtil.equals(user.getStatus().toString(), CommonConstant.STATUS_NORMAL), authorities);
+
+		if(CollectionUtil.isNotEmpty(info.getExtraInfo())){
+			if (info.getExtraInfo().size() > 1) {
+				authUser.setMutilRole(true);
+				authUser.setRoles(info.getExtraInfo().stream().map(e -> e.getType()).collect(Collectors.toList()));;
+			} else {
+				authUser.setMutilRole(false);
+			}
+		}
+		return authUser;
 	}
 
 	/**
