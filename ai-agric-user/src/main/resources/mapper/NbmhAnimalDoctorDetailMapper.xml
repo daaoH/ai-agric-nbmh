@@ -3,7 +3,7 @@
 <mapper namespace="com.hszn.nbmh.user.mapper.NbmhAnimalDoctorDetailMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.hszn.nbmh.user.entity.NbmhAnimalDoctorDetail">
+    <resultMap id="BaseResultMap" type="com.hszn.nbmh.user.api.entity.NbmhAnimalDoctorDetail">
         <id column="id" property="id" />
         <result column="user_id" property="userId" />
         <result column="admissions" property="admissions" />
