@@ -1,6 +1,8 @@
 package com.hszn.nbmh.common.mybatis;
 
+import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
+import com.hszn.nbmh.common.mybatis.config.MybatisPlusMetaObjectHandler;
 import com.hszn.nbmh.common.mybatis.plugins.CustomPaginationInnerInterceptor;
 import com.hszn.nbmh.common.mybatis.resolver.SqlFilterArgumentResolver;
 import org.springframework.context.annotation.Bean;
@@ -33,6 +35,15 @@ public class MybatisAutoConfiguration implements WebMvcConfigurer {
 		MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
 		interceptor.addInnerInterceptor(new CustomPaginationInnerInterceptor());
 		return interceptor;
+	}
+
+	/**
+	 * 审计字段自动填充
+	 * @return {@link MetaObjectHandler}
+	 */
+	@Bean
+	public MybatisPlusMetaObjectHandler mybatisPlusMetaObjectHandler() {
+		return new MybatisPlusMetaObjectHandler();
 	}
 
 }
