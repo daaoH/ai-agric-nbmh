@@ -4,21 +4,25 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
+import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
 
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * MybatisPlus 自动填充配置
  */
 @Slf4j
+@Component
 public class MybatisPlusMetaObjectHandler implements MetaObjectHandler {
 
 	@Override
 	public void insertFill(MetaObject metaObject) {
 		log.debug("mybatis plus start insert fill ....");
-		LocalDateTime now = LocalDateTime.now();
+		// 数据库实体使用Date类型
+		Date now = new Date();
 
 		fillValIfNullByName("createTime", now, metaObject, false);
 		fillValIfNullByName("updateTime", now, metaObject, false);
