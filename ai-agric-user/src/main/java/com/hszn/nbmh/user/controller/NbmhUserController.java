@@ -4,12 +4,16 @@ package com.hszn.nbmh.user.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.nacos.common.utils.CollectionUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hszn.nbmh.common.core.constant.SecurityConstants;
 import com.hszn.nbmh.common.core.enums.CommonEnum;
 import com.hszn.nbmh.common.core.mould.CodeImageRequest;
+import com.hszn.nbmh.common.core.mould.QueryRequest;
 import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.common.core.utils.SnowFlakeIdUtil;
+import com.hszn.nbmh.common.core.utils.SortUtil;
 import com.hszn.nbmh.common.security.annotation.Inner;
 import com.hszn.nbmh.user.api.entity.NbmhAnimalDoctorDetail;
 import com.hszn.nbmh.user.api.entity.NbmhUser;
@@ -17,10 +21,7 @@ import com.hszn.nbmh.user.api.entity.NbmhUserCredentials;
 import com.hszn.nbmh.user.api.entity.NbmhUserExtraInfo;
 import com.hszn.nbmh.user.api.feign.RemotePreventService;
 import com.hszn.nbmh.user.api.feign.RemoteThirdService;
-import com.hszn.nbmh.user.api.params.input.AnimalDoctorRegisterParam;
-import com.hszn.nbmh.user.api.params.input.NbmhBaseConfigParam;
-import com.hszn.nbmh.user.api.params.input.NbmhPreventStationParam;
-import com.hszn.nbmh.user.api.params.input.RegisterParam;
+import com.hszn.nbmh.user.api.params.input.*;
 import com.hszn.nbmh.user.api.params.out.CurUserInfo;
 import com.hszn.nbmh.user.api.params.out.LoginUser;
 import com.hszn.nbmh.user.service.INbmhAnimalDoctorDetailService;
@@ -355,6 +356,50 @@ public class NbmhUserController {
         }
         extraInfoService.updateById(userExtraInfo);
         return Result.ok();
+    }
+
+    @Inner(false)
+    @Operation(summary="查询防疫站旗下养殖户信息")
+    @PostMapping("/queryBreederList")
+    public Result queryBreederList(@RequestBody QueryRequest<UserPageParam> param) {
+        //返回结果集
+        List<CurUserInfo> curUserInfoList=new ArrayList<>();
+        //用户附属信息
+        LambdaQueryWrapper<NbmhUserExtraInfo> queryWrapper=new LambdaQueryWrapper<>();
+        if (!ObjectUtils.isEmpty(param.getQueryEntity())) {
+            //防疫站id
+            if (!ObjectUtils.isEmpty(param.getQueryEntity().getPreventStationId())) {
+                queryWrapper.eq(NbmhUserExtraInfo::getPreventStationId, param.getQueryEntity().getPreventStationId());
+            }
+            //防疫站id
+            if (!ObjectUtils.isEmpty(param.getQueryEntity().getType())) {
+                queryWrapper.eq(NbmhUserExtraInfo::getType, param.getQueryEntity().getType());
+            }
+        }
+        //分页
+        Page<NbmhUserExtraInfo> page=new Page<>(param.getPageNum(), param.getPageSize());
+        //排序
+        SortUtil.handlePageSort(param, page, param.getField(), param.getOrder(), true);
+        //获取数据集
+        IPage<NbmhUserExtraInfo> extraInfos=extraInfoService.page(page, queryWrapper);
+        List<Long> ids=new ArrayList<>();
+        if (!ObjectUtils.isEmpty(extraInfos.getRecords())) {
+            extraInfos.getRecords().forEach(ex -> {
+                ids.add(ex.getUserId());
+            });
+            List<NbmhUser> userLsit=userService.listByIds(ids);
+            userLsit.forEach(u -> {
+                extraInfos.getRecords().forEach(ex -> {
+                    if (u.getId().equals(ex.getUserId())) {
+                        CurUserInfo userInfo=new CurUserInfo();
+                        userInfo.setUser(u);
+                        userInfo.setExtraInfo(ex);
+                        curUserInfoList.add(userInfo);
+                    }
+                });
+            });
+        }
+        return Result.ok(curUserInfoList);
     }
 
 

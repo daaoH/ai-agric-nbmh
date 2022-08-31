@@ -174,4 +174,11 @@ public class NbmhUserExtraInfo implements Serializable {
     private String businessLicense;
 
 
+    /**
+     * 营业执照
+     */
+    @Schema(name="business_license", description="营业执照")
+    private Long  preventStationId;
+
+
 }
