@@ -170,15 +170,15 @@ public class NbmhUserExtraInfo implements Serializable {
     /**
      * 营业执照
      */
-    @Schema(name="business_license", description="营业执照")
+    @Schema(name="businessLicense", description="营业执照")
     private String businessLicense;
 
 
     /**
-     * 营业执照
+     * 防疫站id
      */
-    @Schema(name="business_license", description="营业执照")
-    private Long  preventStationId;
+    @Schema(name="preventStationId", description="防疫站id")
+    private Long preventStationId;
 
 
 }

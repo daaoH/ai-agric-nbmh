@@ -24,7 +24,7 @@ public class UserPageParam implements Serializable {
     /**
      * 用户类型-3站长 4防疫员 5养殖户  7稽查员
      */
-    @Schema(name="用户类型-3站长 4防疫员 5养殖户  7稽查员", description="type")
+    @Schema(name="用户类型 4防疫员+稽查员 5养殖户", description="type")
     private int type;
 
 
