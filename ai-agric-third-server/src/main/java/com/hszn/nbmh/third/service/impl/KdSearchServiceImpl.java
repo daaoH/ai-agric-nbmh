@@ -1,11 +1,11 @@
 package com.hszn.nbmh.third.service.impl;
 
+import cn.hutool.core.codec.Base64;
 import com.alibaba.fastjson.JSON;
 import com.hszn.nbmh.common.core.exception.ServiceException;
 import com.hszn.nbmh.third.config.KdSearchProperties;
 import com.hszn.nbmh.third.entity.KdSearchEntity;
 import com.hszn.nbmh.third.service.KdSearchService;
-import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

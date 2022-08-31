@@ -1,7 +1,7 @@
 package com.hszn.nbmh.user.service;
 
-import com.hszn.nbmh.user.api.entity.NbmhUser;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.hszn.nbmh.user.api.entity.NbmhUser;
 
 /**
  * <p>

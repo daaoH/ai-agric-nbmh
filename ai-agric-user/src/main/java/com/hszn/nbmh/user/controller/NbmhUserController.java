@@ -11,16 +11,19 @@ import com.hszn.nbmh.common.core.mould.CodeImageRequest;
 import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.common.core.utils.SnowFlakeIdUtil;
 import com.hszn.nbmh.common.security.annotation.Inner;
+import com.hszn.nbmh.user.api.entity.NbmhAnimalDoctorDetail;
 import com.hszn.nbmh.user.api.entity.NbmhUser;
 import com.hszn.nbmh.user.api.entity.NbmhUserCredentials;
 import com.hszn.nbmh.user.api.entity.NbmhUserExtraInfo;
 import com.hszn.nbmh.user.api.feign.RemotePreventService;
 import com.hszn.nbmh.user.api.feign.RemoteThirdService;
+import com.hszn.nbmh.user.api.params.input.AnimalDoctorRegisterParam;
 import com.hszn.nbmh.user.api.params.input.NbmhBaseConfigParam;
 import com.hszn.nbmh.user.api.params.input.NbmhPreventStationParam;
 import com.hszn.nbmh.user.api.params.input.RegisterParam;
 import com.hszn.nbmh.user.api.params.out.CurUserInfo;
 import com.hszn.nbmh.user.api.params.out.LoginUser;
+import com.hszn.nbmh.user.service.INbmhAnimalDoctorDetailService;
 import com.hszn.nbmh.user.service.INbmhUserCredentialsService;
 import com.hszn.nbmh.user.service.INbmhUserExtraInfoService;
 import com.hszn.nbmh.user.service.INbmhUserService;
@@ -59,6 +62,8 @@ public class NbmhUserController {
     private final INbmhUserService userService;
 
     private final INbmhUserExtraInfoService extraInfoService;
+
+    private final INbmhAnimalDoctorDetailService animalDoctorDetailService;
 
     private final INbmhUserCredentialsService userCredentialsService;
 
@@ -178,10 +183,11 @@ public class NbmhUserController {
         if (ObjectUtils.isEmpty(param.getUserName()) || ObjectUtils.isEmpty(param.getExtraInfo())) {
             return Result.failed(CommonEnum.PARAM_MISS.getMsg());
         }
+
         //获取用户用基础信息
         NbmhUser user=userService.getOne(Wrappers.<NbmhUser>query().lambda().eq(NbmhUser::getUserName, param.getUserName()));
         if (ObjectUtils.isEmpty(user)) {
-            return Result.failed("为获取到当前和用户信息!请先注册账号!谢谢!");
+            return Result.failed("未获取到当前和用户信息!请先注册账号!谢谢!");
         }
         //生成二维码基本参数
         param.getExtraInfo().setQrcode(this.generateQrCode(user.getId()));
@@ -313,15 +319,15 @@ public class NbmhUserController {
 
 
     @Transactional
-    @Operation(summary="防疫站站长-修改旗下人员")
+    @Operation(summary = "防疫站站长-修改旗下人员")
     @PutMapping("/psUpdateUser")
     public Result psUpdateUser(@RequestBody NbmhUserExtraInfo param) {
         if (ObjectUtils.isEmpty(param)) {
             return Result.failed(CommonEnum.PARAM_MISS.getMsg());
         }
         //存在则解锁原账号状态
-        NbmhUser user=userService.getOne(Wrappers.<NbmhUser>query().lambda().eq(NbmhUser::getId, param.getUserId()));
-        NbmhUserExtraInfo userExtraInfo=extraInfoService.getById(param.getId());
+        NbmhUser user = userService.getOne(Wrappers.<NbmhUser>query().lambda().eq(NbmhUser::getId, param.getUserId()));
+        NbmhUserExtraInfo userExtraInfo = extraInfoService.getById(param.getId());
         if (ObjectUtils.isEmpty(user) || ObjectUtils.isEmpty(userExtraInfo)) {
             return Result.failed(CommonEnum.DATA_UPDATE_FAILED.getMsg());
         }
@@ -331,7 +337,7 @@ public class NbmhUserController {
 
 
     @Transactional
-    @Operation(summary="防疫站站长删除旗下人员")
+    @Operation(summary = "防疫站站长删除旗下人员")
     @PutMapping("/psDeleteUser")
     public Result psDeleteUser(@RequestBody RegisterParam param) {
         if (ObjectUtils.isEmpty(param.getUserName()) || ObjectUtils.isEmpty(param.getExtraInfo())) {
@@ -342,8 +348,8 @@ public class NbmhUserController {
         //TODO 清空附属
 
         //存在则解锁原账号状态
-        NbmhUser user=userService.getOne(Wrappers.<NbmhUser>query().lambda().eq(NbmhUser::getUserName, param.getUserName()));
-        NbmhUserExtraInfo userExtraInfo=extraInfoService.getById(param.getExtraInfo().getId());
+        NbmhUser user = userService.getOne(Wrappers.<NbmhUser>query().lambda().eq(NbmhUser::getUserName, param.getUserName()));
+        NbmhUserExtraInfo userExtraInfo = extraInfoService.getById(param.getExtraInfo().getId());
         if (ObjectUtils.isEmpty(user) || ObjectUtils.isEmpty(userExtraInfo)) {
             return Result.failed(CommonEnum.DATA_UPDATE_FAILED.getMsg());
         }
@@ -351,6 +357,52 @@ public class NbmhUserController {
         return Result.ok();
     }
 
+
+    @Operation(summary = "兽医注册")
+    @PostMapping("/animalDoctorRegister")
+    public Result animalDoctorRegister(@RequestBody AnimalDoctorRegisterParam param) {
+
+        if (ObjectUtils.isEmpty(param.getLoginName()) || ObjectUtils.isEmpty(param.getExtraInfo()) || ObjectUtils.isEmpty(param.getExtraInfo())) {
+            return Result.failed(CommonEnum.PARAM_MISS.getMsg());
+        }
+
+        NbmhUser user;
+        if (param.getLoginType() == 0) {
+            user = userService.getOne(Wrappers.<NbmhUser>query().lambda().eq(NbmhUser::getUserName, param.getLoginName()));
+        } else {
+            user = userService.getOne(Wrappers.<NbmhUser>query().lambda().eq(NbmhUser::getPhone, param.getLoginName()));
+        }
+
+        if (ObjectUtils.isEmpty(user)) {
+            return Result.failed("未获取到当前用户信息!请先注册账号!谢谢!");
+        }
+
+        param.getExtraInfo().setParentId(0L).setQrcode(this.generateQrCode(user.getId()));
+
+        NbmhUserExtraInfo userExtraInfo = this.getUserExtraInfo(param.getExtraInfo().getType(), user.getId());
+        if (ObjectUtils.isEmpty(userExtraInfo)) {
+
+            //保存用户扩展信息
+            extraInfoService.save(param.getExtraInfo().setUserId(user.getId()).setType(2).setCreateTime(new Date()).setAuthStatus(2).setStatus(0));
+        } else {
+
+            //更新用户扩展信息
+            extraInfoService.updateById(param.getExtraInfo().setId(userExtraInfo.getId()).setStatus(0).setUpdateTime(new Date()));
+        }
+
+        NbmhAnimalDoctorDetail animalDoctorDetail = this.getAnimalDoctorDetail(user.getId());
+        if (ObjectUtils.isEmpty(animalDoctorDetail)) {
+
+            //保存兽医专属信息
+            animalDoctorDetailService.save(param.getAnimalDoctorDetail().setUserId(user.getId()).setCreateTime(new Date()).setStatus(0));
+        } else {
+
+            //更新兽医专属信息
+            animalDoctorDetailService.updateById(param.getAnimalDoctorDetail().setId(animalDoctorDetail.getId()).setStatus(0).setUpdateTime(new Date()));
+        }
+
+        return Result.ok();
+    }
 
     /**
      * 检验用户是否存在
@@ -449,6 +501,20 @@ public class NbmhUserController {
         queryWrapper.eq(NbmhUserExtraInfo::getUserId, userId);
 
         return extraInfoService.getOne(queryWrapper);
+    }
+
+    /**
+     * 校验兽医附属信息是否存在
+     *
+     * @param userId 兽医用户id
+     */
+    private NbmhAnimalDoctorDetail getAnimalDoctorDetail(Long userId) {
+        //添加条件
+        LambdaQueryWrapper<NbmhAnimalDoctorDetail> queryWrapper = new LambdaQueryWrapper<>();
+        //用户id
+        queryWrapper.eq(NbmhAnimalDoctorDetail::getUserId, userId);
+
+        return animalDoctorDetailService.getOne(queryWrapper);
     }
 
 }

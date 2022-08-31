@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hszn.nbmh.user.mapper.NbmhAnimalDoctorDetailMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hszn.nbmh.user.entity.NbmhAnimalDoctorDetail">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="admissions" property="admissions" />
+        <result column="doctor_type" property="doctorType" />
+        <result column="good_animal_type" property="goodAnimalType" />
+        <result column="good_ disease" property="good disease" />
+        <result column="certificate_no" property="certificateNo" />
+        <result column="vedio_medical_price" property="vedioMedicalPrice" />
+        <result column="medical_price" property="medicalPrice" />
+        <result column="door_medical_price" property="doorMedicalPrice" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="status" property="status" />
+    </resultMap>
+
+</mapper>

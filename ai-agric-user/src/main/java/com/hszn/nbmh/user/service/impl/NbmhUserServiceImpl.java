@@ -1,13 +1,13 @@
 package com.hszn.nbmh.user.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hszn.nbmh.user.api.entity.NbmhUser;
 import com.hszn.nbmh.user.mapper.NbmhUserMapper;
 import com.hszn.nbmh.user.service.INbmhUserService;
-
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.annotation.Resource;
 
 /**
@@ -25,7 +25,5 @@ public class NbmhUserServiceImpl extends ServiceImpl<NbmhUserMapper, NbmhUser> i
 
     @Resource
     private NbmhUserMapper nbmhUserMapper;
-
-
 
 }
