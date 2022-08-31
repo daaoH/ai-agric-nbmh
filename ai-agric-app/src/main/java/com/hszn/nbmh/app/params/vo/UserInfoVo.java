@@ -1,5 +1,7 @@
 package com.hszn.nbmh.app.params.vo;
 
+import com.hszn.nbmh.user.api.entity.NbmhUser;
+import com.hszn.nbmh.user.api.entity.NbmhUserExtraInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -29,4 +31,6 @@ public class UserInfoVo implements Serializable {
     private String attributes;
     private boolean mutilRole;
     private List<Integer> userRoles;
+    private NbmhUser nbmhUser;
+    private List<NbmhUserExtraInfo> extraInfos;
 }

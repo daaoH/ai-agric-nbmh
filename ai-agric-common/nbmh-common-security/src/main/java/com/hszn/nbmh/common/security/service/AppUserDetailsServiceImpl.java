@@ -30,7 +30,7 @@ public class AppUserDetailsServiceImpl implements CustomUserDetailsService {
 
 		Result<LoginUser> result = remoteUserService.queryUserByPhone(phone, SecurityConstants.FROM_IN);
 
-		UserDetails userDetails = getUserDetails(result);
+		UserDetails userDetails = getAppUserDetails(result);
 
 		return userDetails;
 	}

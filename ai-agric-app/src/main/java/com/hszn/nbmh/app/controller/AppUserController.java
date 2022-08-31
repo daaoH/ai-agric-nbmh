@@ -111,8 +111,8 @@ public class AppUserController {
                 if (ObjectUtils.isNotEmpty(userInfo)) {
                     retData.setMutilRole(userInfo.isMutilRole());
                     retData.setRoles(userInfo.getUserRoles());
-                    retData.setUserInfo(userInfo);
-
+                    retData.setUserInfo(userInfo.getNbmhUser());
+                    retData.setExtraInfos(userInfo.getExtraInfos());
                 } else {
                     return Result.failed("用户数据为空");
                 }
@@ -138,7 +138,7 @@ public class AppUserController {
         Result validateRet = smsService.validateCode(phone, code);
         if (validateRet.getCode() == 200) {
             Map<String, Object> validateEntity = (LinkedHashMap) validateRet.getData();
-            if (!(boolean) validateEntity.get("validateResult")) {
+            if ((boolean) validateEntity.get("validateResult")) {
                 //验证码验证正确，检查手机号是否存在
                 Result existRet = userService.checkUserExist(phone, SecurityConstants.FROM);
                 if (existRet.getCode() == 200) {

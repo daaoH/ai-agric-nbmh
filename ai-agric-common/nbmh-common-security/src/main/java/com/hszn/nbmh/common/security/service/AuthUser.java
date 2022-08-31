@@ -1,5 +1,7 @@
 package com.hszn.nbmh.common.security.service;
 
+import com.hszn.nbmh.user.api.entity.NbmhUser;
+import com.hszn.nbmh.user.api.entity.NbmhUserExtraInfo;
 import com.hszn.nbmh.user.api.params.out.CurUserInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,12 +34,20 @@ public class AuthUser extends User implements OAuth2AuthenticatedPrincipal {
     @Getter
     private final List<Integer> userRoles;
 
-    public AuthUser(Long id, String username,  String password, String phone, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities, boolean mutilRole, List<Integer> userRoles) {
+    @Getter
+    private final NbmhUser nbmhUser;
+
+    @Getter
+    private final List<NbmhUserExtraInfo> extraInfos;
+
+    public AuthUser(Long id, String username,  String password, String phone, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities, boolean mutilRole, List<Integer> userRoles, NbmhUser nbmhUser, List<NbmhUserExtraInfo> extraInfos) {
         super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
         this.id = id;
         this.phone = phone;
         this.userRoles = userRoles;
         this.mutilRole = mutilRole;
+        this.nbmhUser = nbmhUser;
+        this.extraInfos = extraInfos;
     }
 
 

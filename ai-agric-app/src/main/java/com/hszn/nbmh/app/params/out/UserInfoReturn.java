@@ -2,6 +2,7 @@ package com.hszn.nbmh.app.params.out;
 
 import com.hszn.nbmh.app.params.vo.UserInfoVo;
 import com.hszn.nbmh.user.api.entity.NbmhUser;
+import com.hszn.nbmh.user.api.entity.NbmhUserExtraInfo;
 import com.hszn.nbmh.user.api.params.out.CurUserInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -19,7 +20,7 @@ import java.util.List;
 public class UserInfoReturn {
 
     @Schema(description = "用户信息")
-    private UserInfoVo userInfo;
+    private NbmhUser userInfo;
 
     @Schema(description = "token")
     private String token;
@@ -32,4 +33,7 @@ public class UserInfoReturn {
 
     @Schema(description = "角色数组　1普通用户 2专家 3站长 4防疫员 5养殖户 6商家")
     private List<Integer> roles;
+
+    @Schema(description = "用户扩展信息")
+    private List<NbmhUserExtraInfo> extraInfos;
 }
