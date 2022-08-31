@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hszn.nbmh.shop.mapper.NbmhShopInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hszn.nbmh.shop.api.entity.NbmhShopInfo">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="tenant_id" property="tenantId"/>
+        <result column="logo_url" property="logoUrl"/>
+        <result column="shop_name" property="shopName"/>
+        <result column="shop_type" property="shopType"/>
+        <result column="company_license" property="companyLicense"/>
+        <result column="company_name" property="companyName"/>
+        <result column="company_code" property="companyCode"/>
+        <result column="company_tel" property="companyTel"/>
+        <result column="company_address" property="companyAddress"/>
+        <result column="shop_address" property="shopAddress"/>
+        <result column="longitude" property="longitude"/>
+        <result column="latitude" property="latitude"/>
+        <result column="company_person" property="companyPerson"/>
+        <result column="legal_person_no" property="legalPersonNo"/>
+        <result column="legal_person_id_type" property="legalPersonIdType"/>
+        <result column="person_id_front" property="personIdFront"/>
+        <result column="person_id_back" property="personIdBack"/>
+        <result column="business_type" property="businessType"/>
+        <result column="business_model" property="businessModel"/>
+        <result column="business_year" property="businessYear"/>
+        <result column="shop_team" property="shopTeam"/>
+        <result column="status" property="status"/>
+        <result column="auth_status" property="authStatus"/>
+        <result column="due_time" property="dueTime"/>
+        <result column="is_due" property="isDue"/>
+        <result column="shop_template_id" property="shopTemplateId"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="business_hours" property="businessHours"/>
+        <result column="shop_phone" property="shopPhone"/>
+        <result column="pay_qrcode" property="payQrcode"/>
+        <result column="shop_qrcode" property="shopQrcode"/>
+        <result column="create_time" property="createTime"/>
+        <result column="remark" property="remark"/>
+    </resultMap>
+
+</mapper>
