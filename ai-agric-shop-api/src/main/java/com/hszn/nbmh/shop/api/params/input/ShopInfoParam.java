@@ -28,6 +28,12 @@ public class ShopInfoParam {
     private Long userId;
 
     /**
+     * 商户类型
+     */
+    @Schema(description = "用户类型")
+    private String userType;
+
+    /**
      * 租户id
      */
     @Schema(description = "租户id")
@@ -57,6 +63,18 @@ public class ShopInfoParam {
      */
     @Schema(description = "营业执照")
     private String companyLicense;
+
+    /**
+     * 兽药经营许可证
+     */
+    @Schema(description = "兽药经营许可证")
+    private String veterinaryDrugLicense;
+
+    /**
+     * GSP验收通过证
+     */
+    @Schema(description = "GSP验收通过证")
+    private String gspPassport;
 
     /**
      * 企业名称
