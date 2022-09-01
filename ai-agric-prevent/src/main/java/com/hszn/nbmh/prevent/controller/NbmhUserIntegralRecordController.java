@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -36,12 +37,10 @@ public class NbmhUserIntegralRecordController {
 
     @PostMapping("/submit")
     @Operation(summary="提交积分记录")
-    public Result submit(@RequestBody NbmhUserIntegralRecord param) {
-        param.setCreateTime(new Date());
-        boolean ret=nbmhUserIntegralRecordService.save(param);
+    public Result submit(@RequestBody List<NbmhUserIntegralRecord> params) {
+        boolean ret=nbmhUserIntegralRecordService.saveBatch(params);
         // 提交积分记录
         if (ret) {
-            //TODO 用户积分同步增加
             return Result.ok();
         }
         return Result.failed(CommonEnum.DATA_ADD_FAILED.getMsg());

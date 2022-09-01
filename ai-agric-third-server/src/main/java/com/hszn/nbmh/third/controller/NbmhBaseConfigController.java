@@ -45,7 +45,7 @@ public class NbmhBaseConfigController {
     }
 
     @GetMapping("/getBySubject/{subject}")
-    @Operation(summary="获取分页数据")
+    @Operation(summary="根据业务类型获取数据集")
     public Result getBySubject(@PathVariable("subject") String subject) {
         return Result.ok(this.baseConfigService.getBySubject(subject));
     }

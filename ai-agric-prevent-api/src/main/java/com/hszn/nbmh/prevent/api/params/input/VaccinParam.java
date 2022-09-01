@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hszn.nbmh.prevent.api.entity.NbmhVaccin;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -98,12 +99,13 @@ public class VaccinParam extends NbmhVaccin implements Serializable {
     private Long preventStationId;
 
 
-
     /**
      * 防疫时间
      */
     @Schema(name="vaccinDate", description="防疫时间")
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
+
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(pattern="yyyy-MM-dd")
     private Date vaccinDate;
 
 }

@@ -24,6 +24,13 @@
         </dependency>
 
         <dependency>
+            <groupId>com.hszn.nbmh.prevent.api</groupId>
+            <artifactId>ai-agric-prevent-api</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+
+        <dependency>
             <groupId>com.hszn.nbmh.common.log</groupId>
             <artifactId>nbmh-common-log</artifactId>
             <version>1.0</version>

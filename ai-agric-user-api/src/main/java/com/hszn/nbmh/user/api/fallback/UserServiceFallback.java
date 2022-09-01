@@ -2,6 +2,7 @@ package com.hszn.nbmh.user.api.fallback;
 
 import com.hszn.nbmh.common.core.enums.CommonEnum;
 import com.hszn.nbmh.common.core.utils.Result;
+import com.hszn.nbmh.user.api.entity.NbmhUser;
 import com.hszn.nbmh.user.api.feign.RemoteUserService;
 import com.hszn.nbmh.user.api.params.input.RegisterParam;
 import com.hszn.nbmh.user.api.params.out.CurUserInfo;
@@ -35,6 +36,11 @@ public class UserServiceFallback implements RemoteUserService {
     @Override
     public Result registerUser(RegisterParam param) {
         return Result.failed(CommonEnum.DATA_ADD_FAILED.getMsg());
+    }
+
+    @Override
+    public Result integralUpdate(NbmhUser param) {
+        return Result.failed(CommonEnum.FALL_BACK_MSG.getMsg());
     }
 
 }

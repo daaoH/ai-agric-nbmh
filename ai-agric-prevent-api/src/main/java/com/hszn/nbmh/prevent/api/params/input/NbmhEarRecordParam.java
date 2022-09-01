@@ -28,7 +28,7 @@ public class NbmhEarRecordParam extends NbmhEarRecord implements Serializable {
      */
     @Schema(name = "createTimeParam", description = "创建时间")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-MM", timezone = "GMT+8", shape = JsonFormat.Shape.STRING)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8", shape = JsonFormat.Shape.STRING)
     private Date createTimeParam;
 
 }

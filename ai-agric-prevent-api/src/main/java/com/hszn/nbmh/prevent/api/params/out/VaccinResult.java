@@ -35,6 +35,12 @@ public class VaccinResult {
     private String userAvatarUrl;
 
     /**
+     * 养殖地址
+     */
+    @Schema(name="userAddress", description="养殖户头像")
+    private String userAddress;
+
+    /**
      * 养殖电话
      */
     @Schema(name="userAvatarUrl", description="养殖电话")
@@ -52,6 +58,12 @@ public class VaccinResult {
      */
     @Schema(name="animalType", description="动物类型(种类 0猪 1牛)")
     private int animalType;
+
+    /**
+     * 身份证号
+     */
+    @Schema(name="farmerIdNo", description="身份证号")
+    private String farmerIdNo;
 
 
     /**
