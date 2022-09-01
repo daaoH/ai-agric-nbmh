@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hszn.nbmh.prevent.mapper.NbmhMedicalAcceptMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hszn.nbmh.prevent.api.entity.NbmhMedicalAccept">
+        <id column="id" property="id" />
+        <result column="report_number" property="reportNumber" />
+        <result column="doctor_id" property="doctorId" />
+        <result column="doctor_name" property="doctorName" />
+        <result column="doctor_job_tags" property="doctorJobTags" />
+        <result column="work_year" property="workYear" />
+        <result column="skill_desc" property="skillDesc" />
+        <result column="doctor_avatar" property="doctorAvatar" />
+        <result column="accept_order_time" property="acceptOrderTime" />
+        <result column="meeting_admin_status" property="meetingAdminStatus" />
+        <result column="order_status" property="orderStatus" />
+        <result column="reject_ reason" property="reject reason" />
+        <result column="medical_result" property="medicalResult" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="status" property="status" />
+    </resultMap>
+
+</mapper>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hszn.nbmh.prevent.mapper.NbmhVideoLessonMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hszn.nbmh.prevent.api.entity.NbmhVideoLesson">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="user_name" property="userName" />
+        <result column="user_avatar" property="userAvatar" />
+        <result column="video_sn" property="videoSn" />
+        <result column="video_title" property="videoTitle" />
+        <result column="category_id" property="categoryId" />
+        <result column="video_cover" property="videoCover" />
+        <result column="video_url" property="videoUrl" />
+        <result column="try_look_link" property="tryLookLink" />
+        <result column="video_desc" property="videoDesc" />
+        <result column="keywords" property="keywords" />
+        <result column="is_on_sale" property="isOnSale" />
+        <result column="sort_order" property="sortOrder" />
+        <result column="video_price" property="videoPrice" />
+        <result column="sell_num" property="sellNum" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="status" property="status" />
+    </resultMap>
+
+</mapper>
