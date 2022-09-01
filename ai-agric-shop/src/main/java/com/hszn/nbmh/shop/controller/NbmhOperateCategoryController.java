@@ -36,8 +36,8 @@ public class NbmhOperateCategoryController {
     @Inner(value = false)
     @GetMapping("/search")
     @Operation(description = "查询经营类目,默认返回第一层数据")
-    public Result<List<NbmhOperateCategory>> search(OperateCategoryParam param) {
-        return Result.ok(categoryService.search(param));
+    public Result<List<NbmhOperateCategory>> search() {
+        return Result.ok(categoryService.search(null));
     }
 
 

@@ -2,6 +2,9 @@ package com.hszn.nbmh.order.mapper;
 
 import com.hszn.nbmh.order.api.entity.NbmhOrderItem;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,12 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface NbmhOrderItemMapper extends BaseMapper<NbmhOrderItem> {
 
+    /**
+     * 根据用户Id及name获取明细
+     *
+     * @param name
+     * @param userId
+     * @return list
+     */
+    List<NbmhOrderItem> findByNmAndUid(@Param("name") String name, @Param("userId") String userId);
 }

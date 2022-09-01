@@ -3,6 +3,9 @@ package com.hszn.nbmh.order.api.entity;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.io.Serializable;
+import java.util.List;
+
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -184,6 +187,9 @@ public class NbmhOrder implements Serializable {
      * 删除状态：0正常 -1删除
      */
     private Integer status;
+
+    @TableField(exist = false)
+    private List<NbmhOrderItem> orderItems;
 
 
 }

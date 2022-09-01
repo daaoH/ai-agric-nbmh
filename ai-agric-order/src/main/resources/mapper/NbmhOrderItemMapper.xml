@@ -4,28 +4,44 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.hszn.nbmh.order.api.entity.NbmhOrderItem">
-        <id column="id" property="id" />
-        <result column="shop_id" property="shopId" />
-        <result column="tenant_id" property="tenantId" />
-        <result column="order_id" property="orderId" />
-        <result column="goods_id" property="goodsId" />
-        <result column="goods_pic" property="goodsPic" />
-        <result column="goods_name" property="goodsName" />
-        <result column="goods_sn" property="goodsSn" />
-        <result column="goods_price" property="goodsPrice" />
-        <result column="goods_original_price" property="goodsOriginalPrice" />
-        <result column="goods_quantity" property="goodsQuantity" />
-        <result column="goods_sku_id" property="goodsSkuId" />
-        <result column="goods_sku_code" property="goodsSkuCode" />
-        <result column="promotion_amount" property="promotionAmount" />
-        <result column="coupon_amount" property="couponAmount" />
-        <result column="real_amount" property="realAmount" />
-        <result column="specs" property="specs" />
-        <result column="provider_id" property="providerId" />
-        <result column="refund_amount" property="refundAmount" />
-        <result column="create_time" property="createTime" />
-        <result column="update_time" property="updateTime" />
-        <result column="status" property="status" />
+        <id column="id" property="id"/>
+        <result column="shop_id" property="shopId"/>
+        <result column="tenant_id" property="tenantId"/>
+        <result column="order_id" property="orderId"/>
+        <result column="goods_id" property="goodsId"/>
+        <result column="goods_pic" property="goodsPic"/>
+        <result column="goods_name" property="goodsName"/>
+        <result column="goods_sn" property="goodsSn"/>
+        <result column="goods_price" property="goodsPrice"/>
+        <result column="goods_original_price" property="goodsOriginalPrice"/>
+        <result column="goods_quantity" property="goodsQuantity"/>
+        <result column="goods_sku_id" property="goodsSkuId"/>
+        <result column="goods_sku_code" property="goodsSkuCode"/>
+        <result column="promotion_amount" property="promotionAmount"/>
+        <result column="coupon_amount" property="couponAmount"/>
+        <result column="real_amount" property="realAmount"/>
+        <result column="specs" property="specs"/>
+        <result column="provider_id" property="providerId"/>
+        <result column="refund_amount" property="refundAmount"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="status" property="status"/>
     </resultMap>
+    <sql id="sqlField">
+        oi.id, oi.shop_id, oi.tenant_id, oi.order_id, oi.goods_id, oi.goods_pic, oi.goods_name, oi.goods_sn,
+            oi.goods_price, oi.goods_original_price, oi.goods_quantity, oi.goods_sku_id, oi.goods_sku_code,
+            oi.promotion_amount, oi.coupon_amount, oi.real_amount, oi.specs, oi.provider_id, oi.refund_amount,
+            oi.create_time, oi.update_time, oi.status
+    </sql>
+
+    <select id="findByNmAndUid" resultType="com.hszn.nbmh.order.api.entity.NbmhOrderItem">
+        select
+            <include refid="sqlField" />
+        from nbmh_order o, nbmh_order_item oi
+        <where>
+            o.id = oi.order_id
+            and o.user_id = #{userId} and oi.goods_name like concat('%',#{name},'%')
+        </where>
+    </select>
 
 </mapper>

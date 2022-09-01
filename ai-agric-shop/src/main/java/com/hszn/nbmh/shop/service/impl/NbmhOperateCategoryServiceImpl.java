@@ -1,5 +1,6 @@
 package com.hszn.nbmh.shop.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hszn.nbmh.shop.api.entity.NbmhOperateCategory;
@@ -29,11 +30,13 @@ public class NbmhOperateCategoryServiceImpl extends ServiceImpl<NbmhOperateCateg
 
     @Override
     public List<NbmhOperateCategory> search(OperateCategoryParam param) {
-        if (!StringUtils.hasText(param.getName()) && param.getParentId() == null) {
-            param.setParentId(-1L);
-        }
-        NbmhOperateCategory category = new NbmhOperateCategory();
-        BeanUtils.copyProperties(param, category);
-        return list(Wrappers.query(category));
+        List<NbmhOperateCategory> list = findByParentId(-1L);
+        list.forEach(e -> e.setChild(findByParentId(e.getId())));
+        return list;
+    }
+
+    public List<NbmhOperateCategory> findByParentId(Long parentId) {
+        LambdaQueryWrapper<NbmhOperateCategory> wrapper = Wrappers.lambdaQuery();
+        return list(wrapper.eq(NbmhOperateCategory::getParentId, parentId));
     }
 }
