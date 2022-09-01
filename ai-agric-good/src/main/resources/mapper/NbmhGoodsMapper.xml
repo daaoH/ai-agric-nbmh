@@ -5,26 +5,56 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.hszn.nbmh.good.api.entity.NbmhGoods">
         <id column="id" property="id" />
+        <result column="tenant_id" property="tenantId" />
+        <result column="shop_id" property="shopId" />
         <result column="goods_sn" property="goodsSn" />
         <result column="name" property="name" />
+        <result column="sub_title" property="subTitle" />
+        <result column="deliver_province" property="deliverProvince" />
+        <result column="deliver_city" property="deliverCity" />
+        <result column="deliver_town" property="deliverTown" />
         <result column="category_id" property="categoryId" />
         <result column="brand_id" property="brandId" />
-        <result column="gallery" property="gallery" />
+        <result column="freight_template_id" property="freightTemplateId" />
+        <result column="album_pics" property="albumPics" />
+        <result column="pic_url" property="picUrl" />
+        <result column="video_url" property="videoUrl" />
         <result column="keywords" property="keywords" />
         <result column="brief" property="brief" />
+        <result column="sale_describe" property="saleDescribe" />
         <result column="is_on_sale" property="isOnSale" />
         <result column="sort_order" property="sortOrder" />
-        <result column="pic_url" property="picUrl" />
+        <result column="unit" property="unit" />
+        <result column="price" property="price" />
+        <result column="original_price" property="originalPrice" />
         <result column="share_url" property="shareUrl" />
+        <result column="recommend" property="recommend" />
         <result column="is_new" property="isNew" />
         <result column="is_hot" property="isHot" />
-        <result column="unit" property="unit" />
-        <result column="wholesale_price" property="wholesalePrice" />
-        <result column="retail_price" property="retailPrice" />
+        <result column="sale_num" property="saleNum" />
+        <result column="comment_num" property="commentNum" />
+        <result column="grade" property="grade" />
+        <result column="stock" property="stock" />
         <result column="detail" property="detail" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
         <result column="status" property="status" />
     </resultMap>
 
+    <select id="queryGoodsByParams" resultMap="BaseResultMap">
+        SELECT * FROM nbmh_goods WHERE status = 0
+        <if test="params.catogeryId != null">
+            AND category_id = #{params.catogeryId}
+        </if>
+        <if test="params.province != null and params.province != ''">
+            AND deliver_province = #{params.province}
+        </if>
+        <if test="params.city != null and params.city != ''">
+            AND deliver_city = #{params.city}
+        </if>
+        <if test="params.town != null and params.town != ''">
+            AND deliver_town = #{params.town}
+        </if>
+        ORDER BY create_time DESC
+    </select>
 </mapper>

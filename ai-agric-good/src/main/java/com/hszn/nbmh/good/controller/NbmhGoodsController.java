@@ -11,6 +11,7 @@ import com.hszn.nbmh.common.security.annotation.Inner;
 import com.hszn.nbmh.good.api.entity.NbmhComment;
 import com.hszn.nbmh.good.api.entity.NbmhGoods;
 import com.hszn.nbmh.good.api.entity.NbmhGoodsAttribute;
+import com.hszn.nbmh.good.api.params.input.QueryGoodsParams;
 import com.hszn.nbmh.good.api.params.out.GoodDetailReturn;
 import com.hszn.nbmh.good.api.params.vo.CommentVo;
 import com.hszn.nbmh.good.service.*;
@@ -50,6 +51,9 @@ public class NbmhGoodsController {
     private INbmhGoodsService goodsService;
 
     @Autowired
+    private INbmhGoodsSkuService skuService;
+
+    @Autowired
     private INbmhGoodsSpecificationService specService;
 
     @Autowired
@@ -73,8 +77,8 @@ public class NbmhGoodsController {
         //获取商品属性
         Callable<List> goodAttributeCallable = () -> attributeService.list(Wrappers.<NbmhGoodsAttribute>query().lambda().eq(NbmhGoodsAttribute::getGoodsId, goodId).eq(NbmhGoodsAttribute::getStatus, 0));
 
-        //获取商品规格
-        Callable<List> specsCallable = () -> specService.getSpecsVoList(goodId);
+        //获取商品sku
+        Callable<List> skuCallable = () -> skuService.querySkuByGoodId(goodId);
 
         //评论
         Callable<CommentVo> commentsCallable = () -> {
@@ -100,18 +104,18 @@ public class NbmhGoodsController {
         });
 
         FutureTask<List> goodAttributeTask = new FutureTask<>(goodAttributeCallable);
-        FutureTask<List> specsTask = new FutureTask<>(specsCallable);
+        FutureTask<List> skuTask = new FutureTask<>(skuCallable);
         FutureTask<CommentVo> commentsTask = new FutureTask<CommentVo>(commentsCallable);
 
         executor.execute(goodAttributeTask);
-        executor.execute(specsTask);
+        executor.execute(skuTask);
         executor.execute(commentsTask);
 
         GoodDetailReturn data = new GoodDetailReturn();
         try{
             data.setGoods(good);
             data.setGoodsAttribute(goodAttributeTask.get());
-            data.setSpecification(specsTask.get());
+            data.setSkus(skuTask.get());
             data.setComments(commentsTask.get());
 
         }catch (Exception e){
@@ -126,12 +130,31 @@ public class NbmhGoodsController {
     @Operation(description = "根据类别id获取商品列表")
     @Parameter(description = "商品类别id")
     @PostMapping("/queryGoodsByCategoryId")
-    public Result<List<NbmhGoods>> queryGoodsByCategoryId(@RequestParam("categoryId") Integer categoryId){
-        List<NbmhGoods> goods = goodsService.list(Wrappers.<NbmhGoods>query().lambda().eq(NbmhGoods::getCategoryId, categoryId).eq(NbmhGoods::getStatus, 0));
-        if(CollectionUtils.isNotEmpty(goods)){
+    public Result<IPage<NbmhGoods>> queryGoodsByCategoryId(@RequestParam("categoryId") Integer categoryId,
+                                                          @RequestParam(value = "pageNum" ,defaultValue = "1", required = false) Integer pageNum,
+                                                          @RequestParam(value = "pageSize" ,defaultValue = "12", required = false) Integer pageSize){
+
+        IPage<NbmhGoods> goods = goodsService.page(new Page<>(pageNum, pageSize), Wrappers.<NbmhGoods>query().lambda().eq(NbmhGoods::getCategoryId, categoryId).eq(NbmhGoods::getStatus, 0));
+        if(CollectionUtils.isNotEmpty(goods.getRecords())){
             return Result.ok(goods);
         }
 
         return Result.failed(CommonEnum.DATA_NOT_EXIST.getMsg());
     }
+
+
+    @Inner(false)
+    @Operation(description = "根据参数取筛选商品")
+    @PostMapping("/queryGoodsByParams")
+    public Result<IPage<NbmhGoods>> queryGoodsByParams(@RequestBody QueryGoodsParams params, @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum, @RequestParam(value = "pageSize", defaultValue = "12") Integer pageSize){
+
+        IPage<NbmhGoods> goods = goodsService.queryGoodsByParams(new Page<>(pageNum, pageSize), params);
+        if(CollectionUtils.isNotEmpty(goods.getRecords())){
+            return Result.ok(goods);
+        }
+
+        return Result.failed(CommonEnum.DATA_NOT_EXIST.getMsg());
+    }
+
+
 }

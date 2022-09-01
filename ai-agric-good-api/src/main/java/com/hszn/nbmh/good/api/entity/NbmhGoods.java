@@ -16,9 +16,9 @@ import lombok.EqualsAndHashCode;
  * </p>
  *
  * @author yuan
- * @since 2022-08-25
+ * @since 2022-09-01
  */
-@Schema(description = "商品信息")
+@Schema(description = "商品基本信息")
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class NbmhGoods implements Serializable {
@@ -30,6 +30,16 @@ public class NbmhGoods implements Serializable {
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
+
+    /**
+     * 租户id
+     */
+    private String tenantId;
+
+    /**
+     * 店铺id
+     */
+    private Long shopId;
 
     /**
      * 商品编号
@@ -44,6 +54,31 @@ public class NbmhGoods implements Serializable {
     private String name;
 
     /**
+     * 商品副标题
+     */
+    @Schema(description = "商品副标题")
+    private String subTitle;
+
+
+    /**
+     * 发货地省
+     */
+    @Schema(description = "发货地省")
+    private String deliverProvince;
+
+    /**
+     * 发货地市
+     */
+    @Schema(description = "发货地市")
+    private String deliverCity;
+
+    /**
+     * 发货地县/区
+     */
+    @Schema(description = "发货地县/区")
+    private String deliverTown;
+
+    /**
      * 商品所属类目ID
      */
     @Schema(description = "商品所属类目ID")
@@ -56,15 +91,33 @@ public class NbmhGoods implements Serializable {
     private Integer brandId;
 
     /**
-     * 商品宣传图片列表，采用JSON数组格式
+     * 运费模板ID
      */
-    @Schema(description = "商品宣传图片")
-    private String gallery;
+    @Schema(description = "运费模板ID")
+    private Integer freightTemplateId;
+
+    /**
+     * 图片组 json保存
+     */
+    @Schema(description = "图片组 json保存")
+    private String albumPics;
+
+    /**
+     * 商品图片
+     */
+    @Schema(description = "商品图片")
+    private String picUrl;
+
+    /**
+     * 视频url
+     */
+    @Schema(description = "视频url")
+    private String videoUrl;
 
     /**
      * 商品关键字，采用逗号间隔
      */
-    @Schema(description = "商品关键字")
+    @Schema(description = "商品关键字，采用逗号间隔")
     private String keywords;
 
     /**
@@ -72,6 +125,12 @@ public class NbmhGoods implements Serializable {
      */
     @Schema(description = "商品简介")
     private String brief;
+
+    /**
+     * 卖点描述
+     */
+    @Schema(description = "卖点描述")
+    private String saleDescribe;
 
     /**
      * 是否上架
@@ -86,10 +145,22 @@ public class NbmhGoods implements Serializable {
     private Integer sortOrder;
 
     /**
-     * 商品页面商品图片
+     * 商品单位，例如件、盒
      */
-    @Schema(description = "商品图片")
-    private String picUrl;
+    @Schema(description = "商品单位")
+    private String unit;
+
+    /**
+     * 实售价
+     */
+    @Schema(description = "实售价")
+    private BigDecimal price;
+
+    /**
+     * 指导价（划线价）
+     */
+    @Schema(description = "指导价（划线价）")
+    private BigDecimal originalPrice;
 
     /**
      * 商品分享海报
@@ -98,34 +169,46 @@ public class NbmhGoods implements Serializable {
     private String shareUrl;
 
     /**
-     * 是否新品首发，如果设置则可以在新品首发页面展示
+     * 是否为推荐商品
      */
-    @Schema(description = "是否新品首发")
+    @Schema(description = "是否为推荐商品")
+    private Boolean recommend;
+
+    /**
+     * 是否新品
+     */
+    @Schema(description = "是否新品")
     private Boolean isNew;
 
     /**
-     * 是否人气推荐，如果设置则可以在人气推荐页面展示
+     * 是否热门产品
      */
-    @Schema(description = "是否人气推荐")
+    @Schema(description = "是否热门产品")
     private Boolean isHot;
 
     /**
-     * 商品单位，例如件、盒
+     * 销量
      */
-    @Schema(description = "商品单位，例如件、盒")
-    private String unit;
+    @Schema(description = "销量")
+    private Integer saleNum;
 
     /**
-     * 批发价格
+     * 评价数量
      */
-    @Schema(description = "批发价格")
-    private BigDecimal wholesalePrice;
+    @Schema(description = "评价数量")
+    private Integer commentNum;
 
     /**
-     * 零售价格
+     * 商品好评率
      */
-    @Schema(description = "零售价格")
-    private BigDecimal retailPrice;
+    @Schema(description = "商品好评率")
+    private Double grade;
+
+    /**
+     * 库存
+     */
+    @Schema(description = "库存")
+    private Integer stock;
 
     /**
      * 商品详情
@@ -146,10 +229,10 @@ public class NbmhGoods implements Serializable {
     private Date updateTime;
 
     /**
-     * 状态
+     * 状态 0正常 -1删除
      */
     @Schema(description = "状态 0正常 -1删除")
-    private Boolean status;
+    private Integer status;
 
 
 }

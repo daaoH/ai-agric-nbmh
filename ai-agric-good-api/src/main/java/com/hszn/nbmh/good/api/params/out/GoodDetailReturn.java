@@ -5,6 +5,7 @@ import com.hszn.nbmh.good.api.entity.NbmhGoods;
 import com.hszn.nbmh.good.api.entity.NbmhGoodsAttribute;
 import com.hszn.nbmh.good.api.entity.NbmhGoodsSpecification;
 import com.hszn.nbmh.good.api.params.vo.CommentVo;
+import com.hszn.nbmh.good.api.params.vo.SkuVo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -32,4 +33,7 @@ public class GoodDetailReturn implements Serializable {
 
     @Schema(description = "评论数据")
     private CommentVo comments;
+
+    @Schema(description = "sku列表")
+    private List<SkuVo> skus;
 }
