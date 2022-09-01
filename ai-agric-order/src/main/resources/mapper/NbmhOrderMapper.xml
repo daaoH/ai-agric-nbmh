@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hszn.nbmh.order.mapper.NbmhOrderMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hszn.nbmh.order.api.entity.NbmhOrder">
+        <id column="id" property="id" />
+        <result column="tenant_id" property="tenantId" />
+        <result column="shop_id" property="shopId" />
+        <result column="user_id" property="userId" />
+        <result column="user_name" property="userName" />
+        <result column="user_avatar" property="userAvatar" />
+        <result column="user_note" property="userNote" />
+        <result column="type" property="type" />
+        <result column="total_amount" property="totalAmount" />
+        <result column="discounts_amount" property="discountsAmount" />
+        <result column="pay_amount" property="payAmount" />
+        <result column="freight_amount" property="freightAmount" />
+        <result column="promotion_amount" property="promotionAmount" />
+        <result column="coupon_id" property="couponId" />
+        <result column="coupon_amount" property="couponAmount" />
+        <result column="promotion_id" property="promotionId" />
+        <result column="full_scale_id" property="fullScaleId" />
+        <result column="full_scale_amount" property="fullScaleAmount" />
+        <result column="pay_type" property="payType" />
+        <result column="transaction_id" property="transactionId" />
+        <result column="pay_time" property="payTime" />
+        <result column="close_time" property="closeTime" />
+        <result column="order_status" property="orderStatus" />
+        <result column="note" property="note" />
+        <result column="comment_time" property="commentTime" />
+        <result column="complete_time" property="completeTime" />
+        <result column="refund_amount" property="refundAmount" />
+        <result column="refund_transaction_id" property="refundTransactionId" />
+        <result column="estimated_delivery_time" property="estimatedDeliveryTime" />
+        <result column="expire_time" property="expireTime" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="status" property="status" />
+    </resultMap>
+
+</mapper>
