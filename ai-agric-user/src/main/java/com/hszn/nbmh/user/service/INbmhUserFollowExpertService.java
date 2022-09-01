@@ -3,7 +3,7 @@ package com.hszn.nbmh.user.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.hszn.nbmh.user.api.entity.NbmhAnimalDoctorDetail;
+import com.hszn.nbmh.user.api.entity.NbmhUserFollowExpert;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -11,29 +11,29 @@ import java.util.List;
 
 /**
  * <p>
- * 兽医详细信息表 服务类
+ * 关注的专家记录表 服务类
  * </p>
  *
  * @author MCR
- * @since 2022-08-30
+ * @since 2022-08-31
  */
-public interface INbmhAnimalDoctorDetailService extends IService<NbmhAnimalDoctorDetail> {
+public interface INbmhUserFollowExpertService extends IService<NbmhUserFollowExpert> {
 
     /**
      * 保存
      *
-     * @param nbmhAnimalDoctorDetailList 兽医详细信息
+     * @param nbmhUserFollowExpertList 关注的专家列表
      * @return the list
      */
-    List<Integer> save(List<NbmhAnimalDoctorDetail> nbmhAnimalDoctorDetailList);
+    List<Integer> save(List<NbmhUserFollowExpert> nbmhUserFollowExpertList);
 
     /**
      * 更新
      *
-     * @param nbmhAnimalDoctorDetailList 兽医详细信息
+     * @param nbmhUserFollowExpertList 关注的专家列表
      * @return the int
      */
-    int update(List<NbmhAnimalDoctorDetail> nbmhAnimalDoctorDetailList);
+    int update(List<NbmhUserFollowExpert> nbmhUserFollowExpertList);
 
     /**
      * 分页查询
@@ -44,7 +44,7 @@ public interface INbmhAnimalDoctorDetailService extends IService<NbmhAnimalDocto
      * @param orderItemList 排序方式
      * @return the page
      */
-    IPage<NbmhAnimalDoctorDetail> query(@NotNull NbmhAnimalDoctorDetail entity, int pageNum, int pageSize, List<OrderItem> orderItemList);
+    IPage<NbmhUserFollowExpert> query(@NotNull NbmhUserFollowExpert entity, int pageNum, int pageSize, List<OrderItem> orderItemList);
 
     /**
      * 查询
@@ -53,7 +53,7 @@ public interface INbmhAnimalDoctorDetailService extends IService<NbmhAnimalDocto
      * @param orderItemList 排序方式
      * @return the list
      */
-    List<NbmhAnimalDoctorDetail> list(@NotNull NbmhAnimalDoctorDetail entity, List<OrderItem> orderItemList);
+    List<NbmhUserFollowExpert> list(@NotNull NbmhUserFollowExpert entity, List<OrderItem> orderItemList);
 
     /**
      * 删除.

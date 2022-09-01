@@ -1,0 +1,61 @@
+version: 1.0
+# 数据源
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: root
+      password: 123456
+      url: jdbc:mysql://127.0.0.1:3306/nbmh?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8&allowMultiQueries=true&allowPublicKeyRetrieval=true
+
+　redis:
+  #数据库索引
+  database: 0
+  host: 127.0.0.1
+  port: 6379
+  password: 0demin
+  jedis:
+    pool:
+      max-active: 8 # 连接池最大连接数（使用负值表示没有限制）
+      max-wait: -1ms # 连接池最大阻塞等待时间（使用负值表示没有限制）
+      max-idle: 8 # 连接池中的最大空闲连接
+      min-idle: 0 # 连接池中的最小空闲连接
+  #连接超时时间
+  timeout: 5000
+
+# 加解密根密码
+jasypt:
+  encryptor:
+    password: nbmh #根密码
+
+security:
+  oauth2:
+    client:
+      client-id: ENC(imENTO7M8bLO38LFSIxnzw==)
+      client-secret: ENC(i3cDFhs26sa2Ucrfz2hnQw==)
+      scope: server
+
+# swagger 配置
+swagger:
+  enabled: true
+  title: 营销模块 Swagger API
+  gateway: http://192.168.0.29:11200
+  token-url: ${swagger.gateway}/auth/oauth2/token
+  scope: server
+  services:
+    marketing-service: marketing
+
+mybatis:
+  type-aliases-package: com.hszn.nbmh.marketing.api.entity
+  mapper-locations: classpath:/mapper/*.xml
+  configuration:
+    mapUnderscoreToCamelCase: true
+    default-enum-type-handler: org.apache.ibatis.type.EnumOrdinalTypeHandler
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+logging:
+  level:
+    com.baomidou: debug
+    com.hszn.nbmh: debug
+    com.github.binarywang: debug

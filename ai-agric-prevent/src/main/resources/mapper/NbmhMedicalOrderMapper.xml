@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hszn.nbmh.prevent.mapper.NbmhMedicalOrderMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hszn.nbmh.prevent.api.entity.NbmhMedicalOrder">
+        <id column="id" property="id" />
+        <result column="report_number" property="reportNumber" />
+        <result column="room_number" property="roomNumber" />
+        <result column="farmer_id" property="farmerId" />
+        <result column="farmer_name" property="farmerName" />
+        <result column="farmer_phone" property="farmerPhone" />
+        <result column="farmer_avatar" property="farmerAvatar" />
+        <result column="farmer_address" property="farmerAddress" />
+        <result column="animal_type" property="animalType" />
+        <result column="medical_type" property="medicalType" />
+        <result column="medical_time" property="medicalTime" />
+        <result column="illness_desc" property="illnessDesc" />
+        <result column="pic_url" property="picUrl" />
+        <result column="free_status" property="freeStatus" />
+        <result column="medical_money" property="medicalMoney" />
+        <result column="front_money" property="frontMoney" />
+        <result column="pay_front_money" property="payFrontMoney" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="status" property="status" />
+        <result column="pay_medical_money" property="payMedicalMoney" />
+    </resultMap>
+
+</mapper>

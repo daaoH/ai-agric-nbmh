@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hszn.nbmh.prevent.mapper.NbmhAnimalLibraryMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hszn.nbmh.prevent.api.entity.NbmhAnimalLibrary">
+        <id column="id" property="id" />
+        <result column="library_sn" property="librarySn" />
+        <result column="title" property="title" />
+        <result column="library_type" property="libraryType" />
+        <result column="category_id" property="categoryId" />
+        <result column="gallery" property="gallery" />
+        <result column="library_desc" property="libraryDesc" />
+        <result column="detail" property="detail" />
+        <result column="keywords" property="keywords" />
+        <result column="is_on_sale" property="isOnSale" />
+        <result column="sort_order" property="sortOrder" />
+        <result column="library_price" property="libraryPrice" />
+        <result column="sell_num" property="sellNum" />
+        <result column="user_id" property="userId" />
+        <result column="user_name" property="userName" />
+        <result column="user_avatar" property="userAvatar" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="status" property="status" />
+    </resultMap>
+
+</mapper>

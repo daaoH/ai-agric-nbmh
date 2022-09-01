@@ -132,10 +132,6 @@ public class NbmhButcherReportServiceImpl extends ServiceImpl<NbmhButcherReportM
 
         LambdaQueryWrapper<NbmhButcherReport> lambdaQueryWrapper = Wrappers.lambdaQuery(entity);
 
-
-//        List<Long> farmerIdList= new ArrayList<>();
-//        resourceIPage = nbmhButcherReportMapper.selectPage(page, Wrappers.lambdaQuery(entity).in(NbmhButcherReport::getFarmerId, farmerIdList));
-
         return nbmhButcherReportMapper.selectPage(page, lambdaQueryWrapper);
     }
 

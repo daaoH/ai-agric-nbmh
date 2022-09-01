@@ -4,19 +4,22 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.hszn.nbmh.user.api.entity.NbmhAnimalDoctorDetail">
-        <id column="id" property="id" />
-        <result column="user_id" property="userId" />
-        <result column="admissions" property="admissions" />
-        <result column="doctor_type" property="doctorType" />
-        <result column="good_animal_type" property="goodAnimalType" />
-        <result column="good_ disease" property="good disease" />
-        <result column="certificate_no" property="certificateNo" />
-        <result column="vedio_medical_price" property="vedioMedicalPrice" />
-        <result column="medical_price" property="medicalPrice" />
-        <result column="door_medical_price" property="doorMedicalPrice" />
-        <result column="create_time" property="createTime" />
-        <result column="update_time" property="updateTime" />
-        <result column="status" property="status" />
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="admissions" property="admissions"/>
+        <result column="doctor_type" property="doctorType"/>
+        <result column="good_animal_type" property="goodAnimalType"/>
+        <result column="good_disease" property="goodDisease"/>
+        <result column="certificate_no" property="certificateNo"/>
+        <result column="video_medical_price" property="videoMedicalPrice"/>
+        <result column="medical_price" property="medicalPrice"/>
+        <result column="door_medical_price" property="doorMedicalPrice"/>
+        <result column="longitude" property="longitude"/>
+        <result column="latitude" property="latitude"/>
+        <result column="geo_code" property="geoCode"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="status" property="status"/>
     </resultMap>
 
 </mapper>
