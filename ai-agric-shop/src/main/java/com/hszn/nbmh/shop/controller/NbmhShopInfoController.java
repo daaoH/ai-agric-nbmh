@@ -60,7 +60,7 @@ public class NbmhShopInfoController {
     }
 
     @Inner(false)
-    @Operation(summary = "根据Id获取店铺详情")
+    @Operation(summary = "根据条件查询")
     @PostMapping("/search")
     public Result<Page<NbmhShopInfo>> search(@RequestBody QueryRequest<ShopInfoSearchParam> param) {
         Page<NbmhShopInfo> result = shopInfoService.search(param);
