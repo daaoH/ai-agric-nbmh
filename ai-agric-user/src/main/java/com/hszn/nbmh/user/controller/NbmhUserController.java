@@ -520,10 +520,27 @@ public class NbmhUserController {
         return Result.ok();
     }
 
-    @Operation(summary="查找指定范围内的兽医", method="POST")
-    @Parameters({@Parameter(description="距离范围 单位km", name="distance"), @Parameter(description="当前经度", name="userLng"), @Parameter(description="当前纬度", name="userLat")})
+    @Operation(summary = "获取推荐专家列表", method = "POST")
+    @PostMapping("/animalDoctor/popular")
+    public Result<List<NbmhAnimalDoctorDetail>> popular(@RequestBody NbmhAnimalDoctorDetail nbmhAnimalDoctorDetail) {
+
+        QueryWrapper<NbmhAnimalDoctorDetail> queryWrapper = Wrappers.query(nbmhAnimalDoctorDetail);
+        queryWrapper.orderBy(true, false, "heatWeight");
+
+        List<NbmhAnimalDoctorDetail> animalDoctorList = animalDoctorDetailService.list(queryWrapper);
+
+        if (CollectionUtils.isEmpty(animalDoctorList)) {
+            return Result.ok();
+        }
+
+        return Result.ok(animalDoctorList);
+    }
+
+    @Operation(summary = "查找指定范围内的兽医", method = "POST")
+    @Parameters({@Parameter(description = "距离范围 单位km", name = "distance"), @Parameter(description = "当前经度", name = "userLng"), @Parameter(description = "当前纬度", name = "userLat")})
     @PostMapping("/animalDoctor/nearby")
-    public Result<List<NbmhAnimalDoctorDetail>> nearby(@RequestParam("distance") double distance, @RequestParam("userLng") double userLng, @RequestParam("userLat") double userLat) {
+    public Result<List<NbmhAnimalDoctorDetail>> nearby(@RequestBody NbmhAnimalDoctorDetail nbmhAnimalDoctorDetail, @RequestParam("distance") double distance,
+                                                       @RequestParam("userLng") double userLng, @RequestParam("userLat") double userLat) {
 
         //1.根据要求的范围，确定geoHash码的精度，获取到当前用户坐标的geoHash码
         GeoHash geoHash=GeoHash.withCharacterPrecision(userLat, userLng, LEN);
@@ -544,6 +561,15 @@ public class NbmhUserController {
         animalDoctorList=animalDoctorList.stream()
                 .filter(animalDoctor -> getDistance(animalDoctor.getLongitude(), animalDoctor.getLatitude(), userLng, userLat) <= distance)
                 .collect(Collectors.toList());
+        animalDoctorList = animalDoctorList.stream().filter(animalDoctor -> getDistance(animalDoctor.getLongitude(), animalDoctor.getLatitude(), userLng, userLat) <= distance).collect(Collectors.toList());
+
+        if (nbmhAnimalDoctorDetail.getDoctorType() != null) {
+            animalDoctorList = animalDoctorList.stream().filter(animalDoctor -> animalDoctor.getDoctorType().equals(nbmhAnimalDoctorDetail.getDoctorType())).collect(Collectors.toList());
+        }
+
+        if (nbmhAnimalDoctorDetail.getGoodAnimalType() != null) {
+            animalDoctorList = animalDoctorList.stream().filter(animalDoctor -> animalDoctor.getGoodAnimalType().equals(nbmhAnimalDoctorDetail.getGoodAnimalType())).collect(Collectors.toList());
+        }
 
         return Result.ok(animalDoctorList);
     }

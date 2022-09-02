@@ -4,17 +4,22 @@ import com.hszn.nbmh.common.core.constant.SecurityConstants;
 import com.hszn.nbmh.common.core.constant.ServiceNameConstant;
 import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.user.api.constant.UserPathConstant;
+import com.hszn.nbmh.user.api.entity.NbmhAnimalDoctorDetail;
 import com.hszn.nbmh.user.api.entity.NbmhUser;
 import com.hszn.nbmh.user.api.fallback.UserServiceFallback;
+import com.hszn.nbmh.user.api.params.input.AnimalDoctorRegisterParam;
 import com.hszn.nbmh.user.api.params.input.RegisterParam;
 import com.hszn.nbmh.user.api.params.out.CurUserInfo;
 import com.hszn.nbmh.user.api.params.out.LoginUser;
-import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(contextId="remoteUserService", value=ServiceNameConstant.USER_SERVICE, path=UserPathConstant.NBMH_USER,
-        fallback=UserServiceFallback.class)
+import java.util.List;
+
+@FeignClient(contextId = "remoteUserService", value = ServiceNameConstant.USER_SERVICE, path = UserPathConstant.NBMH_USER, fallback = UserServiceFallback.class)
 public interface RemoteUserService {
 
     @PostMapping("/queryUserByPhone")
@@ -24,7 +29,7 @@ public interface RemoteUserService {
     Result checkUserExist(@RequestParam("userName") String userName, @RequestHeader(SecurityConstants.FROM) String from);
 
     @PostMapping("/queryCurUserInfo")
-    Result<CurUserInfo> queryCurUserInfo(@RequestParam("userId") Long userId, @RequestParam(value="type", required=false) Integer type);
+    Result<CurUserInfo> queryCurUserInfo(@RequestParam("userId") Long userId, @RequestParam(value = "type", required = false) Integer type);
 
     @PostMapping("/registerUser")
     Result registerUser(@RequestBody RegisterParam param);
@@ -32,4 +37,13 @@ public interface RemoteUserService {
 
     @PostMapping("/integralUpdate")
     Result integralUpdate(@RequestBody NbmhUser param);
+
+    @PostMapping("/animalDoctorRegister")
+    Result animalDoctorRegister(@RequestBody AnimalDoctorRegisterParam param);
+
+    @PostMapping("/animalDoctor/popular")
+    Result<List<NbmhAnimalDoctorDetail>> popular(@RequestBody NbmhAnimalDoctorDetail nbmhAnimalDoctorDetail);
+
+    @PostMapping("/animalDoctor/nearby")
+    Result<List<NbmhAnimalDoctorDetail>> nearby(@RequestBody NbmhAnimalDoctorDetail nbmhAnimalDoctorDetail, @RequestParam("distance") double distance, @RequestParam("userLng") double userLng, @RequestParam("userLat") double userLat);
 }

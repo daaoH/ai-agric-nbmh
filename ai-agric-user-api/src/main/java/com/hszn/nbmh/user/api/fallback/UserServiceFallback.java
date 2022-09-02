@@ -2,12 +2,16 @@ package com.hszn.nbmh.user.api.fallback;
 
 import com.hszn.nbmh.common.core.enums.CommonEnum;
 import com.hszn.nbmh.common.core.utils.Result;
+import com.hszn.nbmh.user.api.entity.NbmhAnimalDoctorDetail;
 import com.hszn.nbmh.user.api.entity.NbmhUser;
 import com.hszn.nbmh.user.api.feign.RemoteUserService;
+import com.hszn.nbmh.user.api.params.input.AnimalDoctorRegisterParam;
 import com.hszn.nbmh.user.api.params.input.RegisterParam;
 import com.hszn.nbmh.user.api.params.out.CurUserInfo;
 import com.hszn.nbmh.user.api.params.out.LoginUser;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
  * @Author：袁德民
@@ -41,6 +45,21 @@ public class UserServiceFallback implements RemoteUserService {
     @Override
     public Result integralUpdate(NbmhUser param) {
         return Result.failed(CommonEnum.FALL_BACK_MSG.getMsg());
+    }
+
+    @Override
+    public Result animalDoctorRegister(AnimalDoctorRegisterParam param) {
+        return Result.failed(CommonEnum.DATA_ADD_FAILED.getMsg());
+    }
+
+    @Override
+    public Result<List<NbmhAnimalDoctorDetail>> popular(NbmhAnimalDoctorDetail nbmhAnimalDoctorDetail) {
+        return Result.failed(CommonEnum.DATA_QUERY_FAILED.getMsg());
+    }
+
+    @Override
+    public Result<List<NbmhAnimalDoctorDetail>> nearby(NbmhAnimalDoctorDetail nbmhAnimalDoctorDetail, double distance, double userLng, double userLat) {
+        return Result.failed(CommonEnum.DATA_QUERY_FAILED.getMsg());
     }
 
 }

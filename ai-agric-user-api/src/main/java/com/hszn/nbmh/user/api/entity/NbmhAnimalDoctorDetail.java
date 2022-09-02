@@ -1,9 +1,11 @@
 package com.hszn.nbmh.user.api.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -117,6 +119,12 @@ public class NbmhAnimalDoctorDetail implements Serializable {
     private String geoCode;
 
     /**
+     * 热度（推荐度）
+     */
+    @Schema(name = "heatWeight", description = "热度（推荐度）")
+    private Double heatWeight;
+
+    /**
      * 创建时间
      */
     @Schema(name = "createTime", description = "创建时间")
@@ -133,6 +141,10 @@ public class NbmhAnimalDoctorDetail implements Serializable {
      */
     @Schema(name = "status", description = "状态 0正常 -1冻结")
     private Integer status;
+
+    @ApiModelProperty(value = "是否接诊（0：休息中；1：可接诊）", hidden = true)
+    @TableField(exist = false)
+    private Integer medicalStatus;
 
     public interface Save extends Default {
     }

@@ -22,7 +22,7 @@ import java.util.List;
 
 /**
  * <p>
- * 接诊时间设置 前端控制器
+ * 兽医接诊时间设置 前端控制器
  * </p>
  *
  * @author MCR
