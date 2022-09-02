@@ -45,6 +45,7 @@ public class NbmhFarmController {
 
     @Operation(summary = "新增养殖场信息", method = "POST")
     @PostMapping("/add")
+    @Inner(false)
     public Result add(@RequestBody NbmhFarm nbmhFarm) {
 
         List<Integer> idList = nbmhFarmService.save(Collections.singletonList(nbmhFarm));
@@ -58,6 +59,7 @@ public class NbmhFarmController {
     @Operation(summary = "根据ID查询养殖场信息", method = "GET")
     @Parameters({@Parameter(description="养殖场信息Id", name="id")})
     @PostMapping("/{id}")
+    @Inner(false)
     public Result<NbmhFarm> getById(@PathVariable(value = "id") @NotBlank Long id) {
 
         return Result.ok(nbmhFarmService.getById(id));
@@ -65,6 +67,7 @@ public class NbmhFarmController {
 
     @Operation(summary = "更新养殖场信息", method = "PUT")
     @PutMapping
+    @Inner(false)
     public Result update(@RequestBody NbmhFarm nbmhFarm) {
 
         nbmhFarmService.update(Collections.singletonList(nbmhFarm));
@@ -74,6 +77,7 @@ public class NbmhFarmController {
     @Operation(summary = "分页查询养殖场信息", method = "POST")
     @Parameters({@Parameter(description="页码", name="pageNum"), @Parameter(description="每页显示条数", name="pageSize"), @Parameter(description="排序条件集合", name="orderItemList")})
     @PostMapping("/query")
+    @Inner(false)
     public Result<IPage<NbmhFarm>> query(@RequestBody NbmhFarm nbmhFarm,
                                          @RequestParam @DecimalMin("1") int pageNum,
                                          @RequestParam @DecimalMin("1") int pageSize,
@@ -96,6 +100,7 @@ public class NbmhFarmController {
 
     @DeleteMapping("delete/{id}")
     @Operation(summary = "删除养殖场信息")
+    @Inner(false)
     public Result delete(@PathVariable Long id) {
 
         nbmhFarmService.delete(Collections.singletonList(id));

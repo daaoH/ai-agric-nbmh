@@ -27,6 +27,9 @@
         <result column="buyer_phone" property="buyerPhone"/>
         <result column="buyer_card" property="buyerCard"/>
         <result column="report_number" property="reportNumber"/>
+        <result column="prevent_station_id" property="preventStationId"/>
+        <result column="user_phone" property="userPhone"/>
+
     </resultMap>
 
 </mapper>

@@ -101,6 +101,13 @@ public class NbmhInspect implements Serializable {
     @Schema(name="userAvatarUrl", description="养殖户头像")
     private String userAvatarUrl;
 
+
+    /**
+     * 养殖户手机
+     */
+    @Schema(name="userPhone", description="养殖户手机")
+    private String userPhone;
+
     /**
      * 动物id
      */
@@ -168,5 +175,11 @@ public class NbmhInspect implements Serializable {
      */
     @Schema(name="reportNumber", description="报备编号")
     private String reportNumber;
+
+    /**
+     * 防疫站id
+     */
+    @Schema(name="preventStationId", description="防疫站id")
+    private String preventStationId;
 
 }
