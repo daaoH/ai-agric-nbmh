@@ -5,10 +5,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hszn.nbmh.common.core.mould.QueryRequest;
 import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.common.security.annotation.Inner;
+import com.hszn.nbmh.shop.api.entity.NbmhShopExtraInfo;
 import com.hszn.nbmh.shop.api.entity.NbmhShopInfo;
 import com.hszn.nbmh.shop.api.params.input.ShopEditParam;
 import com.hszn.nbmh.shop.api.params.input.ShopInfoParam;
 import com.hszn.nbmh.shop.api.params.input.ShopInfoSearchParam;
+import com.hszn.nbmh.shop.service.INbmhShopExtraInfoService;
 import com.hszn.nbmh.shop.service.INbmhShopInfoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -16,6 +18,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpHeaders;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
 
 /**
  * <p>
@@ -31,6 +35,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/shop-info")
 public class NbmhShopInfoController {
     private final INbmhShopInfoService shopInfoService;
+
+    @Resource
+    private INbmhShopExtraInfoService shopExtraInfoService;
 
     public NbmhShopInfoController(INbmhShopInfoService shopInfoService) {
         this.shopInfoService = shopInfoService;
@@ -77,6 +84,25 @@ public class NbmhShopInfoController {
             return Result.ok("修改成功");
         }
         return Result.failed("修改失败,请重试");
+    }
+
+    @Inner(false)
+    @Operation(summary = "提交实体信息")
+    @PostMapping("/commitEntityInfo")
+    public Result<String> commitEntityInfo(@RequestBody NbmhShopExtraInfo info) {
+        boolean result = shopExtraInfoService.save(info);
+        if (result) {
+            return Result.ok("提交成功");
+        }
+        return Result.failed("提交失败,请重试");
+    }
+
+    @Inner(false)
+    @Operation(summary = "根据单前登录店铺详情")
+    @GetMapping("/currentShopInfo")
+    public Result<NbmhShopInfo> currentShopInfo() {
+        NbmhShopInfo result = shopInfoService.currentShopInfo();
+        return Result.ok(result);
     }
 
 }

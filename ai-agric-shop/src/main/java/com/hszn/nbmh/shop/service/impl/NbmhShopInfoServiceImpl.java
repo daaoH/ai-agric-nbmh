@@ -1,8 +1,10 @@
 package com.hszn.nbmh.shop.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hszn.nbmh.common.core.mould.QueryRequest;
 import com.hszn.nbmh.common.core.utils.SortUtil;
 import com.hszn.nbmh.shop.api.entity.NbmhShopInfo;
@@ -11,13 +13,13 @@ import com.hszn.nbmh.shop.api.params.input.ShopInfoParam;
 import com.hszn.nbmh.shop.api.params.input.ShopInfoSearchParam;
 import com.hszn.nbmh.shop.mapper.NbmhShopInfoMapper;
 import com.hszn.nbmh.shop.service.INbmhShopInfoService;
-
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hszn.nbmh.user.api.entity.NbmhUserExtraInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
 
 /**
  * <p>
@@ -57,5 +59,25 @@ public class NbmhShopInfoServiceImpl extends ServiceImpl<NbmhShopInfoMapper, Nbm
         NbmhShopInfo info = new NbmhShopInfo();
         BeanUtils.copyProperties(param, info);
         return updateById(info);
+    }
+
+    public Integer currentShopStatus() {
+        NbmhShopInfo shopInfo = currentShopInfo();
+        if (shopInfo == null) {
+            return null;
+        }
+        return shopInfo.getStatus();
+    }
+
+    @Override
+    public NbmhShopInfo currentShopInfo() {
+        // TODO: 2022/9/2 获取当前用户id
+        Long userId = 123L;
+        LambdaQueryWrapper<NbmhShopInfo> wrapper = Wrappers.lambdaQuery(NbmhShopInfo.class).eq(NbmhShopInfo::getUserId, userId);
+        List<NbmhShopInfo> shopInfos = baseMapper.selectList(wrapper);
+        if (CollectionUtils.isEmpty(shopInfos)) {
+            return null;
+        }
+        return shopInfos.get(0);
     }
 }
