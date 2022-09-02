@@ -98,7 +98,7 @@ public class NbmhShopInfoController {
     }
 
     @Inner(false)
-    @Operation(summary = "根据单前登录店铺详情")
+    @Operation(summary = "获取当前登录用户店铺详情")
     @GetMapping("/currentShopInfo")
     public Result<NbmhShopInfo> currentShopInfo() {
         NbmhShopInfo result = shopInfoService.currentShopInfo();
