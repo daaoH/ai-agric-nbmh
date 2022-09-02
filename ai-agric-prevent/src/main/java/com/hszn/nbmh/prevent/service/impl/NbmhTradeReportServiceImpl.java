@@ -94,8 +94,8 @@ public class NbmhTradeReportServiceImpl extends ServiceImpl<NbmhTradeReportMappe
 
             animalList.add(animal);
             nbmhInspectList.add(NbmhInspect.builder().animalId(Long.valueOf(animalId)).animalType(entity.getAnimalType()).earNo(animal.getEarNo())
-                    .buyerName(entity.getBuyerName()).buyerPhone(entity.getBuyerPhone()).buyerCard(entity.getBuyerCard())
-                    .userId(entity.getFarmerId()).userName(entity.getFarmerName()).stationId(entity.getPreventStationId()).animalStatus(entity.getStatus()).build());
+                    .buyerName(entity.getBuyerName()).buyerPhone(entity.getBuyerPhone()).buyerCard(entity.getBuyerCard()).userId(entity.getFarmerId())
+                    .userName(entity.getFarmerName()).userPhone(entity.getFarmerPhone()).stationId(entity.getPreventStationId()).animalStatus(entity.getStatus()).build());
         });
 
         inspectService.saveBatch(nbmhInspectList);
