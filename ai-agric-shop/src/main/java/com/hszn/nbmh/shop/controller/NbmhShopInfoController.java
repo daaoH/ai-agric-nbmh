@@ -6,6 +6,7 @@ import com.hszn.nbmh.common.core.mould.QueryRequest;
 import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.common.security.annotation.Inner;
 import com.hszn.nbmh.shop.api.entity.NbmhShopInfo;
+import com.hszn.nbmh.shop.api.params.input.ShopEditParam;
 import com.hszn.nbmh.shop.api.params.input.ShopInfoParam;
 import com.hszn.nbmh.shop.api.params.input.ShopInfoSearchParam;
 import com.hszn.nbmh.shop.service.INbmhShopInfoService;
@@ -65,6 +66,17 @@ public class NbmhShopInfoController {
     public Result<Page<NbmhShopInfo>> search(@RequestBody QueryRequest<ShopInfoSearchParam> param) {
         Page<NbmhShopInfo> result = shopInfoService.search(param);
         return Result.ok(result);
+    }
+
+    @Inner(false)
+    @Operation(summary = "店铺修改")
+    @PostMapping("/update")
+    public Result<String> update(@RequestBody ShopEditParam param) {
+        boolean result = shopInfoService.modify(param);
+        if (result) {
+            return Result.ok("修改成功");
+        }
+        return Result.failed("修改失败,请重试");
     }
 
 }

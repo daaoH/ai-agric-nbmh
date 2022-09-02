@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hszn.nbmh.common.core.mould.QueryRequest;
 import com.hszn.nbmh.common.core.utils.SortUtil;
 import com.hszn.nbmh.shop.api.entity.NbmhShopInfo;
+import com.hszn.nbmh.shop.api.params.input.ShopEditParam;
 import com.hszn.nbmh.shop.api.params.input.ShopInfoParam;
 import com.hszn.nbmh.shop.api.params.input.ShopInfoSearchParam;
 import com.hszn.nbmh.shop.mapper.NbmhShopInfoMapper;
@@ -37,6 +38,7 @@ public class NbmhShopInfoServiceImpl extends ServiceImpl<NbmhShopInfoMapper, Nbm
         BeanUtils.copyProperties(shopInfo, info);
         //新开店铺为审核状态
         info.setStatus(0);
+        info.setTenantId("text");
         return save(info);
     }
 
@@ -48,5 +50,12 @@ public class NbmhShopInfoServiceImpl extends ServiceImpl<NbmhShopInfoMapper, Nbm
         SortUtil.handlePageSort(param, page, param.getField(), param.getOrder(), true);
         QueryWrapper<NbmhShopInfo> wrapper = Wrappers.query(info);
         return page(page, wrapper);
+    }
+
+    @Override
+    public boolean modify(ShopEditParam param) {
+        NbmhShopInfo info = new NbmhShopInfo();
+        BeanUtils.copyProperties(param, info);
+        return updateById(info);
     }
 }

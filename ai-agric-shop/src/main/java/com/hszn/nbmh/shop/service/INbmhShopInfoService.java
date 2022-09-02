@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hszn.nbmh.common.core.mould.QueryRequest;
 import com.hszn.nbmh.shop.api.entity.NbmhShopInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.hszn.nbmh.shop.api.params.input.ShopEditParam;
 import com.hszn.nbmh.shop.api.params.input.ShopInfoParam;
 import com.hszn.nbmh.shop.api.params.input.ShopInfoSearchParam;
 
@@ -27,9 +28,18 @@ public interface INbmhShopInfoService extends IService<NbmhShopInfo> {
 
     /**
      * 根据条件查询
+     *
      * @param param
      * @return
      */
     Page<NbmhShopInfo> search(QueryRequest<ShopInfoSearchParam> param);
+
+    /**
+     * 店铺修改
+     *
+     * @param param
+     * @return
+     */
+    boolean modify(ShopEditParam param);
 
 }
