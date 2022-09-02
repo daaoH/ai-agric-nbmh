@@ -17,4 +17,9 @@ public interface ShopPathConstant {
      * 采购记录列表
      */
     String PURCHASE_RECORD_URL = "/purchase-record";
+
+    /**
+     * 店铺信息
+     */
+    String SHOP_INFO_URL = "/shop-info";
 }

@@ -42,4 +42,10 @@ public interface INbmhShopInfoService extends IService<NbmhShopInfo> {
      */
     boolean modify(ShopEditParam param);
 
+    /**
+     * 获取当前用户店铺信息
+     *
+     * @return
+     */
+    NbmhShopInfo currentShopInfo();
 }

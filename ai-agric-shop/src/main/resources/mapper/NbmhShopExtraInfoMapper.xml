@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hszn.nbmh.shop.mapper.NbmhShopExtraInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hszn.nbmh.shop.api.entity.NbmhShopExtraInfo">
+        <id column="id" property="id"/>
+        <result column="shop_id" property="shopId"/>
+        <result column="having_flag" property="havingFlag"/>
+        <result column="address" property="address"/>
+        <result column="entity_photo" property="entityPhoto"/>
+        <result column="operation_name" property="operationName"/>
+        <result column="operation_phone" property="operationPhone"/>
+        <result column="operation_email" property="operationEmail"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+</mapper>

@@ -17,6 +17,7 @@
         <result column="longitude" property="longitude"/>
         <result column="latitude" property="latitude"/>
         <result column="geo_code" property="geoCode"/>
+        <result column="heat_weight" property="heatWeight"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
         <result column="status" property="status"/>
