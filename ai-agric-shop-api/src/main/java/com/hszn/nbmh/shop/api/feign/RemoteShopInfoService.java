@@ -7,7 +7,6 @@ import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.shop.api.constant.ShopPathConstant;
 import com.hszn.nbmh.shop.api.entity.NbmhShopExtraInfo;
 import com.hszn.nbmh.shop.api.entity.NbmhShopInfo;
-import com.hszn.nbmh.shop.api.fallback.PurchasePublishServiceFallback;
 import com.hszn.nbmh.shop.api.fallback.RemoteShopInfoServiceFallback;
 import com.hszn.nbmh.shop.api.params.input.ShopEditParam;
 import com.hszn.nbmh.shop.api.params.input.ShopInfoParam;
