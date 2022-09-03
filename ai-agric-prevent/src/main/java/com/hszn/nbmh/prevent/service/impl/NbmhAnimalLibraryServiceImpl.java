@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hszn.nbmh.common.core.utils.BeanUtils;
+import com.hszn.nbmh.common.core.utils.SnowFlakeIdUtil;
 import com.hszn.nbmh.prevent.api.entity.NbmhAnimalLibrary;
 import com.hszn.nbmh.prevent.mapper.NbmhAnimalLibraryMapper;
 import com.hszn.nbmh.prevent.service.INbmhAnimalLibraryService;
@@ -44,7 +45,7 @@ public class NbmhAnimalLibraryServiceImpl extends ServiceImpl<NbmhAnimalLibraryM
         return nbmhAnimalLibraryList.stream().map(entity -> {
 
             Date createTime = new Date();
-            entity.setCreateTime(createTime).setUpdateTime(createTime).setStatus(1);
+            entity.setLibrarySn(String.valueOf(new SnowFlakeIdUtil(1, 0).nextId())).setCreateTime(createTime).setUpdateTime(createTime).setStatus(1);
 
             return nbmhAnimalLibraryMapper.insert(entity);
         }).collect(Collectors.toList());

@@ -38,6 +38,7 @@ public class NbmhVideoLessonController {
 
     @Operation(summary = "新增视频课堂", method = "POST")
     @PostMapping("/add")
+    @Inner(false)
     public Result add(@RequestBody NbmhVideoLesson nbmhVideoLesson) {
 
         List<Integer> idList = nbmhVideoLessonService.save(Collections.singletonList(nbmhVideoLesson));
@@ -50,6 +51,7 @@ public class NbmhVideoLessonController {
 
     @Operation(summary = "根据ID查询视频课堂", method = "GET")
     @PostMapping("/{id}")
+    @Inner(false)
     public Result<NbmhVideoLesson> getById(@PathVariable(value = "id") @NotBlank Long id) {
 
         return Result.ok(nbmhVideoLessonService.getById(id));
@@ -57,6 +59,7 @@ public class NbmhVideoLessonController {
 
     @Operation(summary = "更新视频课堂", method = "PUT")
     @PutMapping
+    @Inner(false)
     public Result update(@RequestBody NbmhVideoLesson nbmhVideoLesson) {
 
         nbmhVideoLessonService.update(Collections.singletonList(nbmhVideoLesson));
@@ -66,6 +69,7 @@ public class NbmhVideoLessonController {
     @Operation(summary = "分页查询视频课堂", method = "POST")
     @Parameters({@Parameter(description = "页码", name = "pageNum"), @Parameter(description = "每页显示条数", name = "pageSize"), @Parameter(description = "排序条件集合", name = "orderItemList")})
     @PostMapping("/query")
+    @Inner(false)
     public Result<IPage<NbmhVideoLesson>> query(@RequestBody NbmhVideoLesson nbmhVideoLesson,
                                                 @RequestParam @DecimalMin("1") int pageNum,
                                                 @RequestParam @DecimalMin("1") int pageSize,
@@ -88,6 +92,7 @@ public class NbmhVideoLessonController {
 
     @DeleteMapping("delete/{id}")
     @Operation(summary = "删除视频课堂")
+    @Inner(false)
     public Result delete(@PathVariable Long id) {
 
         nbmhVideoLessonService.delete(Collections.singletonList(id));
