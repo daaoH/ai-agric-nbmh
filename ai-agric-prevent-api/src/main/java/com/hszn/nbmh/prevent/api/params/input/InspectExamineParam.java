@@ -20,9 +20,9 @@ import java.util.List;
 public class InspectExamineParam {
 
     /**
-     * 检疫数据ids
+     * 动物ids
      */
-    @Schema(name="ids", description="检疫数据ids")
+    @Schema(name="ids", description="动物ids")
     private List<Long> ids;
 
 

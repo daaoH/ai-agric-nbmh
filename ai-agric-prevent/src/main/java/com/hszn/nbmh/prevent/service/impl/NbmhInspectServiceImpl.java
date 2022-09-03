@@ -58,9 +58,13 @@ public class NbmhInspectServiceImpl extends ServiceImpl<NbmhInspectMapper, NbmhI
         LambdaQueryWrapper<NbmhInspect> queryWrapper=new LambdaQueryWrapper<>();
         //养殖户名字
         if (ObjectUtils.isNotEmpty(inspectRecordParam.getUserName())) {
-            queryWrapper.eq(NbmhInspect::getUserName, inspectRecordParam.getUserName());
+            queryWrapper.like(NbmhInspect::getUserName, inspectRecordParam.getUserName());
         }
-        //养殖户名字
+        //防疫站id
+        if (ObjectUtils.isNotEmpty(inspectRecordParam.getPreventStationId())) {
+            queryWrapper.eq(NbmhInspect::getPreventStationId, inspectRecordParam.getPreventStationId());
+        }
+        //检疫编号
         if (ObjectUtils.isNotEmpty(inspectRecordParam.getReportNumber())) {
             queryWrapper.eq(NbmhInspect::getReportNumber, inspectRecordParam.getReportNumber());
         }
@@ -70,8 +74,9 @@ public class NbmhInspectServiceImpl extends ServiceImpl<NbmhInspectMapper, NbmhI
         }
         //时间 查询条件为年月日匹配
         if (ObjectUtils.isNotEmpty(inspectRecordParam.getInspectDate())) {
-            String strStart=DateFormatUtils.format(inspectRecordParam.getInspectDate(), "yyyy-MM");
-            queryWrapper.apply("UNIX_TIMESTAMP(create_time) = UNIX_TIMESTAMP('" + strStart + "')");
+            //时间 查询条件为年月日匹配
+            String strStart=DateFormatUtils.format(inspectRecordParam.getInspectDate(), "yyyy-MM-dd");
+            queryWrapper.apply("date_format (create_time,'%Y-%m-%d') = date_format('" + strStart + "','%Y-%m-%d')");
         }
         //获取数据集
         List<NbmhInspect> inspects=this.baseMapper.selectList(queryWrapper);
@@ -82,6 +87,7 @@ public class NbmhInspectServiceImpl extends ServiceImpl<NbmhInspectMapper, NbmhI
         for (Map.Entry<String, List<NbmhInspect>> entry : groupMap.entrySet()) {
             InspectRecordResult inspectRecordResult=new InspectRecordResult();
             inspectRecordResult.setUserId(entry.getValue().get(0).getUserId());
+            inspectRecordResult.setUserPhone(entry.getValue().get(0).getUserPhone());
             inspectRecordResult.setUserName(entry.getValue().get(0).getUserName());
             inspectRecordResult.setAnimalType(entry.getValue().get(0).getAnimalType());
             inspectRecordResult.setInspectDate(entry.getValue().get(0).getCreateTime());
@@ -109,7 +115,8 @@ public class NbmhInspectServiceImpl extends ServiceImpl<NbmhInspectMapper, NbmhI
         //时间 查询条件为年月日匹配
         if (ObjectUtils.isNotEmpty(inspectRecordParam.getInspectDate())) {
             String strStart=DateFormatUtils.format(inspectRecordParam.getInspectDate(), "yyyy-MM-dd");
-            queryWrapper.apply("UNIX_TIMESTAMP(create_time) = UNIX_TIMESTAMP('" + strStart + "')");
+            queryWrapper.apply("date_format (create_time,'%Y-%m-%d') = date_format('" + strStart + "','%Y-%m-%d')");
+//            queryWrapper.apply("UNIX_TIMESTAMP(create_time) = UNIX_TIMESTAMP('" + strStart + "')");
         }
         //获取数据集
         List<NbmhInspect> inspectsList=this.baseMapper.selectList(queryWrapper);

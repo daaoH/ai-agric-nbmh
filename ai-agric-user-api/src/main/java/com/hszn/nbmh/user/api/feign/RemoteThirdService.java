@@ -25,8 +25,4 @@ public interface RemoteThirdService {
     @PostMapping("/cloud-qrcode/generate")
     Result generate(@RequestBody CodeImageRequest param);
 
-
-    @GetMapping("/nbmh-base-config/getBySubject/{subject}")
-    Result getBySubject(@PathVariable("subject") String subject);
-
 }

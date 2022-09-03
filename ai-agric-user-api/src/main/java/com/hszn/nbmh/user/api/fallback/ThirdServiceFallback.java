@@ -21,8 +21,4 @@ public class ThirdServiceFallback implements RemoteThirdService {
         return Result.failed(CommonEnum.FALL_BACK_MSG.getMsg());
     }
 
-    @Override
-    public Result getBySubject(String subject) {
-        return Result.failed(CommonEnum.FALL_BACK_MSG.getMsg());
-    }
 }

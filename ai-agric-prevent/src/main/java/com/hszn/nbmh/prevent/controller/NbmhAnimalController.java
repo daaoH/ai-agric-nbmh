@@ -1,12 +1,16 @@
 package com.hszn.nbmh.prevent.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.hszn.nbmh.common.core.mould.QueryRequest;
 import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.prevent.api.entity.NbmhAnimal;
-import com.hszn.nbmh.prevent.api.params.input.AnimalParam;
+import com.hszn.nbmh.prevent.api.entity.NbmhVaccin;
+import com.hszn.nbmh.prevent.api.params.input.BreederCensusParam;
 import com.hszn.nbmh.prevent.api.params.out.AnimalResult;
+import com.hszn.nbmh.prevent.api.params.out.BreederCensusResult;
 import com.hszn.nbmh.prevent.service.INbmhAnimalService;
+import com.hszn.nbmh.prevent.service.INbmhVaccinService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -36,11 +40,70 @@ public class NbmhAnimalController {
     //动物
     private final INbmhAnimalService nbmhAnimalService;
     //防疫
-    //private final INbmhVaccinService nbmhVaccinService;
+    private final INbmhVaccinService nbmhVaccinService;
+
+
+    @PostMapping("/breederCensus")
+    @Operation(summary="防疫员端(农户详情-动物列表,防疫记录,信用抵押)+(动物信息统计)")
+    public Result breederCensus(@RequestBody QueryRequest<BreederCensusParam> param) {
+        //返回结果集合
+        BreederCensusResult breederCensusResult=new BreederCensusResult();
+        /**
+         * 组装参数
+         */
+        QueryRequest newParam=new QueryRequest();
+        newParam.setPageNum(param.getPageNum());
+        newParam.setPageSize(param.getPageSize());
+        if (param.getQueryEntity().getRequestType().equals(1)) {//动物列表
+            NbmhAnimal animal=new NbmhAnimal();
+            if (!ObjectUtils.isEmpty(param.getQueryEntity().getUserId())) {
+                animal.setUserId(param.getQueryEntity().getUserId());
+            }
+            if (!ObjectUtils.isEmpty(param.getQueryEntity().getAnimalType())) {
+                animal.setType(param.getQueryEntity().getAnimalType());
+            }
+            if (!ObjectUtils.isEmpty(param.getQueryEntity().getDataTime())) {
+                animal.setCreateTime(param.getQueryEntity().getDataTime());
+            }
+            if (!ObjectUtils.isEmpty(param.getQueryEntity().getStatus())) {
+                animal.setStatus(param.getQueryEntity().getStatus());
+            }
+            if (!ObjectUtils.isEmpty(param.getQueryEntity().getEarNo())) {
+                animal.setEarNo(param.getQueryEntity().getEarNo());
+            }
+            newParam.setQueryEntity(animal);
+            //获取动物列表
+            breederCensusResult.setList(nbmhAnimalService.getByPage(newParam).getRecords());
+        } else if (param.getQueryEntity().getRequestType().equals(2)) {// 防疫记录
+            NbmhVaccin vaccin=new NbmhVaccin();
+            if (!ObjectUtils.isEmpty(param.getQueryEntity().getUserId())) {
+                vaccin.setFarmerId(param.getQueryEntity().getUserId());
+            }
+            if (!ObjectUtils.isEmpty(param.getQueryEntity().getAnimalType())) {
+                vaccin.setAnimalType(param.getQueryEntity().getAnimalType());
+            }
+            if (!ObjectUtils.isEmpty(param.getQueryEntity().getDataTime())) {
+                vaccin.setCreateTime(param.getQueryEntity().getDataTime());
+            }
+            if (!ObjectUtils.isEmpty(param.getQueryEntity().getStatus())) {
+                vaccin.setStatus(param.getQueryEntity().getStatus());
+            }
+            if (!ObjectUtils.isEmpty(param.getQueryEntity().getEarNo())) {
+                vaccin.setEarNo(param.getQueryEntity().getEarNo());
+            }
+            newParam.setQueryEntity(vaccin);
+            breederCensusResult.setList(nbmhVaccinService.getByPage(newParam).getRecords());
+        } else {//信用抵押
+            breederCensusResult.setList(new ArrayList());
+        }
+        breederCensusResult.setStatisticsResult(nbmhAnimalService.getCensusByUserId(param.getQueryEntity().getUserId(), param.getQueryEntity().getAnimalType()));
+        return Result.ok(breederCensusResult);
+    }
+
 
     @PostMapping("/vaccin/record")
     @Operation(summary="防疫员端-动物列表")
-    public Result record(@RequestBody QueryRequest<AnimalParam> param) {
+    public Result record(@RequestBody QueryRequest<NbmhAnimal> param) {
 
         //返回结果
         List<AnimalResult> animalResults=new ArrayList<>();

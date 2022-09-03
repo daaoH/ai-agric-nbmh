@@ -48,17 +48,21 @@ public class NbmhVaccinServiceImpl extends ServiceImpl<NbmhVaccinMapper, NbmhVac
      * @return IPage<NbmhVaccin>
      */
     @Override
-    public IPage<NbmhVaccin> getByPage(QueryRequest<VaccinParam> param) {
+    public IPage<NbmhVaccin> getByPage(QueryRequest<NbmhVaccin> param) {
         //添加条件
         LambdaQueryWrapper<NbmhVaccin> queryWrapper=new LambdaQueryWrapper<>();
         if (ObjectUtils.isNotEmpty(param.getQueryEntity())) {
             //农户
-            if (ObjectUtils.isNotEmpty(param.getQueryEntity().getUserId())) {
+            if (ObjectUtils.isNotEmpty(param.getQueryEntity().getFarmerId())) {
                 queryWrapper.eq(NbmhVaccin::getFarmerId, param.getQueryEntity().getFarmerId());
             }
             //防疫人员
             if (ObjectUtils.isNotEmpty(param.getQueryEntity().getVaccinUser())) {
-                queryWrapper.eq(NbmhVaccin::getVaccinUser, param.getQueryEntity().getVaccinUser());
+                queryWrapper.like(NbmhVaccin::getVaccinUser, param.getQueryEntity().getVaccinUser());
+            }
+            //耳标号
+            if (ObjectUtils.isNotEmpty(param.getQueryEntity().getEarNo())) {
+                queryWrapper.eq(NbmhVaccin::getEarNo, param.getQueryEntity().getEarNo());
             }
             //抵押状态
             if (ObjectUtils.isNotEmpty(param.getQueryEntity().getStatus())) {
@@ -72,7 +76,7 @@ public class NbmhVaccinServiceImpl extends ServiceImpl<NbmhVaccinMapper, NbmhVac
             //时间 查询条件为年月日匹配
             if (ObjectUtils.isNotEmpty(param.getQueryEntity().getCreateTime())) {
                 String strStart=DateFormatUtils.format(param.getQueryEntity().getCreateTime(), "yyyy-MM-dd");
-                queryWrapper.apply("UNIX_TIMESTAMP(create_time) = UNIX_TIMESTAMP('" + strStart + "')");
+                queryWrapper.apply("date_format (create_time,'%Y-%m-%d') = date_format('" + strStart + "','%Y-%m-%d')");
             }
         }
         //分页

@@ -23,7 +23,6 @@ import com.hszn.nbmh.third.feign.RemoteBaseConfigService;
 import com.hszn.nbmh.user.api.entity.NbmhUser;
 import com.hszn.nbmh.user.api.entity.NbmhUserExtraInfo;
 import com.hszn.nbmh.user.api.feign.RemoteUserService;
-import com.hszn.nbmh.user.api.params.input.NbmhBaseConfigParam;
 import com.hszn.nbmh.user.api.params.out.CurUserInfo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -172,7 +171,7 @@ public class NbmhVaccinController {
     @PostMapping("/record")
     @Operation(summary="防疫员端-防疫记录")
     @Inner(false)
-    public Result record(@RequestBody QueryRequest<VaccinParam> param) {
+    public Result record(@RequestBody QueryRequest<NbmhVaccin> param) {
         //返回结果
         List<VaccinRecordResult> vaccinRecordResultList=new ArrayList<>();
         //获取防疫记录分页数据集
@@ -194,7 +193,7 @@ public class NbmhVaccinController {
     @PostMapping("/personalPageRecord")
     @Operation(summary="站长-防疫员个人页-防疫记录")
     @Inner(false)
-    public Result personalPageRecord(@RequestBody QueryRequest<VaccinParam> param) {
+    public Result personalPageRecord(@RequestBody QueryRequest<NbmhVaccin> param) {
         //返回结果
         List<VaccinRecordResult> vaccinRecordResultList=new ArrayList<>();
         //获取防疫记录分页数据集

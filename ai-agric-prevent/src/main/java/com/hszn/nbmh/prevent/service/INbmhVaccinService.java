@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hszn.nbmh.common.core.mould.QueryRequest;
 import com.hszn.nbmh.prevent.api.entity.NbmhVaccin;
-import com.hszn.nbmh.prevent.api.params.input.VaccinParam;
 
 import java.util.List;
 
@@ -24,7 +23,7 @@ public interface INbmhVaccinService extends IService<NbmhVaccin> {
      * @param param
      * @return IPage<NbmhVaccin>
      */
-    IPage<NbmhVaccin> getByPage(QueryRequest<VaccinParam> param);
+    IPage<NbmhVaccin> getByPage(QueryRequest<NbmhVaccin> param);
 
 
     /**

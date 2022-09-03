@@ -34,7 +34,7 @@ public class InspectRecordParam {
      * status
      */
     @Schema(name="status", description="状态(1:未检疫,2:已检疫,3:数据失效,4:已举报,5:)")
-    private int status;
+    private Integer status;
 
     /**
      * 动物类型(种类 0猪 1牛)
@@ -55,5 +55,11 @@ public class InspectRecordParam {
     @Schema(name="reportNumber", description="检疫编号")
     private String reportNumber;
 
+
+    /**
+     * 防疫站id
+     */
+    @Schema(name="preventStationId", description="防疫站id")
+    private Long preventStationId;
 
 }

@@ -33,6 +33,12 @@ public class InspectRecordResult {
     @Schema(name="userAvatarUrl", description="养殖户头像")
     private String userAvatarUrl;
 
+    /**
+     * 养殖户手机号
+     */
+    @Schema(name="userPhone", description="养殖户手机号")
+    private String userPhone;
+
 
     /**
      * 动物类型(种类 0猪 1牛)

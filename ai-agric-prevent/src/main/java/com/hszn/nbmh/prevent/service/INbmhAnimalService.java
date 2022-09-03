@@ -28,7 +28,7 @@ public interface INbmhAnimalService extends IService<NbmhAnimal> {
      * @param param
      * @return IPage
      */
-    IPage<NbmhAnimal> getByPage(QueryRequest<AnimalParam> param);
+    IPage<NbmhAnimal> getByPage(QueryRequest<NbmhAnimal> param);
 
     /**
      * 根据农户统计动物信息

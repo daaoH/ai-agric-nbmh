@@ -19,6 +19,8 @@ import com.hszn.nbmh.common.core.utils.SortUtil;
 import com.hszn.nbmh.common.security.annotation.Inner;
 import com.hszn.nbmh.prevent.api.entity.NbmhUserIntegralRecord;
 import com.hszn.nbmh.prevent.api.feign.RemoteUserIntegralService;
+import com.hszn.nbmh.third.entity.NbmhBaseConfig;
+import com.hszn.nbmh.third.feign.RemoteBaseConfigService;
 import com.hszn.nbmh.user.api.entity.NbmhAnimalDoctorDetail;
 import com.hszn.nbmh.user.api.entity.NbmhUser;
 import com.hszn.nbmh.user.api.entity.NbmhUserCredentials;
@@ -82,6 +84,8 @@ public class NbmhUserController {
     private final RemotePreventService remotePreventService;
 
     private final RemoteUserIntegralService userIntegralService;
+
+    private final RemoteBaseConfigService baseConfigService;
 
     SnowFlakeIdUtil snowFlakeId=new SnowFlakeIdUtil(1L, 1L);
 
@@ -289,12 +293,14 @@ public class NbmhUserController {
 
             if (param.getInviteType() == 5) {
                 //邀请用户积分-分配
-                List<NbmhBaseConfigParam> configData=(List<NbmhBaseConfigParam>) thirdService.getBySubject("invite").getData();
+                Result configData=baseConfigService.getBySubject("invite");
+                List<NbmhBaseConfig> configs=JSON.parseArray(JSON.toJSONString(configData.getData()), NbmhBaseConfig.class);
                 int isOpen=0;
                 BigDecimal leaderRatio=new BigDecimal("0.00");
                 BigDecimal staffRatio=new BigDecimal("0.00");
                 BigDecimal rewardAmount=new BigDecimal("0.00");
-                for (NbmhBaseConfigParam baseConfig : configData) {
+
+                for (NbmhBaseConfig baseConfig : configs) {
                     if ("staff_ratio".equals(baseConfig.getConfigKey())) {
                         staffRatio=new BigDecimal(baseConfig.getConfigValue());
                     } else if ("reward_amount".equals(baseConfig.getConfigKey())) {
@@ -334,7 +340,7 @@ public class NbmhUserController {
                         userIntegralRecords.add(NbmhUserIntegralRecord.builder()
                                 .userId(user.getId())
                                 .userName(!ObjectUtils.isEmpty(param.getExtraInfo().getRealName()) ? param.getExtraInfo().getRealName() : "")
-                                .userAvatarUrl(!ObjectUtils.isEmpty(breeder.getAvatarUrl()) ? breeder.getAvatarUrl() : "")
+                                .userAvatarUrl(ObjectUtils.isEmpty(breeder.getAvatarUrl()) ? "" : breeder.getAvatarUrl())
                                 .vaccinId(preventOfficer.getId())
                                 .vaccinUser(preventOfficer.getUserName())
                                 .vaccinAvatarUrl(!ObjectUtils.isEmpty(preventOfficer.getAvatarUrl()) ? stationMaster.getAvatarUrl() : "")
@@ -520,14 +526,14 @@ public class NbmhUserController {
         return Result.ok();
     }
 
-    @Operation(summary = "获取推荐专家列表", method = "POST")
+    @Operation(summary="获取推荐专家列表", method="POST")
     @PostMapping("/animalDoctor/popular")
     public Result<List<NbmhAnimalDoctorDetail>> popular(@RequestBody NbmhAnimalDoctorDetail nbmhAnimalDoctorDetail) {
 
-        QueryWrapper<NbmhAnimalDoctorDetail> queryWrapper = Wrappers.query(nbmhAnimalDoctorDetail);
+        QueryWrapper<NbmhAnimalDoctorDetail> queryWrapper=Wrappers.query(nbmhAnimalDoctorDetail);
         queryWrapper.orderBy(true, false, "heatWeight");
 
-        List<NbmhAnimalDoctorDetail> animalDoctorList = animalDoctorDetailService.list(queryWrapper);
+        List<NbmhAnimalDoctorDetail> animalDoctorList=animalDoctorDetailService.list(queryWrapper);
 
         if (CollectionUtils.isEmpty(animalDoctorList)) {
             return Result.ok();
@@ -536,8 +542,8 @@ public class NbmhUserController {
         return Result.ok(animalDoctorList);
     }
 
-    @Operation(summary = "查找指定范围内的兽医", method = "POST")
-    @Parameters({@Parameter(description = "距离范围 单位km", name = "distance"), @Parameter(description = "当前经度", name = "userLng"), @Parameter(description = "当前纬度", name = "userLat")})
+    @Operation(summary="查找指定范围内的兽医", method="POST")
+    @Parameters({@Parameter(description="距离范围 单位km", name="distance"), @Parameter(description="当前经度", name="userLng"), @Parameter(description="当前纬度", name="userLat")})
     @PostMapping("/animalDoctor/nearby")
     public Result<List<NbmhAnimalDoctorDetail>> nearby(@RequestBody NbmhAnimalDoctorDetail nbmhAnimalDoctorDetail, @RequestParam("distance") double distance,
                                                        @RequestParam("userLng") double userLng, @RequestParam("userLat") double userLat) {
@@ -561,14 +567,14 @@ public class NbmhUserController {
         animalDoctorList=animalDoctorList.stream()
                 .filter(animalDoctor -> getDistance(animalDoctor.getLongitude(), animalDoctor.getLatitude(), userLng, userLat) <= distance)
                 .collect(Collectors.toList());
-        animalDoctorList = animalDoctorList.stream().filter(animalDoctor -> getDistance(animalDoctor.getLongitude(), animalDoctor.getLatitude(), userLng, userLat) <= distance).collect(Collectors.toList());
+        animalDoctorList=animalDoctorList.stream().filter(animalDoctor -> getDistance(animalDoctor.getLongitude(), animalDoctor.getLatitude(), userLng, userLat) <= distance).collect(Collectors.toList());
 
         if (nbmhAnimalDoctorDetail.getDoctorType() != null) {
-            animalDoctorList = animalDoctorList.stream().filter(animalDoctor -> animalDoctor.getDoctorType().equals(nbmhAnimalDoctorDetail.getDoctorType())).collect(Collectors.toList());
+            animalDoctorList=animalDoctorList.stream().filter(animalDoctor -> animalDoctor.getDoctorType().equals(nbmhAnimalDoctorDetail.getDoctorType())).collect(Collectors.toList());
         }
 
         if (nbmhAnimalDoctorDetail.getGoodAnimalType() != null) {
-            animalDoctorList = animalDoctorList.stream().filter(animalDoctor -> animalDoctor.getGoodAnimalType().equals(nbmhAnimalDoctorDetail.getGoodAnimalType())).collect(Collectors.toList());
+            animalDoctorList=animalDoctorList.stream().filter(animalDoctor -> animalDoctor.getGoodAnimalType().equals(nbmhAnimalDoctorDetail.getGoodAnimalType())).collect(Collectors.toList());
         }
 
         return Result.ok(animalDoctorList);
@@ -651,24 +657,6 @@ public class NbmhUserController {
         Result codeImageResult=thirdService.generate(imageRequest);
         return String.valueOf(codeImageResult.getData());
     }
-
-
-    /**
-     * 防疫拉新(新养殖户)积分获取处理
-     * 获取积分规则(远程调用)
-     *
-     * @param userId
-     * @return
-     */
-    public void integralAdd(Long userId) {
-        //积分规则比例(业务类型)
-        String invite="invite";
-        //获取积分规则
-        Result configData=thirdService.getBySubject(invite);
-        configData.getData();
-
-    }
-
 
     /**
      * 校验附属信息是否存在

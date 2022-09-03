@@ -142,7 +142,7 @@ public class NbmhInspect implements Serializable {
     /**
      * 状态(1:,2:,3:,4:,5:)
      */
-    @Schema(name="status", description="状态(1:未检疫,2:已检疫,3:数据失效,4:已举报,5:)")
+    @Schema(name="status", description="状态(0未检疫,1:已检疫,2:已抵押,3:数据失效,4:已举报,5:)")
     private int status;
 
     /**

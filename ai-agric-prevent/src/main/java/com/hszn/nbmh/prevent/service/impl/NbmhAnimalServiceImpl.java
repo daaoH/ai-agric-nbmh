@@ -21,6 +21,7 @@ import com.hszn.nbmh.prevent.service.INbmhAnimalService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hszn.nbmh.user.api.entity.NbmhUser;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
@@ -58,11 +59,11 @@ public class NbmhAnimalServiceImpl extends ServiceImpl<NbmhAnimalMapper, NbmhAni
      * @return IPage<NbmhAnimal>
      */
     @Override
-    public IPage<NbmhAnimal> getByPage(QueryRequest<AnimalParam> param) {
+    public IPage<NbmhAnimal> getByPage(QueryRequest<NbmhAnimal> param) {
         //添加条件
         LambdaQueryWrapper<NbmhAnimal> queryWrapper=new LambdaQueryWrapper<>();
         if (ObjectUtils.isNotEmpty(param.getQueryEntity())) {
-            //抵押状态
+            //耳标
             if (ObjectUtils.isNotEmpty(param.getQueryEntity().getEarNo())) {
                 queryWrapper.eq(NbmhAnimal::getEarNo, param.getQueryEntity().getEarNo());
             }
@@ -70,13 +71,18 @@ public class NbmhAnimalServiceImpl extends ServiceImpl<NbmhAnimalMapper, NbmhAni
             if (ObjectUtils.isNotEmpty(param.getQueryEntity().getStatus())) {
                 queryWrapper.eq(NbmhAnimal::getStatus, param.getQueryEntity().getStatus());
             }
+            //抵押状态
+            if (ObjectUtils.isNotEmpty(param.getQueryEntity().getType())) {
+                queryWrapper.eq(NbmhAnimal::getType, param.getQueryEntity().getType());
+            }
             //农户8
             if (ObjectUtils.isNotEmpty(param.getQueryEntity().getUserId())) {
                 queryWrapper.eq(NbmhAnimal::getUserId, param.getQueryEntity().getUserId());
             }
             //时间
             if (ObjectUtils.isNotEmpty(param.getQueryEntity().getCreateTime())) {
-                queryWrapper.eq(NbmhAnimal::getCreateTime, param.getQueryEntity().getCreateTime());
+                String strStart=DateFormatUtils.format(param.getQueryEntity().getCreateTime(), "yyyy-MM-dd");
+                queryWrapper.apply("date_format (create_time,'%Y-%m-%d') = date_format('" + strStart + "','%Y-%m-%d')");
             }
         }
 
@@ -180,8 +186,10 @@ public class NbmhAnimalServiceImpl extends ServiceImpl<NbmhAnimalMapper, NbmhAni
         NbmhAnimal animal=baseMapper.selectOne(Wrappers.<NbmhAnimal>query().lambda().eq(NbmhAnimal::getEarNo, earNo));
         if (ObjectUtils.isNotEmpty(animal)) {
             animalDetailsResult.setAnimal(animal);
-            animalDetailsResult.setInspect(inspectMapper.selectOne(Wrappers.<NbmhInspect>query().lambda().eq(NbmhInspect::getEarNo, earNo)));
-            animalDetailsResult.setVaccinList(vaccinMapper.selectList(Wrappers.<NbmhVaccin>query().lambda().eq(NbmhVaccin::getAnimalId, animal.getId())));
+            NbmhInspect inspect=inspectMapper.selectOne(Wrappers.<NbmhInspect>query().lambda().eq(NbmhInspect::getEarNo, earNo));
+            animalDetailsResult.setInspect(inspect);
+            List<NbmhVaccin> vaccinList=vaccinMapper.selectList(Wrappers.<NbmhVaccin>query().lambda().eq(NbmhVaccin::getAnimalId, animal.getId()));
+            animalDetailsResult.setVaccinList(vaccinList);
         }
         return animalDetailsResult;
     }
