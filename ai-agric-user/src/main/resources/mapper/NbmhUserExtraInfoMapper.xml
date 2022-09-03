@@ -14,6 +14,7 @@
         <result column="real_name" property="realName"/>
         <result column="id_card_front" property="idCardFront"/>
         <result column="id_card_back" property="idCardBack"/>
+        <result column="job_tags" property="jobTags"/>
         <result column="certificate" property="certificate"/>
         <result column="serial_num" property="serialNum"/>
         <result column="work_year" property="workYear"/>
