@@ -7,7 +7,7 @@ spring:
     nacos:
       discovery:
         server-addr: 192.168.99.100:8848
-        ip: 192.168.0.29
+        ip: 127.0.0.1
       config:
         server-addr: 192.168.99.100:8848
         file-extension: yml
