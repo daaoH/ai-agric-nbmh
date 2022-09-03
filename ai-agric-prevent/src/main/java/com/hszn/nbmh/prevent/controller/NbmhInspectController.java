@@ -4,10 +4,15 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.hszn.nbmh.common.core.enums.CommonEnum;
 import com.hszn.nbmh.common.core.utils.Result;
+import com.hszn.nbmh.common.core.utils.SnowFlakeIdUtil;
+import com.hszn.nbmh.prevent.api.entity.NbmhAnimal;
 import com.hszn.nbmh.prevent.api.entity.NbmhInspect;
 import com.hszn.nbmh.prevent.api.params.input.InspectExamineParam;
 import com.hszn.nbmh.prevent.api.params.input.InspectRecordParam;
+import com.hszn.nbmh.prevent.mapper.NbmhAnimalMapper;
 import com.hszn.nbmh.prevent.service.INbmhInspectService;
+import com.hszn.nbmh.user.api.feign.RemoteUserService;
+import com.hszn.nbmh.user.api.params.out.CurUserInfo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -35,6 +40,15 @@ public class NbmhInspectController {
 
     //检疫
     private final INbmhInspectService inspectService;
+
+    //动物
+    private final NbmhAnimalMapper animalMapper;
+
+    //用户信息
+    private final RemoteUserService userService;
+
+
+    SnowFlakeIdUtil snowFlakeId=new SnowFlakeIdUtil(1L, 1L);
 
     @GetMapping("getByEarNo/{earNo}")
     @Operation(summary="根据耳标获取检疫数据对象")
@@ -64,60 +78,60 @@ public class NbmhInspectController {
                     }
                 });
             }
-            inspects.forEach(in -> {
-                in.setStatus(1);
+            inspects.forEach(inspect -> {
+                inspect.setStatus(1);//已检疫状态
+                inspect.setPreventStationId(params.getPreventStationId());//防疫站id
+                inspect.setVaccinId(params.getVaccinId());//检疫人id
+                inspect.setDestination(params.getDestination());//到达地
+                inspect.setInspectNumber(params.getInspectNumber());//检疫编号
+                inspect.setInspectProveUrl(params.getInspectProveUrl());//检疫证明
+                inspect.setSubmitBy(params.getSubmitBy());//送检人
+                inspect.setSubmitByPhone(params.getSubmitByPhone());//送检人电话
+                inspect.setUpdateTime(new Date());//更新时间
             });
-            inspectService.saveBatch(inspects);
+            inspectService.updateBatchById(inspects);
         }
         //动物耳标ids数量大于零 则创建新的检疫数据 状态直接更新为已检疫
         if (params.getIds().size() > 0) {
             //获取当前审批数据集合
             List<NbmhInspect> inspectList=new ArrayList<>();
-            //TODO
             params.getIds().stream().forEach(id -> {
                 NbmhInspect inspect=new NbmhInspect();
-                inspect.setCreateTime(new Date());
-                inspect.setDestination(params.getDestination());
-                inspect.setInspectNumber(params.getInspectNumber());
-                inspect.setStatus(2);
-                inspect.setVaccinId(params.getVaccinId());
-                inspect.setSubmitBy(params.getSubmitBy());
-                inspect.setSubmitByPhone(params.getSubmitByPhone());
+                inspect.setCreateTime(new Date());//创建时间
+                inspect.setInspectNumber(params.getInspectNumber());//检疫编号
+                inspect.setStatus(1);//已检疫状态
+                inspect.setVaccinId(params.getVaccinId());//检疫人id
+                inspect.setPreventStationId(params.getPreventStationId());//防疫站id
+                inspect.setInspectProveUrl(params.getInspectProveUrl());//检疫证明
+                inspect.setSubmitBy(params.getSubmitBy());//送检人
+                inspect.setSubmitByPhone(params.getSubmitByPhone());//送检人电话
+                inspect.setDestination(params.getDestination());//到达地
+                inspect.setBuyerName(params.getBuyerName());//买家
+                inspect.setBuyerCard(params.getBuyerCard());//买家身份证
+                inspect.setBuyerPhone(params.getBuyerPhone());//买家电话
+                inspect.setPlaceConsigned(params.getPlaceConsigned());//启运地
+                inspect.setReportNumber(String.valueOf(snowFlakeId.nextId()));//报备编号
+                //动物信息 TODO 效率问题
+                NbmhAnimal animal=animalMapper.selectById(id);
+                inspect.setAnimalId(id);
+                inspect.setEarNo(animal.getEarNo());
+                inspect.setAnimalType(animal.getType());
+                inspect.setAnimalStatus(animal.getStatus());
+                //用户信息
+                CurUserInfo userInfo=userService.queryCurUserInfo(animal.getUserId(), 5).getData();
+                inspect.setUserId(animal.getUserId());
+                inspect.setUserName(userInfo.getExtraInfo().getRealName());
+                inspect.setUserAvatarUrl(userInfo.getUser().getAvatarUrl());
+                inspect.setUserPhone(userInfo.getUser().getPhone());
+
                 inspectList.add(inspect);
             });
             //动物检疫-批量新增
-            boolean ret=this.inspectService.saveBatch(inspectList);
-            if (ret) {
-                return Result.ok();
-            }
+            this.inspectService.saveBatch(inspectList);
         }
-        return Result.failed(CommonEnum.DATA_SUBMIT_FAILED.getMsg());
+        return Result.ok();
     }
 
-
-    public static void main(String[] args) {
-        List<Long> ids1=new ArrayList<>();
-        ids1.add(1L);
-        ids1.add(2L);
-        ids1.add(3L);
-        ids1.add(4L);
-        List<Long> ids2=new ArrayList<>();
-        ids2.add(1L);
-        ids2.add(2L);
-        ids2.add(3L);
-        ids2.add(4L);
-
-        Iterator<Long> it=ids1.iterator();
-        while (it.hasNext()) {
-            ids2.forEach(i -> {
-                Long x=it.next();
-                if (x.equals(i)) {
-                    it.remove();
-                }
-            });
-        }
-        System.out.println(ids1.toString());
-    }
 
     @PostMapping("/record")
     @Operation(summary="防疫员-防疫记录")

@@ -146,12 +146,6 @@ public class NbmhInspect implements Serializable {
     private int status;
 
     /**
-     * 防疫站标识
-     */
-    @Schema(name="stationId", description="防疫站标识")
-    private Long stationId;
-
-    /**
      * 买家
      */
     @Schema(name="buyerName", description="买家")
@@ -180,6 +174,6 @@ public class NbmhInspect implements Serializable {
      * 防疫站id
      */
     @Schema(name="preventStationId", description="防疫站id")
-    private String preventStationId;
+    private Long preventStationId;
 
 }

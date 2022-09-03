@@ -62,4 +62,38 @@ public class InspectExamineParam {
     @Schema(name="destination", description="到达地")
     private String destination;
 
+    /**
+     * 防疫站id
+     */
+    @Schema(name="preventStationId", description="防疫站id")
+    private Long preventStationId;
+    /**
+     * 买家
+     */
+    @Schema(name="buyerName", description="买家")
+    private String buyerName;
+    /**
+     * 买家电话
+     */
+    @Schema(name="buyerPhone", description="买家电话")
+    private String buyerPhone;
+
+    /**
+     * 买家身份证
+     */
+    @Schema(name="buyerCard", description="买家身份证")
+    private String buyerCard;
+
+    /**
+     * 启运地
+     */
+    @Schema(name="placeConsigned", description="启运地")
+    private String placeConsigned;
+
+    /**
+     * 报备编号
+     */
+    @Schema(name="reportNumber", description="报备编号")
+    private String reportNumber;
+
 }

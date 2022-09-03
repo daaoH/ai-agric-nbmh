@@ -22,7 +22,6 @@
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
         <result column="status" property="status"/>
-        <result column="station_id" property="stationId"/>
         <result column="buyer_name" property="buyerName"/>
         <result column="buyer_phone" property="buyerPhone"/>
         <result column="buyer_card" property="buyerCard"/>
