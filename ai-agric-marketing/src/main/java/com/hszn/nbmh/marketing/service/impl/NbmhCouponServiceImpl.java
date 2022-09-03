@@ -1,5 +1,6 @@
 package com.hszn.nbmh.marketing.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hszn.nbmh.common.core.utils.SnowFlakeIdUtil;
 import com.hszn.nbmh.marketing.api.entity.NbmhCoupon;
@@ -106,6 +107,11 @@ public class NbmhCouponServiceImpl extends ServiceImpl<NbmhCouponMapper, NbmhCou
                 NbmhCouponHistory history = NbmhCouponHistory.builder()
                         .couponId(couponInfo.getId())
                         .getType(getType)
+                        .couponName(couponInfo.getCouponName())
+                        .amount(couponInfo.getAmount())
+                        .minPoint(couponInfo.getMinPoint())
+                        .startTime(couponInfo.getStartTime())
+                        .endTime(couponInfo.getEndTime())
                         .userId(userId)
                         .userName(userName)
                         //未使用
@@ -123,5 +129,12 @@ public class NbmhCouponServiceImpl extends ServiceImpl<NbmhCouponMapper, NbmhCou
         // TODO: 2022/9/3 统一获取当前用户
         Long userId = 123L;
         return baseMapper.getAcceptHistory(couponId, userId);
+    }
+
+    @Override
+    public List<NbmhCouponHistory> findCoupon(Integer status) {
+        LambdaQueryWrapper<NbmhCouponHistory> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(NbmhCouponHistory::getStatus, status);
+        return couponHistoryService.list(wrapper);
     }
 }

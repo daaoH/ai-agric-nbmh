@@ -30,6 +30,36 @@ public class CouponAcceptOut {
     private String shopId;
 
     /**
+     * 优惠卷名字
+     */
+    @Schema(name = "couponName", description = "优惠卷名字")
+    private String couponName;
+
+    /**
+     * 金额
+     */
+    @Schema(name = "amount", description = "金额")
+    private BigDecimal amount;
+
+    /**
+     * 使用门槛
+     */
+    @Schema(name = "minPoint", description = "使用门槛")
+    private BigDecimal minPoint;
+
+    /**
+     * 开始时间
+     */
+    @Schema(name = "startTime", description = "开始时间")
+    private Date startTime;
+
+    /**
+     * 结束时间
+     */
+    @Schema(name = "endTime", description = "结束时间")
+    private Date endTime;
+
+    /**
      * 每人限领张数
      */
     @Schema(name = "perLimit", description = "每人限领张数")

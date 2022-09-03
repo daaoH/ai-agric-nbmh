@@ -3,6 +3,7 @@ package com.hszn.nbmh.marketing.api.entity;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -54,6 +55,31 @@ public class NbmhCouponHistory implements Serializable {
      * 获取方式[0->后台赠送；1->主动领取]
      */
     private Integer getType;
+
+    /**
+     * 优惠卷名字
+     */
+    private String couponName;
+
+    /**
+     * 金额
+     */
+    private BigDecimal amount;
+
+    /**
+     * 使用门槛
+     */
+    private BigDecimal minPoint;
+
+    /**
+     * 开始时间
+     */
+    private Date startTime;
+
+    /**
+     * 结束时间
+     */
+    private Date endTime;
 
     /**
      * 使用时间

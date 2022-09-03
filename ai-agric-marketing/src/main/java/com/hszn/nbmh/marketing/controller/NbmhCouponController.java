@@ -2,11 +2,14 @@ package com.hszn.nbmh.marketing.controller;
 
 
 import com.hszn.nbmh.common.core.utils.Result;
+import com.hszn.nbmh.marketing.api.entity.NbmhCouponHistory;
 import com.hszn.nbmh.marketing.service.INbmhCouponService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import com.hszn.nbmh.marketing.api.params.input.CouponParam;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * <p>
@@ -45,11 +48,23 @@ public class NbmhCouponController {
     @Operation(description = "优惠券领取")
     @GetMapping("accept")
     public Result<String> couponAccept(Long couponId) {
-        boolean result = couponService.accept(couponId,1);
+        boolean result = couponService.accept(couponId, 1);
         if (result) {
             return Result.ok("优惠券领取成功");
         }
         return Result.ok("优惠券领取失败");
+    }
+
+    /**
+     * 获取用户可用优惠券
+     *
+     * @return
+     */
+    @Operation(description = "根据状态获取用户优惠券")
+    @GetMapping("findCoupon")
+    public Result<List<NbmhCouponHistory>> findCoupon(@RequestParam("status") Integer status) {
+        List<NbmhCouponHistory> result = couponService.findCoupon(status);
+        return Result.ok(result);
     }
 
 }

@@ -41,6 +41,11 @@
             c.per_limit,
             c.user_level,
             c.publish_count,
+            c.coupon_name,
+            c.amount,
+            c.min_point,
+            c.start_time,
+            c.end_time,
             ch.user_id
         from nbmh_coupon c
         left join nbmh_coupon_history ch
@@ -49,7 +54,7 @@
            c.id = #{id}
            and status = 1
            and ch.user_id = #{userId}
-           and now() between c.start_time and c.end_time
+           and now() between c.enable_start_time and c.enable_end_time
        </where>
     </select>
 

@@ -4,17 +4,22 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.hszn.nbmh.marketing.api.entity.NbmhCouponHistory">
-        <id column="id" property="id" />
-        <result column="coupon_id" property="couponId" />
-        <result column="user_id" property="userId" />
-        <result column="user_name" property="userName" />
-        <result column="get_type" property="getType" />
-        <result column="use_time" property="useTime" />
-        <result column="order_id" property="orderId" />
-        <result column="order_sn" property="orderSn" />
-        <result column="create_time" property="createTime" />
-        <result column="update_time" property="updateTime" />
-        <result column="status" property="status" />
+        <id column="id" property="id"/>
+        <result column="coupon_id" property="couponId"/>
+        <result column="user_id" property="userId"/>
+        <result column="user_name" property="userName"/>
+        <result column="get_type" property="getType"/>
+        <result column="amount" property="amount"/>
+        <result column="min_point" property="minPoint"/>
+        <result column="coupon_name" property="couponName"/>
+        <result column="start_time" property="startTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="use_time" property="useTime"/>
+        <result column="order_id" property="orderId"/>
+        <result column="order_sn" property="orderSn"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="status" property="status"/>
     </resultMap>
 
 </mapper>
