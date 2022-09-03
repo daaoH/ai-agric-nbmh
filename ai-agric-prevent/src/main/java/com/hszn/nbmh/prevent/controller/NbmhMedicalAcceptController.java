@@ -36,6 +36,7 @@ public class NbmhMedicalAcceptController {
 
     @Operation(summary = "新增动物诊疗接单记录", method = "POST")
     @PostMapping("/add")
+    @Inner(false)
     public Result add(@RequestBody NbmhMedicalAccept nbmhMedicalAccept) {
 
         List<Integer> idList = NbmhMedicalAcceptService.save(Collections.singletonList(nbmhMedicalAccept));
@@ -48,6 +49,7 @@ public class NbmhMedicalAcceptController {
 
     @Operation(summary = "根据ID查询动物诊疗接单记录", method = "GET")
     @PostMapping("/{id}")
+    @Inner(false)
     public Result<NbmhMedicalAccept> getById(@PathVariable(value = "id") @NotBlank Long id) {
 
         return Result.ok(NbmhMedicalAcceptService.getById(id));
@@ -55,6 +57,7 @@ public class NbmhMedicalAcceptController {
 
     @Operation(summary = "更新动物诊疗接单记录", method = "PUT")
     @PutMapping
+    @Inner(false)
     public Result update(@RequestBody NbmhMedicalAccept nbmhMedicalAccept) {
 
         NbmhMedicalAcceptService.update(Collections.singletonList(nbmhMedicalAccept));
@@ -64,6 +67,7 @@ public class NbmhMedicalAcceptController {
     @Operation(summary = "分页查询动物诊疗接单记录", method = "POST")
     @Parameters({@Parameter(description = "页码", name = "pageNum"), @Parameter(description = "每页显示条数", name = "pageSize"), @Parameter(description = "排序条件集合", name = "orderItemList")})
     @PostMapping("/query")
+    @Inner(false)
     public Result<IPage<NbmhMedicalAccept>> query(@RequestBody NbmhMedicalAccept nbmhMedicalAccept,
                                                   @RequestParam @DecimalMin("1") int pageNum,
                                                   @RequestParam @DecimalMin("1") int pageSize,
@@ -86,6 +90,7 @@ public class NbmhMedicalAcceptController {
 
     @DeleteMapping("delete/{id}")
     @Operation(summary = "删除动物诊疗接单记录")
+    @Inner(false)
     public Result delete(@PathVariable Long id) {
 
         NbmhMedicalAcceptService.delete(Collections.singletonList(id));

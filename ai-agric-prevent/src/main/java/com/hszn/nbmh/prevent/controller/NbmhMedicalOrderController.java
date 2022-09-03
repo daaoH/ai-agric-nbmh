@@ -38,6 +38,7 @@ public class NbmhMedicalOrderController {
 
     @Operation(summary = "新增诊断下单记录", method = "POST")
     @PostMapping("/add")
+    @Inner(false)
     public Result add(@RequestBody NbmhMedicalOrder nbmhMedicalOrder) {
 
         List<Integer> idList = nbmhMedicalOrderService.save(Collections.singletonList(nbmhMedicalOrder));
@@ -50,6 +51,7 @@ public class NbmhMedicalOrderController {
 
     @Operation(summary = "根据ID查询诊断下单记录", method = "GET")
     @PostMapping("/{id}")
+    @Inner(false)
     public Result<NbmhMedicalOrder> getById(@PathVariable(value = "id") @NotBlank Long id) {
 
         return Result.ok(nbmhMedicalOrderService.getById(id));
@@ -57,6 +59,7 @@ public class NbmhMedicalOrderController {
 
     @Operation(summary = "更新诊断下单记录", method = "PUT")
     @PutMapping
+    @Inner(false)
     public Result update(@RequestBody NbmhMedicalOrder nbmhMedicalOrder) {
 
         nbmhMedicalOrderService.update(Collections.singletonList(nbmhMedicalOrder));
@@ -66,6 +69,7 @@ public class NbmhMedicalOrderController {
     @Operation(summary = "分页查询诊断下单记录", method = "POST")
     @Parameters({@Parameter(description = "页码", name = "pageNum"), @Parameter(description = "每页显示条数", name = "pageSize"), @Parameter(description = "排序条件集合", name = "orderItemList")})
     @PostMapping("/query")
+    @Inner(false)
     public Result<IPage<NbmhMedicalOrder>> query(@RequestBody NbmhMedicalOrder nbmhMedicalOrder,
                                                  @RequestParam @DecimalMin("1") int pageNum,
                                                  @RequestParam @DecimalMin("1") int pageSize,
@@ -88,6 +92,7 @@ public class NbmhMedicalOrderController {
 
     @DeleteMapping("delete/{id}")
     @Operation(summary = "删除诊断下单记录")
+    @Inner(false)
     public Result delete(@PathVariable Long id) {
 
         nbmhMedicalOrderService.delete(Collections.singletonList(id));

@@ -39,6 +39,7 @@ public class NbmhMedicalScheduleController {
 
     @Operation(summary = "新增接诊时间设置", method = "POST")
     @PostMapping("/add")
+    @Inner(false)
     public Result add(@RequestBody NbmhMedicalSchedule nbmhMedicalSchedule) {
 
         List<Integer> idList = nbmhMedicalScheduleService.save(Collections.singletonList(nbmhMedicalSchedule));
@@ -51,6 +52,7 @@ public class NbmhMedicalScheduleController {
 
     @Operation(summary = "根据ID查询接诊时间设置", method = "GET")
     @PostMapping("/{id}")
+    @Inner(false)
     public Result<NbmhMedicalSchedule> getById(@PathVariable(value = "id") @NotBlank Long id) {
 
         return Result.ok(nbmhMedicalScheduleService.getById(id));
@@ -58,6 +60,7 @@ public class NbmhMedicalScheduleController {
 
     @Operation(summary = "更新接诊时间设置", method = "PUT")
     @PutMapping
+    @Inner(false)
     public Result update(@RequestBody NbmhMedicalSchedule nbmhMedicalSchedule) {
 
         nbmhMedicalScheduleService.update(Collections.singletonList(nbmhMedicalSchedule));
@@ -67,6 +70,7 @@ public class NbmhMedicalScheduleController {
     @Operation(summary = "分页查询接诊时间设置", method = "POST")
     @Parameters({@Parameter(description = "页码", name = "pageNum"), @Parameter(description = "每页显示条数", name = "pageSize"), @Parameter(description = "排序条件集合", name = "orderItemList")})
     @PostMapping("/query")
+    @Inner(false)
     public Result<IPage<NbmhMedicalSchedule>> query(@RequestBody NbmhMedicalSchedule nbmhMedicalSchedule,
                                                     @RequestParam @DecimalMin("1") int pageNum,
                                                     @RequestParam @DecimalMin("1") int pageSize,
@@ -89,6 +93,7 @@ public class NbmhMedicalScheduleController {
 
     @DeleteMapping("delete/{id}")
     @Operation(summary = "删除接诊时间设置")
+    @Inner(false)
     public Result delete(@PathVariable Long id) {
 
         nbmhMedicalScheduleService.delete(Collections.singletonList(id));

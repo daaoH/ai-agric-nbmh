@@ -97,6 +97,12 @@ public class NbmhUserExtraInfo implements Serializable {
     /**
      * 资质证书
      */
+    @Schema(name="jobTags", description="职称标签")
+    private String jobTags;
+
+    /**
+     * 资质证书
+     */
     @Schema(name="certificate", description="资质证书")
     private String certificate;
 
