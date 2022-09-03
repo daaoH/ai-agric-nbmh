@@ -47,6 +47,7 @@
             on c.id = ch.coupon_id
        <where>
            c.id = #{id}
+           and status = 1
            and ch.user_id = #{userId}
            and now() between c.start_time and c.end_time
        </where>
