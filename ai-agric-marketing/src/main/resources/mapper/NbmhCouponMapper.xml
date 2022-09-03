@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hszn.nbmh.marketing.mapper.NbmhCouponMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hszn.nbmh.marketing.api.entity.NbmhCoupon">
+        <id column="id" property="id" />
+        <result column="tenant_id" property="tenantId" />
+        <result column="shop_id" property="shopId" />
+        <result column="coupon_type" property="couponType" />
+        <result column="coupon_img" property="couponImg" />
+        <result column="coupon_name" property="couponName" />
+        <result column="num" property="num" />
+        <result column="amount" property="amount" />
+        <result column="per_limit" property="perLimit" />
+        <result column="min_point" property="minPoint" />
+        <result column="start_time" property="startTime" />
+        <result column="end_time" property="endTime" />
+        <result column="use_type" property="useType" />
+        <result column="remark" property="remark" />
+        <result column="publish_count" property="publishCount" />
+        <result column="use_count" property="useCount" />
+        <result column="receive_count" property="receiveCount" />
+        <result column="enable_start_time" property="enableStartTime" />
+        <result column="enable_end_time" property="enableEndTime" />
+        <result column="code" property="code" />
+        <result column="user_level" property="userLevel" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="status" property="status" />
+    </resultMap>
+
+    <sql id="nbmhCouponField">
+        c.id, c.tenant_id, c.shop_id, c.coupon_type, c.coupon_img, c.coupon_name, c.num, c.amount, c.per_limit, c.min_point, c.start_time, c.end_time, c.use_type, c.remark, c.publish_count, c.use_count, c.receive_count, c.enable_start_time, c.enable_end_time, c.code, c.user_level, c.create_time, c.update_time, c.status
+    </sql>
+
+    <select id="getAcceptHistory" resultType="com.hszn.nbmh.marketing.api.params.out.CouponAcceptOut">
+       select
+            c.id,
+            c.shop_id,
+            c.per_limit,
+            c.user_level,
+            c.publish_count,
+            ch.user_id
+        from nbmh_coupon c
+        left join nbmh_coupon_history ch
+            on c.id = ch.coupon_id
+       <where>
+           c.id = #{id}
+           and ch.user_id = #{userId}
+           and now() between c.start_time and c.end_time
+       </where>
+    </select>
+
+</mapper>
