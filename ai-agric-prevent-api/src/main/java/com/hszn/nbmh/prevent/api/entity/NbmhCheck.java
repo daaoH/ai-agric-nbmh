@@ -185,4 +185,11 @@ public class NbmhCheck implements Serializable {
     private Date updateTime;
 
 
+    /**
+     * 防疫站id
+     */
+    @Schema(name="preventStationId", description="防疫站id")
+    private Long preventStationId;
+
+
 }

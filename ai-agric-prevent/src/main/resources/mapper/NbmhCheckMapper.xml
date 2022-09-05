@@ -4,31 +4,32 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.hszn.nbmh.prevent.api.entity.NbmhCheck">
-        <id column="id" property="id" />
-        <result column="check_number" property="checkNumber" />
-        <result column="check_id" property="checkId" />
-        <result column="car_number" property="carNumber" />
-        <result column="transporter" property="transporter" />
-        <result column="phone" property="phone" />
-        <result column="id_card_front_url" property="idCardFrontUrl" />
-        <result column="id_card_back_url" property="idCardBackUrl" />
-        <result column="destination" property="destination" />
-        <result column="place_consigned" property="placeConsigned" />
-        <result column="animal_type" property="animalType" />
-        <result column="num" property="num" />
-        <result column="monomer_weight" property="monomerWeight" />
-        <result column="photo" property="photo" />
-        <result column="supplementary_note" property="supplementaryNote" />
-        <result column="sign" property="sign" />
-        <result column="sign_url" property="signUrl" />
-        <result column="sign_time" property="signTime" />
-        <result column="user_id" property="userId" />
-        <result column="user_name" property="userName" />
-        <result column="user_avatar_url" property="userAvatarUrl" />
-        <result column="status" property="status" />
-        <result column="over_time" property="overTime" />
-        <result column="create_time" property="createTime" />
-        <result column="update_time" property="updateTime" />
+        <id column="id" property="id"/>
+        <result column="check_number" property="checkNumber"/>
+        <result column="check_id" property="checkId"/>
+        <result column="car_number" property="carNumber"/>
+        <result column="transporter" property="transporter"/>
+        <result column="phone" property="phone"/>
+        <result column="id_card_front_url" property="idCardFrontUrl"/>
+        <result column="id_card_back_url" property="idCardBackUrl"/>
+        <result column="destination" property="destination"/>
+        <result column="place_consigned" property="placeConsigned"/>
+        <result column="animal_type" property="animalType"/>
+        <result column="num" property="num"/>
+        <result column="monomer_weight" property="monomerWeight"/>
+        <result column="photo" property="photo"/>
+        <result column="supplementary_note" property="supplementaryNote"/>
+        <result column="sign" property="sign"/>
+        <result column="sign_url" property="signUrl"/>
+        <result column="sign_time" property="signTime"/>
+        <result column="user_id" property="userId"/>
+        <result column="user_name" property="userName"/>
+        <result column="user_avatar_url" property="userAvatarUrl"/>
+        <result column="status" property="status"/>
+        <result column="over_time" property="overTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="prevent_station_id" property="preventStationId"/>
     </resultMap>
 
 </mapper>

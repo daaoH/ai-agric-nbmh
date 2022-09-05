@@ -57,6 +57,4 @@ public class InspectRecordResult {
      */
     @Schema(name="inspectDate", description="检疫时间")
     private Date inspectDate;
-
-
 }

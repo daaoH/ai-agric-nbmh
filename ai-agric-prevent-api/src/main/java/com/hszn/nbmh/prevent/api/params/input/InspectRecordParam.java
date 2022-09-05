@@ -64,4 +64,11 @@ public class InspectRecordParam {
     @Schema(name="preventStationId", description="防疫站id")
     private Long preventStationId;
 
+
+    /**
+     * 防疫员id
+     */
+    @Schema(name="vaccinUserId", description="防疫员id")
+    private Long vaccinUserId;
+
 }

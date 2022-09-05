@@ -326,26 +326,26 @@ public class NbmhUserController {
                         stationMaster.setIntegral(stationMaster.getIntegral() + rewardAmount.intValue());
                         userIntegralRecords.add(
                                 NbmhUserIntegralRecord.builder()
-                                .userId(stationMaster.getId())
-                                .userName(!ObjectUtils.isEmpty(param.getExtraInfo().getRealName()) ? param.getExtraInfo().getRealName() : "")
-                                .userAvatarUrl("")
-                                .vaccinId(stationMaster.getId())
-                                .vaccinUser(stationMaster.getUserName())
-                                .vaccinAvatarUrl(!ObjectUtils.isEmpty(stationMaster.getAvatarUrl()) ? stationMaster.getAvatarUrl() : "")
-                                .source(2).integral(rewardAmount.intValue()).status(0).createTime(new Date()).isIncome(1).build());
+                                        .userId(stationMaster.getId())
+                                        .userName(!ObjectUtils.isEmpty(param.getExtraInfo().getRealName()) ? param.getExtraInfo().getRealName() : "")
+                                        .userAvatarUrl("")
+                                        .vaccinId(stationMaster.getId())
+                                        .vaccinUser(stationMaster.getUserName())
+                                        .vaccinAvatarUrl(!ObjectUtils.isEmpty(stationMaster.getAvatarUrl()) ? stationMaster.getAvatarUrl() : "")
+                                        .source(2).integral(rewardAmount.intValue()).status(0).createTime(new Date()).isIncome(1).build());
                     } else {
                         //防疫员积分换算 四舍五入
                         int newStaffRatio=rewardAmount.multiply(staffRatio).setScale(0, BigDecimal.ROUND_HALF_UP).intValue();
                         //防疫员积分记录
                         userIntegralRecords.add(
                                 NbmhUserIntegralRecord.builder()
-                                .userId(user.getId())
-                                .userName(!ObjectUtils.isEmpty(param.getExtraInfo().getRealName()) ? param.getExtraInfo().getRealName() : "")
-                                .userAvatarUrl("")
-                                .vaccinId(preventOfficer.getId())
-                                .vaccinUser(preventOfficer.getUserName())
-                                .vaccinAvatarUrl(!ObjectUtils.isEmpty(preventOfficer.getAvatarUrl()) ? stationMaster.getAvatarUrl() : "")
-                                .source(1).integral(newStaffRatio).status(0).createTime(new Date()).isIncome(1).build());
+                                        .userId(user.getId())
+                                        .userName(!ObjectUtils.isEmpty(param.getExtraInfo().getRealName()) ? param.getExtraInfo().getRealName() : "")
+                                        .userAvatarUrl("")
+                                        .vaccinId(preventOfficer.getId())
+                                        .vaccinUser(preventOfficer.getUserName())
+                                        .vaccinAvatarUrl(!ObjectUtils.isEmpty(preventOfficer.getAvatarUrl()) ? stationMaster.getAvatarUrl() : "")
+                                        .source(1).integral(newStaffRatio).status(0).createTime(new Date()).isIncome(1).build());
                         //站长积分换算
                         int stationMasterIntegral=rewardAmount.subtract(rewardAmount.multiply(staffRatio).setScale(0, BigDecimal.ROUND_HALF_UP)).intValue();
                         //站长积分记录
@@ -446,7 +446,14 @@ public class NbmhUserController {
             if (!ObjectUtils.isEmpty(param.getQueryEntity().getPreventStationId())) {
                 queryWrapper.eq(NbmhUserExtraInfo::getPreventStationId, param.getQueryEntity().getPreventStationId());
             }
-            //防疫站id
+            //用户名字
+            if (!ObjectUtils.isEmpty(param.getQueryEntity().getUserName())) {
+                queryWrapper.like(NbmhUserExtraInfo::getRealName, param.getQueryEntity().getUserName());
+            }
+            if (!ObjectUtils.isEmpty(param.getQueryEntity().getUserAddress())) {
+                queryWrapper.like(NbmhUserExtraInfo::getAddress, param.getQueryEntity().getUserAddress());
+            }
+            //用户类型 4防疫员+稽查员 5养殖户
             if (!ObjectUtils.isEmpty(param.getQueryEntity().getType()) && param.getQueryEntity().getType() == 4) {
                 List<Integer> types=new ArrayList();
                 types.add(4);

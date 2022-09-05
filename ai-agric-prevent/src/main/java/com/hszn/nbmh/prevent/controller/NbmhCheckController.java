@@ -6,10 +6,9 @@ import com.hszn.nbmh.common.core.mould.QueryRequest;
 import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.prevent.api.entity.NbmhCheck;
 import com.hszn.nbmh.prevent.api.params.input.CheckParam;
+import com.hszn.nbmh.prevent.api.params.input.CheckRecordParam;
 import com.hszn.nbmh.prevent.service.INbmhCheckService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -50,5 +49,13 @@ public class NbmhCheckController {
     public Result getByPage(@RequestBody QueryRequest<CheckParam> param) {
         return Result.ok(this.checkService.getByPage(param).getRecords());
     }
+
+
+    @PostMapping("/record")
+    @Operation(summary="获取防疫员举报记录")
+    public Result record(@RequestBody CheckRecordParam params) {
+        return Result.ok(checkService.record(params));
+    }
+
 
 }

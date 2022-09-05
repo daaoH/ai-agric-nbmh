@@ -6,6 +6,7 @@ import com.hszn.nbmh.prevent.api.entity.NbmhInspect;
 import com.hszn.nbmh.prevent.api.params.input.InspectRecordParam;
 import com.hszn.nbmh.prevent.api.params.out.InspectRecordDetailsResult;
 import com.hszn.nbmh.prevent.api.params.out.InspectRecordResult;
+import com.hszn.nbmh.prevent.api.params.out.VaccinRecordDetailsResult;
 import com.hszn.nbmh.prevent.mapper.NbmhInspectMapper;
 import com.hszn.nbmh.prevent.service.INbmhInspectService;
 
@@ -63,6 +64,10 @@ public class NbmhInspectServiceImpl extends ServiceImpl<NbmhInspectMapper, NbmhI
         //防疫站id
         if (ObjectUtils.isNotEmpty(inspectRecordParam.getPreventStationId())) {
             queryWrapper.eq(NbmhInspect::getPreventStationId, inspectRecordParam.getPreventStationId());
+        }
+        //防疫站id
+        if (ObjectUtils.isNotEmpty(inspectRecordParam.getVaccinUserId())) {
+            queryWrapper.eq(NbmhInspect::getVaccinId, inspectRecordParam.getVaccinUserId());
         }
         //检疫编号
         if (ObjectUtils.isNotEmpty(inspectRecordParam.getReportNumber())) {

@@ -5,6 +5,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.hszn.nbmh.common.core.mould.QueryRequest;
 import com.hszn.nbmh.prevent.api.entity.NbmhCheck;
 import com.hszn.nbmh.prevent.api.params.input.CheckParam;
+import com.hszn.nbmh.prevent.api.params.input.CheckRecordParam;
+import com.hszn.nbmh.prevent.api.params.out.CheckRecordDetailsResult;
+
+import java.util.List;
 
 /**
  * <p>
@@ -23,5 +27,14 @@ public interface INbmhCheckService extends IService<NbmhCheck> {
      * @return IPage
      */
     IPage<NbmhCheck> getByPage(QueryRequest<CheckParam> param);
+
+
+    /**
+     * 获取防疫员举报记录
+     * @return
+     * @Param List
+     */
+    List<CheckRecordDetailsResult> record(CheckRecordParam params);
+
 
 }

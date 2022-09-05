@@ -91,6 +91,8 @@ public class NbmhUserIntegralRecordServiceImpl extends ServiceImpl<NbmhUserInteg
                 integralRecordDetailsResult.setAnimaltype(entry.getValue().get(0).getAnimalType());
                 integralRecordDetailsResult.setType(3);
             }
+            integralRecordDetailsResult.setCreateTime(entry.getValue().get(0).getCreateTime());
+
             integralRecordDetailsResult.setVaccinNum(entry.getValue().size());
             integralRecordDetailsResults.add(integralRecordDetailsResult);
         }

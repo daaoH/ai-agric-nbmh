@@ -26,6 +26,12 @@ public class UserIntegralRecordParam {
     private Long vaccinId;
 
     /**
+     * 防疫站id
+     */
+    @Schema(name="preventStationId", description="防疫站id")
+    private Long preventStationId;
+
+    /**
      * 是否为收入(0:false,1:true)
      */
     @Schema(name="isIncome", description="是否为收入(0:false,1:true)")

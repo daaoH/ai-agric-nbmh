@@ -1,23 +1,20 @@
 package com.hszn.nbmh.prevent.controller;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.hszn.nbmh.common.core.enums.CommonEnum;
 import com.hszn.nbmh.common.core.mould.QueryRequest;
 import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.common.core.utils.SnowFlakeIdUtil;
 import com.hszn.nbmh.common.security.annotation.Inner;
-import com.hszn.nbmh.prevent.api.entity.NbmhUserIntegralRecord;
-import com.hszn.nbmh.prevent.api.entity.NbmhVaccin;
+import com.hszn.nbmh.prevent.api.entity.*;
+import com.hszn.nbmh.prevent.api.params.input.PreventOfficerRecordParam;
 import com.hszn.nbmh.prevent.api.params.input.VaccinParam;
-import com.hszn.nbmh.prevent.api.params.out.AnimalResult;
-import com.hszn.nbmh.prevent.api.params.out.VaccinPageResult;
-import com.hszn.nbmh.prevent.api.params.out.VaccinRecordResult;
-import com.hszn.nbmh.prevent.api.params.out.VaccinResult;
-import com.hszn.nbmh.prevent.service.INbmhAnimalService;
-import com.hszn.nbmh.prevent.service.INbmhUserIntegralRecordService;
-import com.hszn.nbmh.prevent.service.INbmhVaccinService;
+import com.hszn.nbmh.prevent.api.params.out.*;
+import com.hszn.nbmh.prevent.service.*;
 import com.hszn.nbmh.third.entity.NbmhBaseConfig;
 import com.hszn.nbmh.third.feign.RemoteBaseConfigService;
 import com.hszn.nbmh.user.api.entity.NbmhUser;
@@ -54,6 +51,9 @@ public class NbmhVaccinController {
 
     //防疫接口
     private final INbmhVaccinService nbmhVaccinService;
+
+    //检疫接口
+    private final INbmhInspectService inspectService;
     //动物接口
     private final INbmhAnimalService nbmhAnimalService;
 
@@ -63,6 +63,8 @@ public class NbmhVaccinController {
     //用户接口
     private final RemoteUserService userService;
 
+    //举报接口
+    private final INbmhCheckService checkService;
 
     //配置接口
     private final RemoteBaseConfigService baseConfigService;
@@ -171,22 +173,42 @@ public class NbmhVaccinController {
     @PostMapping("/record")
     @Operation(summary="防疫员端-防疫记录")
     @Inner(false)
-    public Result record(@RequestBody QueryRequest<NbmhVaccin> param) {
-        //返回结果
-        List<VaccinRecordResult> vaccinRecordResultList=new ArrayList<>();
-        //获取防疫记录分页数据集
-        IPage<NbmhVaccin> vaccinIPage=this.nbmhVaccinService.getByPage(param);
-//        vaccinIPage.getRecords().forEach(item -> {
-//            //返回结果数据组装
-//            VaccinRecordResult vaccinRecordResult=new VaccinRecordResult();
-//            //对象转换
-//            BeanUtils.copyProperties(item, vaccinRecordResult);
-//            //set动物信息
-//            vaccinRecordResult.setAnimal(this.nbmhAnimalService.getById(item.getAnimalId()));
-//            //返回结果赋值
-//            vaccinRecordResultList.add(vaccinRecordResult);
-//        });
-        return Result.ok(vaccinIPage.getRecords());
+    public Result record(@RequestBody PreventOfficerRecordParam param) {
+
+        //返回结果集
+        List<VaccinRecordDetailsResult> vaccinRecordDetailsResults=new ArrayList<>();
+
+        //添加条件
+        LambdaQueryWrapper<NbmhVaccin> queryWrapper=new LambdaQueryWrapper<>();
+        //防疫站id
+        if (ObjectUtils.isNotEmpty(param.getPreventStationId())) {
+            queryWrapper.eq(NbmhVaccin::getPreventStationId, param.getPreventStationId());
+        }
+        //防疫人员id
+        if (ObjectUtils.isNotEmpty(param.getVaccinUserId())) {
+            queryWrapper.eq(NbmhVaccin::getVaccinUserId, param.getVaccinUserId());
+        }
+        //时间 查询条件为年月日匹配
+        if (ObjectUtils.isNotEmpty(param.getVaccinDate())) {
+            String strStart=DateFormatUtils.format(param.getVaccinDate(), "yyyy-MM-dd");
+            queryWrapper.apply("date_format (create_time,'%Y-%m-%d') = date_format('" + strStart + "','%Y-%m-%d')");
+        }
+        //获取防疫记录数据集
+        List<NbmhVaccin> vaccins=nbmhVaccinService.list(queryWrapper);
+
+        //数据分组
+        Map<String, List<NbmhVaccin>> groupMap=vaccins.stream()
+                .collect(Collectors.groupingBy(u -> u.getFarmerId() + "|" + u.getAnimalType()));
+        //分组处理数据
+        for (Map.Entry<String, List<NbmhVaccin>> entry : groupMap.entrySet()) {
+            VaccinRecordDetailsResult vaccinRecordDetailsResult=new VaccinRecordDetailsResult();
+            vaccinRecordDetailsResult.setUserName(entry.getValue().get(0).getFarmerName());
+            vaccinRecordDetailsResult.setAnimaltype(entry.getValue().get(0).getAnimalType());
+            vaccinRecordDetailsResult.setVaccinNum(entry.getValue().size());
+            vaccinRecordDetailsResult.setCreateTime(entry.getValue().get(0).getCreateTime());
+            vaccinRecordDetailsResults.add(vaccinRecordDetailsResult);
+        }
+        return Result.ok(vaccinRecordDetailsResults);
     }
 
 
@@ -350,6 +372,30 @@ public class NbmhVaccinController {
         results.setVaccines(vaccines);
         results.setAnimalResultList(animalResultList);
         return Result.ok(results);
+    }
+
+
+    @PostMapping("/preventionOfficerStatistics")
+    @Operation(summary="站长-防疫统计")
+    @Inner(false)
+    public Result preventionOfficerStatistics(@RequestBody PreventOfficerRecordParam param) {
+        VaccinPODtatistissResult result=new VaccinPODtatistissResult();
+        //防疫员积分
+        CurUserInfo userInfo=userService.queryCurUserInfo(param.getVaccinUserId(), 4).getData();
+        if (ObjectUtils.isEmpty(userInfo.getUser())) {
+            return Result.failed(CommonEnum.DATA_NOT_EXIST.getMsg());
+        }
+        //积分
+        result.setIntegralNum(userInfo.getUser().getIntegral());
+        //农牧币
+        result.setCoinNum(userInfo.getUser().getCoin());
+        //防疫数量
+        result.setVaccinNum(nbmhVaccinService.count(Wrappers.<NbmhVaccin>query().lambda().eq(NbmhVaccin::getVaccinUserId, param.getVaccinUserId())));
+        //检疫数量
+        result.setInspectNum(inspectService.count(Wrappers.<NbmhInspect>query().lambda().eq(NbmhInspect::getVaccinId, param.getVaccinUserId())));
+        //举报数量
+        result.setCheckNum(checkService.count(Wrappers.<NbmhCheck>query().lambda().eq(NbmhCheck::getCheckId, param.getVaccinUserId())));
+        return Result.ok(result);
     }
 
 

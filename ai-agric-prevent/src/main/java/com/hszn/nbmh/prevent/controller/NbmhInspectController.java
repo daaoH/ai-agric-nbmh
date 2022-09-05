@@ -2,7 +2,6 @@ package com.hszn.nbmh.prevent.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
-import com.hszn.nbmh.common.core.enums.CommonEnum;
 import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.common.core.utils.SnowFlakeIdUtil;
 import com.hszn.nbmh.prevent.api.entity.NbmhAnimal;
