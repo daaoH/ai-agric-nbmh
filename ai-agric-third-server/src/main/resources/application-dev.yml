@@ -73,3 +73,9 @@ kd:
   e-business-id: 1773231
   req-url: https://api.kdniao.com/Ebusiness/EbusinessOrderHandle.aspx
   request-type: 8002
+
+# 百度审核相关配置
+contentCensor:
+  app_id: 27304157
+  api_key: 2HKwG2Uay18VhGRV2amew0pH
+  secret_key: mthCyUr5nlT8ezrHE52BBtBhmOpgCLrN
