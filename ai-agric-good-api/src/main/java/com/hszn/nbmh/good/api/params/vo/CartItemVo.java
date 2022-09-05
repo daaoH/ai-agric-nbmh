@@ -95,6 +95,14 @@ public class CartItemVo {
         this.count = count;
     }
 
+    public Long getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(Long shopId) {
+        this.shopId = shopId;
+    }
+
     public BigDecimal getTotalPrice() {
         return this.price.multiply(new BigDecimal("" + this.count));
     }

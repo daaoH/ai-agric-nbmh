@@ -10,6 +10,7 @@ import com.hszn.nbmh.good.api.enums.GoodStatusEnum;
 import com.hszn.nbmh.good.api.params.vo.CartVo;
 import com.hszn.nbmh.good.service.INbmhGoodsSkuService;
 import com.hszn.nbmh.good.service.ShoppingCartService;
+import com.hszn.nbmh.shop.api.feign.RemoteShopInfoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -33,7 +34,6 @@ import javax.validation.constraints.NotNull;
 @RestController
 @RequestMapping("/shopping-cart")
 public class ShoppingCartController {
-
 
     @Autowired
     private ShoppingCartService cartService;

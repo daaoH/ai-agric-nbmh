@@ -16,6 +16,13 @@
         <java.version>11</java.version>
     </properties>
     <dependencies>
+
+        <dependency>
+            <groupId>com.hszn.nbmh.shop.api</groupId>
+            <artifactId>ai-agric-shop-api</artifactId>
+            <version>1.0</version>
+        </dependency>
+
         <dependency>
             <groupId>com.hszn.nbmh.common.core</groupId>
             <artifactId>nbmh-common-core</artifactId>

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.generator.config.querys.GaussQuery;
 import com.hszn.nbmh.common.core.enums.CommonEnum;
 import com.hszn.nbmh.common.core.exception.ServiceException;
+import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.common.security.service.AuthUser;
 import com.hszn.nbmh.common.security.util.SecurityUtils;
 import com.hszn.nbmh.good.api.entity.NbmhGoodsSku;
@@ -11,8 +12,11 @@ import com.hszn.nbmh.good.api.enums.GoodAuthEnum;
 import com.hszn.nbmh.good.api.enums.GoodStatusEnum;
 import com.hszn.nbmh.good.api.params.vo.CartItemVo;
 import com.hszn.nbmh.good.api.params.vo.CartVo;
+import com.hszn.nbmh.good.api.params.vo.ShopCartItemVo;
 import com.hszn.nbmh.good.service.INbmhGoodsSkuService;
 import com.hszn.nbmh.good.service.ShoppingCartService;
+import com.hszn.nbmh.shop.api.entity.NbmhShopInfo;
+import com.hszn.nbmh.shop.api.feign.RemoteShopInfoService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundHashOperations;
@@ -20,7 +24,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -35,6 +41,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Autowired
     private INbmhGoodsSkuService goodsSkuService;
+
+    @Autowired
+    private RemoteShopInfoService shopInfoService;
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -53,11 +62,18 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             throw new ServiceException((CommonEnum.DATA_NOT_EXIST.getMsg()));
         }
 
+        Result<NbmhShopInfo> ret = shopInfoService.detail(goodsSku.getShopId());
+        NbmhShopInfo shopInfo = new NbmhShopInfo();
+        if(ret.getCode() == 200){
+            shopInfo = ret.getData();
+        }
+
         BoundHashOperations<String, Object, Object> carts = getCartOps();
         String goodsValue = (String) carts.get(skuId.toString());
         if (StringUtils.isEmpty(goodsValue)) {
             CartItemVo cartItem = new CartItemVo();
 
+            cartItem.setShopId(shopInfo.getId());
             cartItem.setSkuId(goodsSku.getId());
             cartItem.setTitle(goodsSku.getSkuName());
             cartItem.setImage(goodsSku.getPic());
@@ -99,7 +115,18 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             }
 
             List<CartItemVo> cartItems = getCartItems(cartKey);
-            cartVo.setItems(cartItems);
+            Map<Long, List<CartItemVo>> maps = cartItems.stream().collect(Collectors.groupingBy(c -> c.getShopId()));
+            List<ShopCartItemVo> cartItemVos = new ArrayList<>();
+            for(Long key : maps.keySet()){
+                ShopCartItemVo itemVo = new ShopCartItemVo();
+                Result<NbmhShopInfo> ret = shopInfoService.detail(key);
+                NbmhShopInfo shopInfo = ret.getData();
+                itemVo.setShopInfo(shopInfo);
+                itemVo.setItems(maps.get(key));
+                cartItemVos.add(itemVo);
+            }
+
+            cartVo.setShopCartItems(cartItemVos);
             return cartVo;
         }
     }

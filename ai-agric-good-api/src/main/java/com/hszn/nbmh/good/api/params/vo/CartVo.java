@@ -13,10 +13,7 @@ import java.util.List;
  */
 public class CartVo {
 
-    /**
-     * 购物车子项信息
-     */
-    List<CartItemVo> items;
+    List<ShopCartItemVo> shopCartItems;
 
     /**
      * 商品数量
@@ -38,19 +35,21 @@ public class CartVo {
      */
     private BigDecimal reduce = new BigDecimal("0.00");
 
-    public List<CartItemVo> getItems() {
-        return items;
+    public List<ShopCartItemVo> getShopCartItems() {
+        return shopCartItems;
     }
 
-    public void setItems(List<CartItemVo> items) {
-        this.items = items;
+    public void setShopCartItems(List<ShopCartItemVo> shopCartItems) {
+        this.shopCartItems = shopCartItems;
     }
 
     public Integer getCountNum() {
         int count = 0;
-        if(items != null && items.size() > 0){
-            for(CartItemVo item : items){
-                count += item.getCount();
+        if(shopCartItems != null && shopCartItems.size() > 0){
+            for(ShopCartItemVo cartItemVo : shopCartItems) {
+                for (CartItemVo item : cartItemVo.getItems()) {
+                    count += item.getCount();
+                }
             }
         }
         return count;
@@ -62,9 +61,11 @@ public class CartVo {
 
     public Integer getCountType() {
         int count = 0;
-        if(items != null && items.size() > 0){
-            for(CartItemVo item : items){
-                count += 1;
+        if(shopCartItems != null && shopCartItems.size() > 0){
+            for(ShopCartItemVo cartItemVo : shopCartItems) {
+                for (CartItemVo item : cartItemVo.getItems()) {
+                    count += 1;
+                }
             }
         }
         return count;
@@ -77,10 +78,12 @@ public class CartVo {
     public BigDecimal getTotalAmount() {
         BigDecimal amount = new BigDecimal("0");
         //计算购物车项总价
-        if(!CollectionUtils.isEmpty(items)){
-            for(CartItemVo item : items){
-                if(item.getCheck()){
-                    amount = amount.add(item.getTotalPrice());
+        if(!CollectionUtils.isEmpty(shopCartItems)){
+            for(ShopCartItemVo cartItemVo : shopCartItems) {
+                for (CartItemVo item : cartItemVo.getItems()) {
+                    if (item.getCheck()) {
+                        amount = amount.add(item.getTotalPrice());
+                    }
                 }
             }
         }

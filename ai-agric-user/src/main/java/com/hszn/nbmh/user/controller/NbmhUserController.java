@@ -2,6 +2,7 @@ package com.hszn.nbmh.user.controller;
 
 
 import ch.hsr.geohash.GeoHash;
+import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.nacos.common.utils.CollectionUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -17,6 +18,8 @@ import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.common.core.utils.SnowFlakeIdUtil;
 import com.hszn.nbmh.common.core.utils.SortUtil;
 import com.hszn.nbmh.common.security.annotation.Inner;
+import com.hszn.nbmh.common.security.service.AuthUser;
+import com.hszn.nbmh.common.security.util.SecurityUtils;
 import com.hszn.nbmh.prevent.api.entity.NbmhUserIntegralRecord;
 import com.hszn.nbmh.prevent.api.feign.RemoteUserIntegralService;
 import com.hszn.nbmh.third.entity.NbmhBaseConfig;
@@ -50,6 +53,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;

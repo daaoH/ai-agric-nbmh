@@ -5,6 +5,7 @@ import com.hszn.nbmh.common.core.mould.QueryRequest;
 import com.hszn.nbmh.order.api.entity.NbmhOrder;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hszn.nbmh.order.api.params.OrderSearchParam;
+import com.hszn.nbmh.order.api.params.input.CreateOrderParam;
 
 /**
  * <p>
@@ -22,4 +23,11 @@ public interface INbmhOrderService extends IService<NbmhOrder> {
      * @return
      */
     Page<NbmhOrder> search(QueryRequest<OrderSearchParam> param);
+
+    /**
+     * 生成订单
+     * @param order
+     * @return
+     */
+    String createOrder(CreateOrderParam order);
 }

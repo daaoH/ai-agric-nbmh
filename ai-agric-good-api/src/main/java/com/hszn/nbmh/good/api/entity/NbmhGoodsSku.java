@@ -36,7 +36,7 @@ public class NbmhGoodsSku implements Serializable {
     /**
      * 本店店铺id
      */
-    private String shopId;
+    private Long shopId;
 
     /**
      * 版本号

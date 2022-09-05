@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hszn.nbmh.order.mapper.NbmhReceiptMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hszn.nbmh.order.api.entity.NbmhReceipt">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="user_name" property="userName" />
+        <result column="order_id" property="orderId" />
+        <result column="receipt_content" property="receiptContent" />
+        <result column="receipt_detail" property="receiptDetail" />
+        <result column="receipt_price" property="receiptPrice" />
+        <result column="receipt_status" property="receiptStatus" />
+        <result column="receipt_title" property="receiptTitle" />
+        <result column="shop_id" property="shopId" />
+        <result column="shop_name" property="shopName" />
+        <result column="taxpayer" property="taxpayer" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="status" property="status" />
+    </resultMap>
+
+</mapper>
