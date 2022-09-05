@@ -116,7 +116,6 @@ public class NbmhInspectServiceImpl extends ServiceImpl<NbmhInspectMapper, NbmhI
         if (ObjectUtils.isNotEmpty(inspectRecordParam.getInspectDate())) {
             String strStart=DateFormatUtils.format(inspectRecordParam.getInspectDate(), "yyyy-MM-dd");
             queryWrapper.apply("date_format (create_time,'%Y-%m-%d') = date_format('" + strStart + "','%Y-%m-%d')");
-//            queryWrapper.apply("UNIX_TIMESTAMP(create_time) = UNIX_TIMESTAMP('" + strStart + "')");
         }
         //获取数据集
         List<NbmhInspect> inspectsList=this.baseMapper.selectList(queryWrapper);

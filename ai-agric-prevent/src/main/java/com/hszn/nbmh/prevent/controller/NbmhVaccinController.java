@@ -99,7 +99,7 @@ public class NbmhVaccinController {
                 BigDecimal rewardAmount=new BigDecimal("0.00");
                 for (NbmhBaseConfig baseConfig : baseConfigs) {
                     if ("staff_ratio".equals(baseConfig.getConfigKey())) {
-                        staffRatio=new BigDecimal(baseConfig.getConfigValue());
+                        staffRatio=new BigDecimal(baseConfig.getConfigValue()).divide(new BigDecimal(10));//半分比计算除以10得到分成比例
                     } else if ("reward_amount".equals(baseConfig.getConfigKey())) {
                         rewardAmount=new BigDecimal(baseConfig.getConfigValue()).multiply(new BigDecimal(params.size()));
                     } else if ("is_open".equals(baseConfig.getConfigKey())) {

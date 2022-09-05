@@ -2,10 +2,10 @@ package com.hszn.nbmh.prevent.api.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -20,7 +20,11 @@ import java.util.Date;
  */
 @Data
 @EqualsAndHashCode(callSuper=false)
-@Builder(toBuilder = true)
+@Builder(toBuilder=true)
+@NoArgsConstructor
+@AllArgsConstructor
+@Accessors(chain=true)
+@TableName("nbmh_user_integral_record")
 @Schema(name="积分记录信息")
 public class NbmhUserIntegralRecord implements Serializable {
 

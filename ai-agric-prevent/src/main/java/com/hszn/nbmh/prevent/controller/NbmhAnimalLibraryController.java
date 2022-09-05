@@ -39,6 +39,7 @@ public class NbmhAnimalLibraryController {
 
     @Operation(summary = "新增动物基因库/病例库", method = "POST")
     @PostMapping("/add")
+    @Inner(false)
     public Result add(@RequestBody NbmhAnimalLibrary nbmhAnimalLibrary) {
 
         List<Integer> idList = nbmhAnimalLibraryService.save(Collections.singletonList(nbmhAnimalLibrary));
@@ -51,6 +52,7 @@ public class NbmhAnimalLibraryController {
 
     @Operation(summary = "根据ID查询动物基因库/病例库", method = "GET")
     @PostMapping("/{id}")
+    @Inner(false)
     public Result<NbmhAnimalLibrary> getById(@PathVariable(value = "id") @NotBlank Long id) {
 
         return Result.ok(nbmhAnimalLibraryService.getById(id));
@@ -58,6 +60,7 @@ public class NbmhAnimalLibraryController {
 
     @Operation(summary = "更新动物基因库/病例库", method = "PUT")
     @PutMapping
+    @Inner(false)
     public Result update(@RequestBody NbmhAnimalLibrary nbmhAnimalLibrary) {
 
         nbmhAnimalLibraryService.update(Collections.singletonList(nbmhAnimalLibrary));
@@ -67,6 +70,7 @@ public class NbmhAnimalLibraryController {
     @Operation(summary = "分页查询动物基因库/病例库", method = "POST")
     @Parameters({@Parameter(description = "页码", name = "pageNum"), @Parameter(description = "每页显示条数", name = "pageSize"), @Parameter(description = "排序条件集合", name = "orderItemList")})
     @PostMapping("/query")
+    @Inner(false)
     public Result<IPage<NbmhAnimalLibrary>> query(@RequestBody NbmhAnimalLibrary nbmhAnimalLibrary,
                                                   @RequestParam @DecimalMin("1") int pageNum,
                                                   @RequestParam @DecimalMin("1") int pageSize,
@@ -89,6 +93,7 @@ public class NbmhAnimalLibraryController {
 
     @DeleteMapping("delete/{id}")
     @Operation(summary = "删除动物基因库/病例库")
+    @Inner(false)
     public Result delete(@PathVariable Long id) {
 
         nbmhAnimalLibraryService.delete(Collections.singletonList(id));

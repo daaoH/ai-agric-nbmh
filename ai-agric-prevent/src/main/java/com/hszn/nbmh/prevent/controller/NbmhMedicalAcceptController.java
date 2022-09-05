@@ -21,7 +21,7 @@ import java.util.List;
 
 /**
  * <p>
- * 动物诊疗接单记录 前端控制器
+ * 动物诊疗派单记录 前端控制器
  * </p>
  *
  * @author MCR

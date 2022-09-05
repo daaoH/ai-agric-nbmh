@@ -43,7 +43,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor=Exception.class)
 public class NbmhTradeReportServiceImpl extends ServiceImpl<NbmhTradeReportMapper, NbmhTradeReport> implements INbmhTradeReportService {
     @Resource
     private NbmhTradeReportMapper nbmhTradeReportMapper;
@@ -64,10 +64,10 @@ public class NbmhTradeReportServiceImpl extends ServiceImpl<NbmhTradeReportMappe
 
         return nbmhTradeReportList.stream().map(entity -> {
 
-            Date createTime = new Date();
+            Date createTime=new Date();
             entity.setReportNumber(String.valueOf(new SnowFlakeIdUtil(1, 0).nextId())).setCreateTime(createTime).setUpdateTime(createTime).setStatus(1);
 
-            int ret = nbmhTradeReportMapper.insert(entity);
+            int ret=nbmhTradeReportMapper.insert(entity);
 
             handleAnimalData(entity);
 
@@ -76,18 +76,18 @@ public class NbmhTradeReportServiceImpl extends ServiceImpl<NbmhTradeReportMappe
     }
 
     private void handleAnimalData(NbmhTradeReport entity) {
-        List<NbmhAnimal> animalList = new ArrayList<>();
-        List<NbmhInspect> nbmhInspectList = new ArrayList<>();
+        List<NbmhAnimal> animalList=new ArrayList<>();
+        List<NbmhInspect> nbmhInspectList=new ArrayList<>();
 
         if (entity.getAnimalId() == null || entity.getAnimalId().isEmpty()) {
             throw new ServiceException("动物Id为空，数据保存错误");
         }
 
-        List<String> animalIdList = Arrays.asList(entity.getAnimalId().split(","));
+        List<String> animalIdList=Arrays.asList(entity.getAnimalId().split(","));
 
         animalIdList.forEach(animalId -> {
 
-            NbmhAnimal animal = animalMapper.selectById(animalId);
+            NbmhAnimal animal=animalMapper.selectById(animalId);
             if (animal == null) {
                 throw new ServiceException("动物信息未找到");
             }
@@ -95,7 +95,7 @@ public class NbmhTradeReportServiceImpl extends ServiceImpl<NbmhTradeReportMappe
             animalList.add(animal);
             nbmhInspectList.add(NbmhInspect.builder().animalId(Long.valueOf(animalId)).animalType(entity.getAnimalType()).earNo(animal.getEarNo()).reportNumber(entity.getReportNumber())
                     .buyerName(entity.getBuyerName()).buyerPhone(entity.getBuyerPhone()).buyerCard(entity.getBuyerCard()).userId(entity.getFarmerId()).createTime(new Date())
-                    .userName(entity.getFarmerName()).userPhone(entity.getFarmerPhone()).stationId(entity.getPreventStationId()).animalStatus(entity.getStatus()).build());
+                    .userName(entity.getFarmerName()).userPhone(entity.getFarmerPhone()).preventStationId(entity.getPreventStationId()).animalStatus(entity.getStatus()).build());
         });
 
         inspectService.saveBatch(nbmhInspectList);
@@ -122,22 +122,22 @@ public class NbmhTradeReportServiceImpl extends ServiceImpl<NbmhTradeReportMappe
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly=true)
     public IPage<NbmhTradeReport> query(NbmhTradeReport entity, int pageNum, int pageSize, List<OrderItem> orderItemList) {
 
-        Page<NbmhTradeReport> page = new Page<>(pageNum, pageSize);
+        Page<NbmhTradeReport> page=new Page<>(pageNum, pageSize);
         page.setOrders(orderItemList);
 
-        LambdaQueryWrapper<NbmhTradeReport> lambdaQueryWrapper = Wrappers.lambdaQuery(entity);
+        LambdaQueryWrapper<NbmhTradeReport> lambdaQueryWrapper=Wrappers.lambdaQuery(entity);
 
         return nbmhTradeReportMapper.selectPage(page, lambdaQueryWrapper);
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly=true)
     public List<NbmhTradeReport> list(NbmhTradeReport entity, List<OrderItem> orderItemList) {
 
-        QueryWrapper<NbmhTradeReport> queryWrapper = Wrappers.query(entity);
+        QueryWrapper<NbmhTradeReport> queryWrapper=Wrappers.query(entity);
         if (orderItemList != null && orderItemList.size() > 0) {
             orderItemList.forEach(t -> queryWrapper.orderBy(true, t.isAsc(), t.getColumn()));
         }
@@ -150,7 +150,7 @@ public class NbmhTradeReportServiceImpl extends ServiceImpl<NbmhTradeReportMappe
     public void delete(List<Long> idList) {
 
         idList.forEach(id -> {
-            NbmhTradeReport entity = this.getById(id);
+            NbmhTradeReport entity=this.getById(id);
             if (entity != null) {
                 entity.setStatus(-1).setUpdateTime(new Date());
                 nbmhTradeReportMapper.updateById(entity);

@@ -32,7 +32,9 @@ public enum CommonEnum {
     FALL_BACK_MSG(555, "服务繁忙，请稍后再试"),
 
     SMS_VALIDATE_FAIL(600, "短信验证失败，请重试!"),
-    SMS_SEND_FAIL(610, "短信验证失败，请重试!");
+    SMS_SEND_FAIL(610, "短信验证失败，请重试!"),
+
+    CART_NUM_ERROR(1001, "购买数量必须大于0");
 
     @Setter
     @Getter

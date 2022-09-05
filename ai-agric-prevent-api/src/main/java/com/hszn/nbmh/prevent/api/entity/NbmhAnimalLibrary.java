@@ -1,8 +1,6 @@
 package com.hszn.nbmh.prevent.api.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.annotations.ApiModel;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -90,6 +88,7 @@ public class NbmhAnimalLibrary implements Serializable {
      * 基因库/病例库文章关键字，采用逗号间隔
      */
     @Schema(name = "keywords", description = "基因库/病例库文章关键字，采用逗号间隔")
+    @TableField(condition = SqlCondition.LIKE)
     private String keywords;
 
     /**
