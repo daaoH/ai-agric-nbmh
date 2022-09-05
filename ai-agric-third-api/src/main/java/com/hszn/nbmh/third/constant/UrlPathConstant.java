@@ -38,4 +38,9 @@ public interface UrlPathConstant {
      * 配置数据
      */
     String BASRE_CONFIG="/nbmh-base-config";
+
+    /**
+     * 百度内容审核
+     */
+    String CONTENT_CENSOR_URL="/content_censor";
 }
