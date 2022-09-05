@@ -38,6 +38,7 @@
        select
             c.id,
             c.shop_id,
+            c.use_type,
             c.per_limit,
             c.user_level,
             c.publish_count,

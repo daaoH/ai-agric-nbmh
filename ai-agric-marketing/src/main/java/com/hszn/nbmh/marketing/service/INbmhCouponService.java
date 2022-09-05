@@ -4,6 +4,7 @@ import com.hszn.nbmh.marketing.api.entity.NbmhCoupon;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hszn.nbmh.marketing.api.entity.NbmhCouponHistory;
 import com.hszn.nbmh.marketing.api.params.input.CouponParam;
+import com.hszn.nbmh.marketing.api.params.input.GoodsParam;
 import com.hszn.nbmh.marketing.api.params.out.CouponAcceptOut;
 
 import java.util.List;
@@ -48,4 +49,12 @@ public interface INbmhCouponService extends IService<NbmhCoupon> {
      * @return
      */
     List<NbmhCouponHistory> findCoupon(Integer status);
+
+    /**
+     * 根据商品获取可用优惠券
+     *
+     * @param params
+     * @return
+     */
+    List<NbmhCouponHistory> findUsableCoupon(List<GoodsParam> params);
 }

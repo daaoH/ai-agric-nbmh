@@ -11,9 +11,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 
 import java.io.Serializable;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 /**
  * <p>
@@ -26,6 +24,8 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class NbmhCouponHistory implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -54,7 +54,17 @@ public class NbmhCouponHistory implements Serializable {
     /**
      * 获取方式[0->后台赠送；1->主动领取]
      */
-    private Integer getType;
+    private Integer acquireType;
+
+    /**
+     * 优惠券所属店铺ID
+     */
+    private Long couponShopId;
+
+    /**
+     * 优惠券使用类型
+     */
+    private Integer couponUseType;
 
     /**
      * 优惠卷名字
@@ -113,5 +123,9 @@ public class NbmhCouponHistory implements Serializable {
      */
     private Integer status;
 
-
+    /**
+     * 优惠券关联字段
+     */
+    @TableField(exist = false)
+    private String relation;
 }

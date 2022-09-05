@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -23,8 +25,9 @@ import javax.annotation.Resource;
 @Service("couponHistoryService")
 @Transactional(rollbackFor = Exception.class)
 public class NbmhCouponHistoryServiceImpl extends ServiceImpl<NbmhCouponHistoryMapper, NbmhCouponHistory> implements INbmhCouponHistoryService {
-    @Resource
-    private NbmhCouponHistoryMapper nbmhCouponHistoryMapper;
 
-
+    @Override
+    public List<NbmhCouponHistory> findUsableByShopId(Set<Long> shopIds, Long userId) {
+        return baseMapper.findUsableByShopId(shopIds, userId);
+    }
 }

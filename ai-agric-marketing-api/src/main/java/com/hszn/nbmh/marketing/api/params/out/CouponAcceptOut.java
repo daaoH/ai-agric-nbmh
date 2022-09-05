@@ -27,7 +27,13 @@ public class CouponAcceptOut {
      * 本店店铺id
      */
     @Schema(name = "shopId", description = "店铺id")
-    private String shopId;
+    private Long shopId;
+
+    /**
+     * 使用类型
+     */
+    @Schema(name = "useType", description = "使用类型")
+    private Integer useType;
 
     /**
      * 优惠卷名字

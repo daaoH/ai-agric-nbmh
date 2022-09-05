@@ -8,6 +8,7 @@ import com.hszn.nbmh.marketing.api.entity.NbmhCouponCategoryRelation;
 import com.hszn.nbmh.marketing.api.entity.NbmhCouponGoodsRelation;
 import com.hszn.nbmh.marketing.api.entity.NbmhCouponHistory;
 import com.hszn.nbmh.marketing.api.params.input.CouponParam;
+import com.hszn.nbmh.marketing.api.params.input.GoodsParam;
 import com.hszn.nbmh.marketing.api.params.out.CouponAcceptOut;
 import com.hszn.nbmh.marketing.mapper.NbmhCouponMapper;
 import com.hszn.nbmh.marketing.service.INbmhCouponCategoryRelationService;
@@ -19,11 +20,12 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -106,7 +108,7 @@ public class NbmhCouponServiceImpl extends ServiceImpl<NbmhCouponMapper, NbmhCou
             if (count < perLimit) {
                 NbmhCouponHistory history = NbmhCouponHistory.builder()
                         .couponId(couponInfo.getId())
-                        .getType(getType)
+                        .acquireType(getType)
                         .couponName(couponInfo.getCouponName())
                         .amount(couponInfo.getAmount())
                         .minPoint(couponInfo.getMinPoint())
@@ -114,6 +116,8 @@ public class NbmhCouponServiceImpl extends ServiceImpl<NbmhCouponMapper, NbmhCou
                         .endTime(couponInfo.getEndTime())
                         .userId(userId)
                         .userName(userName)
+                        .couponShopId(couponInfo.getShopId())
+                        .couponUseType(couponInfo.getUseType())
                         //未使用
                         .status(0)
                         .build();
@@ -136,5 +140,63 @@ public class NbmhCouponServiceImpl extends ServiceImpl<NbmhCouponMapper, NbmhCou
         LambdaQueryWrapper<NbmhCouponHistory> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(NbmhCouponHistory::getStatus, status);
         return couponHistoryService.list(wrapper);
+    }
+
+    @Override
+    public List<NbmhCouponHistory> findUsableCoupon(List<GoodsParam> params) {
+        List<NbmhCouponHistory> result = new ArrayList<>();
+        //根据用户和店铺id获取可用优惠券
+        Set<Long> shopIds = params.stream().map(GoodsParam::getShopId).collect(Collectors.toSet());
+        long userId = 10086L;
+        List<NbmhCouponHistory> list = couponHistoryService.findUsableByShopId(shopIds, userId);
+        //按类型分类,分三类处理
+        Map<Integer, List<NbmhCouponHistory>> groupList = list.stream().collect(Collectors.groupingBy(NbmhCouponHistory::getCouponUseType));
+        groupList.forEach((userType, histories) -> {
+            //处理通用券,只要订单总额达到都可以使用
+            if (userType == 0) {
+                BigDecimal orderTotal = params.stream().map(GoodsParam::getTotalPrice).reduce(BigDecimal::add).orElse(new BigDecimal("0"));
+                histories.forEach(e -> {
+                    //店铺id为null表示为全场通用
+                    if (e.getCouponShopId() == null) {
+                        if (orderTotal.compareTo(e.getMinPoint()) > 0) {
+                            result.add(e);
+                        }
+                    } else {
+                        //店铺通用优惠券
+                        BigDecimal shopTotal = params.stream().filter(o -> Objects.equals(o.getShopId(), e.getCouponShopId())).map(GoodsParam::getTotalPrice).reduce(BigDecimal::add).orElse(new BigDecimal("0"));
+                        if (shopTotal.compareTo(e.getMinPoint()) > 0) {
+                            result.add(e);
+                        }
+                    }
+                });
+            }
+
+            //处理分类优惠券
+            if (userType == 1) {
+                histories.forEach(e -> {
+                    //获取优惠券使用分类
+                    String[] relations = e.getRelation().split(",");
+                    List<String> relationList = new ArrayList<>(Arrays.asList(relations));
+                    BigDecimal shopTotal = params.stream().filter(o -> Objects.equals(o.getShopId(), e.getCouponShopId())).filter(o -> relationList.contains(o.getCategoryId().toString())).map(GoodsParam::getTotalPrice).reduce(BigDecimal::add).orElse(new BigDecimal("0"));
+                    if (shopTotal.compareTo(e.getMinPoint()) > 0) {
+                        result.add(e);
+                    }
+                });
+            }
+
+            //处理商品优惠券
+            if (userType == 2) {
+                histories.forEach(e -> {
+                    //获取优惠券使用分类
+                    String[] relations = e.getRelation().split(",");
+                    List<String> relationList = new ArrayList<>(Arrays.asList(relations));
+                    BigDecimal shopTotal = params.stream().filter(o -> Objects.equals(o.getShopId(), e.getCouponShopId())).filter(o -> relationList.contains(o.getGoodsId().toString())).map(GoodsParam::getTotalPrice).reduce(BigDecimal::add).orElse(new BigDecimal("0"));
+                    if (shopTotal.compareTo(e.getMinPoint()) > 0) {
+                        result.add(e);
+                    }
+                });
+            }
+        });
+        return result;
     }
 }

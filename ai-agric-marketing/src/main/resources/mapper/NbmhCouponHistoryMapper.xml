@@ -8,7 +8,9 @@
         <result column="coupon_id" property="couponId"/>
         <result column="user_id" property="userId"/>
         <result column="user_name" property="userName"/>
-        <result column="get_type" property="getType"/>
+        <result column="coupon_shop_id" property="couponShopId"/>
+        <result column="coupon_use_type" property="couponUseType"/>
+        <result column="acquire_type" property="acquireType"/>
         <result column="amount" property="amount"/>
         <result column="min_point" property="minPoint"/>
         <result column="coupon_name" property="couponName"/>
@@ -20,6 +22,27 @@
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
         <result column="status" property="status"/>
+        <result column="relation" property="relation"/>
     </resultMap>
+
+    <select id="findUsableByShopId" resultMap="BaseResultMap">
+        select id, coupon_id, user_id, user_name, coupon_shop_id, coupon_use_type, coupon_name, amount, min_point, start_time, end_time,
+             acquire_type, use_time, order_id, order_sn, create_time, update_time, status,
+               (case ch.coupon_use_type
+                    when 1 then (select group_concat(category_id)
+                                 from nbmh_coupon_category_relation ccr
+                                 where ccr.coupon_id = ch.coupon_id)
+                    when 2 then (select group_concat(goods_id)
+                                 from nbmh_coupon_goods_relation cgr
+                                 where cgr.coupon_id = ch.coupon_id)
+                   end) as relation
+        from nbmh_coupon_history ch
+        where status = 0 and user_id = #{userId}
+          and ( coupon_use_type = 0 or coupon_shop_id in
+          <foreach collection="shopIds" open="(" close=")" separator="," item="shopId">
+              #{shopId}
+          </foreach>
+              )
+    </select>
 
 </mapper>
