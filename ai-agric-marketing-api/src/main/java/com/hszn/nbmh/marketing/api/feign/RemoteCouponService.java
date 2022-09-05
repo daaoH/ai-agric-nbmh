@@ -6,6 +6,7 @@ import com.hszn.nbmh.marketing.api.constant.MarketingPathConstant;
 import com.hszn.nbmh.marketing.api.entity.NbmhCouponHistory;
 import com.hszn.nbmh.marketing.api.fallback.RemoteCouponServiceFallback;
 import com.hszn.nbmh.marketing.api.params.input.CouponParam;
+import com.hszn.nbmh.marketing.api.params.input.GoodsParam;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,5 +33,8 @@ public interface RemoteCouponService {
 
     @GetMapping("findCoupon")
     Result<List<NbmhCouponHistory>> findCoupon(@RequestParam("status") Integer status);
+
+    @PostMapping("findUsableCoupon")
+    Result<List<NbmhCouponHistory>> findUsableCoupon(@RequestBody List<GoodsParam> params);
 
 }

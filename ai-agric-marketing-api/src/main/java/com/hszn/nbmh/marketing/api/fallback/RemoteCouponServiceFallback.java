@@ -5,6 +5,7 @@ import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.marketing.api.entity.NbmhCouponHistory;
 import com.hszn.nbmh.marketing.api.feign.RemoteCouponService;
 import com.hszn.nbmh.marketing.api.params.input.CouponParam;
+import com.hszn.nbmh.marketing.api.params.input.GoodsParam;
 
 import java.util.List;
 
@@ -28,6 +29,11 @@ public class RemoteCouponServiceFallback implements RemoteCouponService {
 
     @Override
     public Result<List<NbmhCouponHistory>> findCoupon(Integer status) {
+        return Result.failed(CommonEnum.DATA_QUERY_FAILED.getMsg());
+    }
+
+    @Override
+    public Result<List<NbmhCouponHistory>> findUsableCoupon(List<GoodsParam> params) {
         return Result.failed(CommonEnum.DATA_QUERY_FAILED.getMsg());
     }
 }
