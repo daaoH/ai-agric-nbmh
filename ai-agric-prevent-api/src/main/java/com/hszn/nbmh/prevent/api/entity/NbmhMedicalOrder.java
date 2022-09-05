@@ -46,12 +46,6 @@ public class NbmhMedicalOrder implements Serializable {
     private Long id;
 
     /**
-     * 诊断订单编号
-     */
-    @Schema(name="reportNumber", description="诊断订单编号")
-    private String reportNumber;
-
-    /**
      * 视频诊疗会议房间号
      */
     @Schema(name="roomNumber", description="视频诊疗会议房间号")

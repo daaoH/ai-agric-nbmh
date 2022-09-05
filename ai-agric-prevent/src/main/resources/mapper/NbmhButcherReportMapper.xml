@@ -4,33 +4,34 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.hszn.nbmh.prevent.api.entity.NbmhButcherReport">
-        <id column="id" property="id" />
-        <result column="prevent_station_id" property="preventStationId" />
-        <result column="report_number" property="reportNumber" />
-        <result column="farmer_id" property="farmerId" />
-        <result column="farmer_name" property="farmerName" />
-        <result column="farmer_phone" property="farmerPhone" />
-        <result column="farmer_card" property="farmerCard" />
-        <result column="farmer_avatar" property="farmerAvatar" />
-        <result column="farmer_address" property="farmerAddress" />
-        <result column="ear_no" property="earNo" />
-        <result column="is_ear" property="isEar" />
-        <result column="report_type" property="reportType" />
-        <result column="insured" property="insured" />
-        <result column="insure_pic" property="insurePic" />
-        <result column="longitude" property="longitude" />
-        <result column="latitude" property="latitude" />
-        <result column="dead_reason" property="deadReason" />
-        <result column="animal_num" property="animalNum" />
-        <result column="animal_id" property="animalId" />
-        <result column="animal_type" property="animalType" />
-        <result column="animal_pics" property="animalPics" />
-        <result column="remark" property="remark" />
-        <result column="create_time" property="createTime" />
-        <result column="update_time" property="updateTime" />
-        <result column="status" property="status" />
-        <result column="user_id" property="userId" />
-        <result column="user_name" property="userName" />
+        <id column="id" property="id"/>
+        <result column="prevent_station_id" property="preventStationId"/>
+        <result column="report_number" property="reportNumber"/>
+        <result column="farmer_id" property="farmerId"/>
+        <result column="farmer_name" property="farmerName"/>
+        <result column="farmer_phone" property="farmerPhone"/>
+        <result column="farmer_type" property="farmerType"/>
+        <result column="farmer_card" property="farmerCard"/>
+        <result column="farmer_avatar" property="farmerAvatar"/>
+        <result column="farmer_address" property="farmerAddress"/>
+        <result column="ear_no" property="earNo"/>
+        <result column="is_ear" property="isEar"/>
+        <result column="report_type" property="reportType"/>
+        <result column="insured" property="insured"/>
+        <result column="insure_pic" property="insurePic"/>
+        <result column="longitude" property="longitude"/>
+        <result column="latitude" property="latitude"/>
+        <result column="dead_reason" property="deadReason"/>
+        <result column="animal_num" property="animalNum"/>
+        <result column="animal_id" property="animalId"/>
+        <result column="animal_type" property="animalType"/>
+        <result column="animal_pics" property="animalPics"/>
+        <result column="remark" property="remark"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="status" property="status"/>
+        <result column="user_id" property="userId"/>
+        <result column="user_name" property="userName"/>
     </resultMap>
 
 </mapper>

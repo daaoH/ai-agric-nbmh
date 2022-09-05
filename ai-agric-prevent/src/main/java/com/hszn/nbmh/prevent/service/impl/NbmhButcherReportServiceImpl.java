@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
+import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -12,6 +13,9 @@ import com.hszn.nbmh.common.core.utils.BeanUtils;
 import com.hszn.nbmh.common.core.utils.SnowFlakeIdUtil;
 import com.hszn.nbmh.prevent.api.entity.NbmhAnimal;
 import com.hszn.nbmh.prevent.api.entity.NbmhButcherReport;
+import com.hszn.nbmh.prevent.api.params.out.ButcherStatisticsResult;
+import com.hszn.nbmh.prevent.api.params.out.NbmhButcherReportAnimal;
+import com.hszn.nbmh.prevent.api.params.out.NbmhButcherReportDetail;
 import com.hszn.nbmh.prevent.mapper.NbmhAnimalMapper;
 import com.hszn.nbmh.prevent.mapper.NbmhButcherReportMapper;
 import com.hszn.nbmh.prevent.service.INbmhButcherReportService;
@@ -20,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -158,6 +163,56 @@ public class NbmhButcherReportServiceImpl extends ServiceImpl<NbmhButcherReportM
                 nbmhButcherReportMapper.updateById(entity);
             }
         });
+    }
+
+    @Override
+    @Transactional
+    public ButcherStatisticsResult statistics(NbmhButcherReport entity) {
+
+        if (entity.getReportType() == 0) {
+            Long slaughterNum = nbmhButcherReportMapper.selectCount(Wrappers.query(entity));
+            return ButcherStatisticsResult.builder().slaughterNum(Math.toIntExact(slaughterNum)).villageSlaughterNum(0).harmlessNum(0).villageHarmlessNum(0).build();
+        }
+
+        if (entity.getReportType() == 1) {
+            Long harmlessNum = nbmhButcherReportMapper.selectCount(Wrappers.query(entity));
+            return ButcherStatisticsResult.builder().slaughterNum(0).villageSlaughterNum(0).harmlessNum(Math.toIntExact(harmlessNum)).villageHarmlessNum(0).build();
+        }
+
+        return ButcherStatisticsResult.builder().slaughterNum(0).villageSlaughterNum(0).harmlessNum(0).villageHarmlessNum(0).build();
+    }
+
+    @Override
+    @Transactional
+    public NbmhButcherReportDetail detail(NbmhButcherReport entity) {
+
+        QueryWrapper<NbmhButcherReport> queryWrapper = Wrappers.query(entity);
+        List<NbmhButcherReport> butcherReportList = nbmhButcherReportMapper.selectList(queryWrapper);
+        if (CollectionUtils.isEmpty(butcherReportList)) {
+            return null;
+        }
+
+        NbmhButcherReportDetail butcherReportDetail = NbmhButcherReportDetail.builder().build();
+        List<NbmhButcherReportAnimal> animalList = new ArrayList<>();
+
+        butcherReportList.forEach(item -> {
+            butcherReportDetail.setReportType(item.getReportType()).setFarmerId(item.getFarmerId()).setFarmerName(item.getFarmerName()).setFarmerPhone(item.getFarmerPhone()).setFarmerCard(item.getFarmerCard())
+                    .setFarmerAvatar(item.getFarmerAvatar()).setFarmerAddress(item.getFarmerAddress()).setFarmerType(item.getFarmerType()).setPreventStationId(item.getPreventStationId());
+
+            List<String> animalIdList = Arrays.asList(item.getAnimalId().split(","));
+            animalIdList.forEach(animalId -> {
+                NbmhAnimal animal = animalMapper.selectById(animalId);
+                if (ObjectUtils.isEmpty(animal)) {
+                    throw new ServiceException("动物Id：" + animalId + "信息记录未找到，无法录入");
+                }
+                animalList.add(NbmhButcherReportAnimal.builder().animalId(animal.getId()).earNo(animal.getEarNo()).category(animal.getCategory()).age(animal.getAge()).weight(animal.getWeight()).farmId(animal.getFarmId())
+                        .type(animal.getType()).photos(animal.getPhotos()).insured(animal.getInsured()).insurePic(animal.getInsurePic()).deadReason(item.getDeadReason()).status(animal.getStatus()).build());
+            });
+        });
+
+        butcherReportDetail.setAnimalList(animalList);
+
+        return butcherReportDetail;
     }
 
 }

@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hszn.nbmh.common.core.utils.BeanUtils;
+import com.hszn.nbmh.common.core.utils.SnowFlakeIdUtil;
 import com.hszn.nbmh.prevent.api.entity.NbmhMedicalOrder;
 import com.hszn.nbmh.prevent.mapper.NbmhMedicalOrderMapper;
 import com.hszn.nbmh.prevent.service.INbmhMedicalOrderService;
@@ -44,7 +45,7 @@ public class NbmhMedicalOrderServiceImpl extends ServiceImpl<NbmhMedicalOrderMap
         return nbmhMedicalOrderList.stream().map(entity -> {
 
             Date createTime = new Date();
-            entity.setCreateTime(createTime).setUpdateTime(createTime).setStatus(1);
+            entity.setId(new SnowFlakeIdUtil(1, 0).nextId()).setCreateTime(createTime).setUpdateTime(createTime).setStatus(1);
 
             return nbmhMedicalOrderMapper.insert(entity);
         }).collect(Collectors.toList());
