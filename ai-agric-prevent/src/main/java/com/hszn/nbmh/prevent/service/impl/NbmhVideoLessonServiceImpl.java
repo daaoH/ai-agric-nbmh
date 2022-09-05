@@ -61,7 +61,7 @@ public class NbmhVideoLessonServiceImpl extends ServiceImpl<NbmhVideoLessonMappe
 
         return nbmhVideoLessonList.stream().map(entity -> {
 
-            entity.setUpdateTime(new Date());
+            entity.setUpdateTime(new Date()).setStatus(0);
 
             return nbmhVideoLessonMapper.update(entity, Wrappers.<NbmhVideoLesson>lambdaUpdate().eq(NbmhVideoLesson::getId, entity.getId()));
         }).reduce(0, Integer::sum);
@@ -75,8 +75,10 @@ public class NbmhVideoLessonServiceImpl extends ServiceImpl<NbmhVideoLessonMappe
         page.setOrders(orderItemList);
 
         LambdaQueryWrapper<NbmhVideoLesson> lambdaQueryWrapper = Wrappers.lambdaQuery(entity);
+        IPage<NbmhVideoLesson> videoLessonIPage = nbmhVideoLessonMapper.selectPage(page, lambdaQueryWrapper);
+        videoLessonIPage.getRecords().forEach(record -> record.setVideoUrl(null));
 
-        return nbmhVideoLessonMapper.selectPage(page, lambdaQueryWrapper);
+        return videoLessonIPage;
     }
 
     @Override
@@ -102,6 +104,23 @@ public class NbmhVideoLessonServiceImpl extends ServiceImpl<NbmhVideoLessonMappe
                 nbmhVideoLessonMapper.updateById(entity);
             }
         });
+    }
+
+    @Override
+    @Transactional
+    public int audit(List<NbmhVideoLesson> nbmhVideoLessonList) {
+        BeanUtils.validBean(nbmhVideoLessonList, NbmhVideoLesson.Update.class);
+
+        if (CollectionUtils.isEmpty(nbmhVideoLessonList)) {
+            return 0;
+        }
+
+        return nbmhVideoLessonList.stream().map(entity -> {
+
+            entity.setUpdateTime(new Date());
+
+            return nbmhVideoLessonMapper.update(entity, Wrappers.<NbmhVideoLesson>lambdaUpdate().eq(NbmhVideoLesson::getId, entity.getId()));
+        }).reduce(0, Integer::sum);
     }
 
 }

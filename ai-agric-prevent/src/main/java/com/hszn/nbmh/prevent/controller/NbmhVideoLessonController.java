@@ -22,13 +22,13 @@ import java.util.List;
 
 /**
  * <p>
- * 视频课堂 前端控制器
+ * 视频课堂视频 前端控制器
  * </p>
  *
  * @author MCR
  * @since 2022-08-31
  */
-@Tag(name = "视频课堂")
+@Tag(name = "视频课堂视频")
 @RestController
 @RequestMapping("/nbmh-video-lesson")
 public class NbmhVideoLessonController {
@@ -36,7 +36,7 @@ public class NbmhVideoLessonController {
     @Autowired
     private INbmhVideoLessonService nbmhVideoLessonService;
 
-    @Operation(summary = "新增视频课堂", method = "POST")
+    @Operation(summary = "新增视频课堂视频", method = "POST")
     @PostMapping("/add")
     @Inner(false)
     public Result add(@RequestBody NbmhVideoLesson nbmhVideoLesson) {
@@ -49,7 +49,7 @@ public class NbmhVideoLessonController {
         return Result.failed(CommonEnum.DATA_ADD_FAILED.getMsg());
     }
 
-    @Operation(summary = "根据ID查询视频课堂", method = "GET")
+    @Operation(summary = "根据ID查询视频课堂视频", method = "GET")
     @PostMapping("/{id}")
     @Inner(false)
     public Result<NbmhVideoLesson> getById(@PathVariable(value = "id") @NotBlank Long id) {
@@ -57,7 +57,7 @@ public class NbmhVideoLessonController {
         return Result.ok(nbmhVideoLessonService.getById(id));
     }
 
-    @Operation(summary = "更新视频课堂", method = "PUT")
+    @Operation(summary = "更新视频课堂视频", method = "PUT")
     @PutMapping
     @Inner(false)
     public Result update(@RequestBody NbmhVideoLesson nbmhVideoLesson) {
@@ -66,7 +66,7 @@ public class NbmhVideoLessonController {
         return Result.ok();
     }
 
-    @Operation(summary = "分页查询视频课堂", method = "POST")
+    @Operation(summary = "分页查询视频课堂视频", method = "POST")
     @Parameters({@Parameter(description = "页码", name = "pageNum"), @Parameter(description = "每页显示条数", name = "pageSize"), @Parameter(description = "排序条件集合", name = "orderItemList")})
     @PostMapping("/query")
     @Inner(false)
@@ -80,7 +80,7 @@ public class NbmhVideoLessonController {
         return Result.ok(butcherReportPage);
     }
 
-    @Operation(summary = "查询视频课堂", method = "POST")
+    @Operation(summary = "查询视频课堂视频", method = "POST")
     @Parameters({@Parameter(description = "排序条件集合", name = "orderItemList")})
     @PostMapping("/list")
     @Inner(false)
@@ -91,7 +91,7 @@ public class NbmhVideoLessonController {
     }
 
     @DeleteMapping("delete/{id}")
-    @Operation(summary = "删除视频课堂")
+    @Operation(summary = "删除视频课堂视频")
     @Inner(false)
     public Result delete(@PathVariable Long id) {
 
@@ -99,5 +99,13 @@ public class NbmhVideoLessonController {
         return Result.ok();
     }
 
+    @Operation(summary = "管理员审核视频课堂视频", method = "PUT")
+    @PutMapping("/audit")
+    @Inner(false)
+    public Result audit(@RequestBody NbmhVideoLesson nbmhVideoLesson) {
+
+        nbmhVideoLessonService.audit(Collections.singletonList(nbmhVideoLesson));
+        return Result.ok();
+    }
 
 }

@@ -23,6 +23,7 @@
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
         <result column="status" property="status" />
+        <result column="audit_desc" property="auditDesc" />
     </resultMap>
 
 </mapper>

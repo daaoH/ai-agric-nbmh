@@ -17,7 +17,7 @@ import java.util.Date;
 
 /**
  * <p>
- * 视频课堂
+ * 视频课堂视频
  * </p>
  *
  * @author MCR
@@ -30,7 +30,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Accessors(chain = true)
 @TableName("nbmh_video_lesson")
-@ApiModel(value = "NbmhVideoLesson对象", description = "视频课堂")
+@ApiModel(value = "NbmhVideoLesson对象", description = "视频课堂视频")
 public class NbmhVideoLesson implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -148,6 +148,12 @@ public class NbmhVideoLesson implements Serializable {
      */
     @Schema(name = "status", description = "状态 0:审核中，1:正常，2:审核失败，-1逻辑删除")
     private Integer status;
+
+    /**
+     * 审核情况说明
+     */
+    @Schema(name = "auditDesc", description = "审核情况说明")
+    private String auditDesc;
 
     public interface Save extends Default {
     }

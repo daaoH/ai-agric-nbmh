@@ -45,7 +45,7 @@ public class NbmhAnimalLibraryServiceImpl extends ServiceImpl<NbmhAnimalLibraryM
         return nbmhAnimalLibraryList.stream().map(entity -> {
 
             Date createTime = new Date();
-            entity.setLibrarySn(String.valueOf(new SnowFlakeIdUtil(1, 0).nextId())).setCreateTime(createTime).setUpdateTime(createTime).setStatus(1);
+            entity.setLibrarySn(String.valueOf(new SnowFlakeIdUtil(1, 0).nextId())).setCreateTime(createTime).setUpdateTime(createTime).setStatus(0);
 
             return nbmhAnimalLibraryMapper.insert(entity);
         }).collect(Collectors.toList());
@@ -62,7 +62,7 @@ public class NbmhAnimalLibraryServiceImpl extends ServiceImpl<NbmhAnimalLibraryM
 
         return nbmhAnimalLibraryList.stream().map(entity -> {
 
-            entity.setUpdateTime(new Date());
+            entity.setUpdateTime(new Date()).setStatus(0);
 
             return nbmhAnimalLibraryMapper.update(entity, Wrappers.<NbmhAnimalLibrary>lambdaUpdate().eq(NbmhAnimalLibrary::getId, entity.getId()));
         }).reduce(0, Integer::sum);
@@ -77,7 +77,10 @@ public class NbmhAnimalLibraryServiceImpl extends ServiceImpl<NbmhAnimalLibraryM
 
         LambdaQueryWrapper<NbmhAnimalLibrary> lambdaQueryWrapper = Wrappers.lambdaQuery(entity);
 
-        return nbmhAnimalLibraryMapper.selectPage(page, lambdaQueryWrapper);
+        IPage<NbmhAnimalLibrary> animalLibraryIPage = nbmhAnimalLibraryMapper.selectPage(page, lambdaQueryWrapper);
+        animalLibraryIPage.getRecords().forEach(record -> record.setDetail(null));
+
+        return animalLibraryIPage;
     }
 
     @Override
@@ -103,6 +106,23 @@ public class NbmhAnimalLibraryServiceImpl extends ServiceImpl<NbmhAnimalLibraryM
                 nbmhAnimalLibraryMapper.updateById(entity);
             }
         });
+    }
+
+    @Override
+    @Transactional
+    public int audit(List<NbmhAnimalLibrary> nbmhAnimalLibraryList) {
+        BeanUtils.validBean(nbmhAnimalLibraryList, NbmhAnimalLibrary.Update.class);
+
+        if (CollectionUtils.isEmpty(nbmhAnimalLibraryList)) {
+            return 0;
+        }
+
+        return nbmhAnimalLibraryList.stream().map(entity -> {
+
+            entity.setUpdateTime(new Date());
+
+            return nbmhAnimalLibraryMapper.update(entity, Wrappers.<NbmhAnimalLibrary>lambdaUpdate().eq(NbmhAnimalLibrary::getId, entity.getId()));
+        }).reduce(0, Integer::sum);
     }
 
 }

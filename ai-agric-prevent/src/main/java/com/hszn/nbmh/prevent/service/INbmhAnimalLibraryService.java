@@ -62,4 +62,12 @@ public interface INbmhAnimalLibraryService extends IService<NbmhAnimalLibrary> {
      */
     void delete(@NotEmpty List<Long> idList);
 
+    /**
+     * 审核
+     *
+     * @param nbmhAnimalLibraryList 动物基因库/病例库列表
+     * @return the int
+     */
+    int audit(List<NbmhAnimalLibrary> nbmhAnimalLibraryList);
+
 }

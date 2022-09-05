@@ -21,18 +21,18 @@ public interface INbmhVideoLessonService extends IService<NbmhVideoLesson> {
     /**
      * 保存
      *
-     * @param NbmhVideoLessonList 视频课堂列表
+     * @param nbmhVideoLessonList 视频课堂列表
      * @return the list
      */
-    List<Integer> save(List<NbmhVideoLesson> NbmhVideoLessonList);
+    List<Integer> save(List<NbmhVideoLesson> nbmhVideoLessonList);
 
     /**
      * 更新
      *
-     * @param NbmhVideoLessonList 视频课堂列表
+     * @param nbmhVideoLessonList 视频课堂列表
      * @return the int
      */
-    int update(List<NbmhVideoLesson> NbmhVideoLessonList);
+    int update(List<NbmhVideoLesson> nbmhVideoLessonList);
 
     /**
      * 分页查询
@@ -60,4 +60,12 @@ public interface INbmhVideoLessonService extends IService<NbmhVideoLesson> {
      * @param idList the id list
      */
     void delete(@NotEmpty List<Long> idList);
+
+    /**
+     * 审核
+     *
+     * @param nbmhVideoLessonList 视频课堂列表
+     * @return the int
+     */
+    int audit(List<NbmhVideoLesson> nbmhVideoLessonList);
 }

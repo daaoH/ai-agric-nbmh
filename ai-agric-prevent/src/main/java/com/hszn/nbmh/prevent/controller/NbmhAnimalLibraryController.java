@@ -100,5 +100,14 @@ public class NbmhAnimalLibraryController {
         return Result.ok();
     }
 
+    @Operation(summary = "管理员审核动物基因库/病例库", method = "PUT")
+    @PutMapping("/audit")
+    @Inner(false)
+    public Result audit(@RequestBody NbmhAnimalLibrary nbmhAnimalLibrary) {
+
+        nbmhAnimalLibraryService.audit(Collections.singletonList(nbmhAnimalLibrary));
+        return Result.ok();
+    }
+
 
 }
