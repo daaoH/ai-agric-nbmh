@@ -2,8 +2,10 @@ package com.hszn.nbmh.prevent.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
-import com.hszn.nbmh.prevent.api.entity.NbmhButcherReport;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.hszn.nbmh.prevent.api.entity.NbmhButcherReport;
+import com.hszn.nbmh.prevent.api.params.out.ButcherStatisticsResult;
+import com.hszn.nbmh.prevent.api.params.out.NbmhButcherReportDetail;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -58,8 +60,24 @@ public interface INbmhButcherReportService extends IService<NbmhButcherReport> {
     /**
      * 删除.
      *
-     * @param idList    the id list
+     * @param idList the id list
      */
     void delete(@NotEmpty List<Long> idList);
+
+    /**
+     * 统计
+     *
+     * @param entity 查询条件的实体
+     * @return the list
+     */
+    ButcherStatisticsResult statistics(@NotNull NbmhButcherReport entity);
+
+    /**
+     * 防疫站工作人员查看自屠宰/无害坏详情
+     *
+     * @param entity 查询条件的实体
+     * @return the detail
+     */
+    NbmhButcherReportDetail detail(NbmhButcherReport entity);
 
 }

@@ -5,7 +5,6 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.hszn.nbmh.prevent.api.entity.NbmhMedicalOrder">
         <id column="id" property="id" />
-        <result column="report_number" property="reportNumber" />
         <result column="room_number" property="roomNumber" />
         <result column="farmer_id" property="farmerId" />
         <result column="farmer_name" property="farmerName" />
