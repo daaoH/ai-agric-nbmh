@@ -43,4 +43,7 @@ public interface RemoteAnimalLibraryService {
 
     @DeleteMapping("delete/{id}")
     Result delete(@PathVariable Long id);
+
+    @PutMapping("/audit")
+     Result audit(@RequestBody NbmhAnimalLibrary nbmhAnimalLibrary);
 }
