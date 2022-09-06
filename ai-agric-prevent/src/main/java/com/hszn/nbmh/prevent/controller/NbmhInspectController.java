@@ -133,7 +133,7 @@ public class NbmhInspectController {
 
 
     @PostMapping("/record")
-    @Operation(summary="防疫员-防疫记录")
+    @Operation(summary="防疫员-检疫记录")
     public Result record(@RequestBody InspectRecordParam params) {
         return Result.ok(inspectService.record(params));
     }

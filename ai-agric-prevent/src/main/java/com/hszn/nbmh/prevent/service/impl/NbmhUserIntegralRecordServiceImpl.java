@@ -43,8 +43,12 @@ public class NbmhUserIntegralRecordServiceImpl extends ServiceImpl<NbmhUserInteg
         //添加条件
         LambdaQueryWrapper<NbmhUserIntegralRecord> queryWrapper=new LambdaQueryWrapper<>();
         //防疫-检疫人-id
-        if (ObjectUtils.isNotEmpty(param.getVaccinId())) {
-            queryWrapper.eq(NbmhUserIntegralRecord::getVaccinId, param.getVaccinId());
+        if (ObjectUtils.isNotEmpty(param.getVaccinUserId())) {
+            queryWrapper.eq(NbmhUserIntegralRecord::getVaccinId, param.getVaccinUserId());
+        }
+        //防疫站id
+        if (ObjectUtils.isNotEmpty(param.getPreventStationId())) {
+            queryWrapper.eq(NbmhUserIntegralRecord::getPreventStationId, param.getPreventStationId());
         }
         //是否为收入(0:false,1:true)
         if (ObjectUtils.isNotEmpty(param.getIsIncome())) {
@@ -54,10 +58,15 @@ public class NbmhUserIntegralRecordServiceImpl extends ServiceImpl<NbmhUserInteg
         if (ObjectUtils.isNotEmpty(param.getAnimalType())) {
             queryWrapper.eq(NbmhUserIntegralRecord::getAnimalType, param.getAnimalType());
         }
+        //来源(1:防疫,2:检疫,3:分账)
+        if (ObjectUtils.isNotEmpty(param.getSource())) {
+            queryWrapper.eq(NbmhUserIntegralRecord::getSource, param.getSource());
+        }
         //时间 查询条件为年月匹配
         if (ObjectUtils.isNotEmpty(param.getYearsAndMonth())) {
-            String strStart=DateFormatUtils.format(param.getYearsAndMonth(), "yyyy-MM");
-            queryWrapper.apply("UNIX_TIMESTAMP(create_time) = UNIX_TIMESTAMP('" + strStart + "')");
+            //时间 查询条件为年月日匹配
+            String strStart=DateFormatUtils.format(param.getYearsAndMonth(), "yyyy-MM-dd");
+            queryWrapper.apply("date_format (create_time,'%Y-%m-%d') = date_format('" + strStart + "','%Y-%m-%d')");
         }
         return this.baseMapper.selectList(queryWrapper);
     }
@@ -73,27 +82,28 @@ public class NbmhUserIntegralRecordServiceImpl extends ServiceImpl<NbmhUserInteg
         //返回结果
         List<IntegralRecordDetailsResult> integralRecordDetailsResults=new ArrayList<>();
         //获取数据集
-        Map<String, List<NbmhUserIntegralRecord>> groupMap=this.getByParam(param).stream()
-                .collect(Collectors.groupingBy(u -> u.getSource() + "|" + u.getAnimalType()));
+        Map<Integer, List<NbmhUserIntegralRecord>> groupMap=this.getByParam(param).stream()
+                .collect(Collectors.groupingBy(u -> u.getSource()));
         //分组处理数据
-        for (Map.Entry<String, List<NbmhUserIntegralRecord>> entry : groupMap.entrySet()) {
+        for (Map.Entry<Integer, List<NbmhUserIntegralRecord>> entry : groupMap.entrySet()) {
             IntegralRecordDetailsResult integralRecordDetailsResult=new IntegralRecordDetailsResult();
             //1邀请 2动物防疫 3动物检疫
             if (entry.getValue().get(0).getSource() == 1) {
-                integralRecordDetailsResult.setUserName("邀请养殖户" + entry.getValue().get(0).getUserName());
+                integralRecordDetailsResult.setUserName("邀请养殖户" + entry.getValue().get(0).getUserName() + ".......");
                 integralRecordDetailsResult.setType(1);
-            } else if (entry.getValue().get(0).getSource() == 2) {
+            } else {
                 integralRecordDetailsResult.setType(2);
                 //动物类型(种类 0猪 1牛)
-                integralRecordDetailsResult.setAnimaltype(entry.getValue().get(0).getAnimalType());
-            } else {
-                //动物类型(种类 0猪 1牛)
-                integralRecordDetailsResult.setAnimaltype(entry.getValue().get(0).getAnimalType());
-                integralRecordDetailsResult.setType(3);
+//                integralRecordDetailsResult.setAnimaltype(entry.getValue().get(0).getAnimalType());
             }
+//            else {
+//                //动物类型(种类 0猪 1牛)
+//                integralRecordDetailsResult.setAnimaltype(entry.getValue().get(0).getAnimalType());
+//                integralRecordDetailsResult.setType(3);
+//            }
             integralRecordDetailsResult.setCreateTime(entry.getValue().get(0).getCreateTime());
-
             integralRecordDetailsResult.setVaccinNum(entry.getValue().size());
+            integralRecordDetailsResult.setIntegral(entry.getValue().stream().mapToInt(NbmhUserIntegralRecord -> NbmhUserIntegralRecord.getIntegral()).sum());
             integralRecordDetailsResults.add(integralRecordDetailsResult);
         }
         return integralRecordDetailsResults;
@@ -131,7 +141,7 @@ public class NbmhUserIntegralRecordServiceImpl extends ServiceImpl<NbmhUserInteg
             } else if (entry.getValue().get(0).getSource() == 2) {
                 source="防疫";
             } else {
-                source="检疫";
+                source="未知";
             }
             String animalType="";
             // 0猪 1牛
@@ -167,19 +177,32 @@ public class NbmhUserIntegralRecordServiceImpl extends ServiceImpl<NbmhUserInteg
         vUserIntegralRecordResult.setYearsAndMonth(param.getYearsAndMonth());
         vUserIntegralRecordResult.setTotalIntegral(nbmhUserIntegralRecords.stream().mapToInt(NbmhUserIntegralRecord -> NbmhUserIntegralRecord.getIntegral()).sum());
         List<VUserIntegralRecordListResult> vUserIntegralRecordListResultList=new ArrayList<>();
-        //分组处理数据
-        for (Map.Entry<Long, List<NbmhUserIntegralRecord>> entry : groupMap.entrySet()) {
-            VUserIntegralRecordListResult vUserIntegralRecordListResult=new VUserIntegralRecordListResult();
-            vUserIntegralRecordListResult.setVaccinNum(entry.getValue().size());
-            vUserIntegralRecordListResult.setIntegral(entry.getValue().stream().mapToInt(NbmhUserIntegralRecord -> NbmhUserIntegralRecord.getIntegral()).sum());
-            vUserIntegralRecordListResult.setUserAvatarUrl(entry.getValue().get(0).getUserAvatarUrl());
-            vUserIntegralRecordListResult.setUserName(entry.getValue().get(0).getUserName());
-            List<String> earNos=new ArrayList<>();
-            for (NbmhUserIntegralRecord nb : entry.getValue()) {
-                earNos.add(nb.getEarNo());
+        if (param.getSource() == 2) {
+            //分组处理数据
+            for (Map.Entry<Long, List<NbmhUserIntegralRecord>> entry : groupMap.entrySet()) {
+                VUserIntegralRecordListResult vUserIntegralRecordListResult=new VUserIntegralRecordListResult();
+                vUserIntegralRecordListResult.setVaccinNum(entry.getValue().size());
+                vUserIntegralRecordListResult.setIntegral(entry.getValue().stream().mapToInt(NbmhUserIntegralRecord -> NbmhUserIntegralRecord.getIntegral()).sum());
+                vUserIntegralRecordListResult.setUserAvatarUrl(entry.getValue().get(0).getUserAvatarUrl());
+                vUserIntegralRecordListResult.setUserName(entry.getValue().get(0).getUserName());
+                List<String> earNos=new ArrayList<>();
+                for (NbmhUserIntegralRecord nb : entry.getValue()) {
+                    earNos.add(nb.getEarNo());
+                }
+                vUserIntegralRecordListResult.setEarNos(earNos);
+                vUserIntegralRecordListResultList.add(vUserIntegralRecordListResult);
             }
-            vUserIntegralRecordListResult.setEarNos(earNos);
-            vUserIntegralRecordListResultList.add(vUserIntegralRecordListResult);
+        } else {
+            //分组处理数据
+            for (Map.Entry<Long, List<NbmhUserIntegralRecord>> entry : groupMap.entrySet()) {
+                VUserIntegralRecordListResult vUserIntegralRecordListResult=new VUserIntegralRecordListResult();
+                vUserIntegralRecordListResult.setVaccinNum(0);
+                vUserIntegralRecordListResult.setIntegral(entry.getValue().stream().mapToInt(NbmhUserIntegralRecord -> NbmhUserIntegralRecord.getIntegral()).sum());
+                vUserIntegralRecordListResult.setUserAvatarUrl(entry.getValue().get(0).getUserAvatarUrl());
+                vUserIntegralRecordListResult.setUserName(entry.getValue().get(0).getUserName());
+                vUserIntegralRecordListResult.setEarNos(new ArrayList<>());
+                vUserIntegralRecordListResultList.add(vUserIntegralRecordListResult);
+            }
         }
         vUserIntegralRecordResult.setVUserIntegralRecordListResultList(vUserIntegralRecordListResultList);
         return vUserIntegralRecordResult;

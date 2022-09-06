@@ -1,8 +1,10 @@
 package com.hszn.nbmh.prevent.api.params.input;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -22,8 +24,8 @@ public class UserIntegralRecordParam {
     /**
      * 防疫-检疫人-id
      */
-    @Schema(name="vaccinId", description="防疫-检疫人-id")
-    private Long vaccinId;
+    @Schema(name="vaccinUserId", description="防疫-检疫人-id")
+    private Long vaccinUserId;
 
     /**
      * 防疫站id
@@ -42,6 +44,8 @@ public class UserIntegralRecordParam {
      * 年月
      */
     @Schema(name="yearsAndMonth", description="年月")
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(pattern="yyyy-MM-dd", timezone="GMT+8", shape=JsonFormat.Shape.STRING)
     private Date yearsAndMonth;
 
 
@@ -50,5 +54,13 @@ public class UserIntegralRecordParam {
      */
     @Schema(name="animalType", description="动物类型(种类 0猪 1牛)")
     private Integer animalType;
+
+
+
+    /**
+     * 来源(1:防疫,2:检疫,3:分账)
+     */
+    @Schema(name="source", description="来源(1:邀请 2:防疫,3:检疫,3:分账)")
+    private Integer source;
 
 }

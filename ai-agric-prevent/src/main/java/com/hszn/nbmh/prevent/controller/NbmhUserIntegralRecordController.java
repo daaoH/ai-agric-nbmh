@@ -6,7 +6,6 @@ import com.hszn.nbmh.prevent.api.entity.NbmhUserIntegralRecord;
 import com.hszn.nbmh.prevent.api.params.input.UserIntegralRecordParam;
 import com.hszn.nbmh.prevent.service.INbmhUserIntegralRecordService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
 import java.util.List;
 
 /**

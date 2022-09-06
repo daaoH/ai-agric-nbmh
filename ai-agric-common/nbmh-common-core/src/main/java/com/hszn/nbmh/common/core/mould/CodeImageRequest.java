@@ -16,7 +16,7 @@ public class CodeImageRequest {
     /**
      * 类型 1:用户信息二维码
      **/
-    @Schema(name="type", description="类型  1:用户信息二维码")
+    @Schema(name="type", description="类型: 1活体报备获取农户养殖动物数据")
     private Integer type;
 
     /**

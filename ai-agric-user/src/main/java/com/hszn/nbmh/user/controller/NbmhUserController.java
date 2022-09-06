@@ -1,8 +1,6 @@
 package com.hszn.nbmh.user.controller;
 
-
 import ch.hsr.geohash.GeoHash;
-import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.nacos.common.utils.CollectionUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -18,18 +16,16 @@ import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.common.core.utils.SnowFlakeIdUtil;
 import com.hszn.nbmh.common.core.utils.SortUtil;
 import com.hszn.nbmh.common.security.annotation.Inner;
-import com.hszn.nbmh.common.security.service.AuthUser;
-import com.hszn.nbmh.common.security.util.SecurityUtils;
 import com.hszn.nbmh.prevent.api.entity.NbmhUserIntegralRecord;
 import com.hszn.nbmh.prevent.api.feign.RemoteUserIntegralService;
 import com.hszn.nbmh.third.entity.NbmhBaseConfig;
 import com.hszn.nbmh.third.feign.RemoteBaseConfigService;
+import com.hszn.nbmh.third.feign.RemoteCodeImageService;
 import com.hszn.nbmh.user.api.entity.NbmhAnimalDoctorDetail;
 import com.hszn.nbmh.user.api.entity.NbmhUser;
 import com.hszn.nbmh.user.api.entity.NbmhUserCredentials;
 import com.hszn.nbmh.user.api.entity.NbmhUserExtraInfo;
 import com.hszn.nbmh.user.api.feign.RemotePreventService;
-import com.hszn.nbmh.user.api.feign.RemoteThirdService;
 import com.hszn.nbmh.user.api.params.input.AnimalDoctorRegisterParam;
 import com.hszn.nbmh.user.api.params.input.NbmhPreventStationParam;
 import com.hszn.nbmh.user.api.params.input.RegisterParam;
@@ -86,7 +82,8 @@ public class NbmhUserController {
 
     private final INbmhUserCredentialsService userCredentialsService;
 
-    private final RemoteThirdService thirdService;
+
+    private final RemoteCodeImageService codeImageService;
 
     private final RemotePreventService remotePreventService;
 
@@ -678,7 +675,7 @@ public class NbmhUserController {
         Map<String, Object> objectMap=new HashMap<>();
         objectMap.put("userId", userId);
         imageRequest.setContent(JSON.toJSONString(objectMap));
-        Result codeImageResult=thirdService.generate(imageRequest);
+        Result codeImageResult=codeImageService.generate(imageRequest);
         return String.valueOf(codeImageResult.getData());
     }
 

@@ -139,5 +139,11 @@ public class NbmhUserIntegralRecord implements Serializable {
     @Schema(name="updateTime", description="修改时间")
     private Date updateTime;
 
+    /**
+     * 防疫站id
+     */
+    @Schema(name="preventStationId", description="防疫站id")
+    private Long preventStationId;
+
 
 }

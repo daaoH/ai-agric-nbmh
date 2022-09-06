@@ -113,6 +113,12 @@ public class NbmhInspectServiceImpl extends ServiceImpl<NbmhInspectMapper, NbmhI
         if (ObjectUtils.isNotEmpty(inspectRecordParam.getUserId())) {
             queryWrapper.eq(NbmhInspect::getUserId, inspectRecordParam.getUserId());
         }
+        if (ObjectUtils.isNotEmpty(inspectRecordParam.getVaccinUserId())) {
+            queryWrapper.eq(NbmhInspect::getVaccinId, inspectRecordParam.getVaccinUserId());
+        }
+        if (ObjectUtils.isNotEmpty(inspectRecordParam.getPreventStationId())) {
+            queryWrapper.eq(NbmhInspect::getPreventStationId, inspectRecordParam.getPreventStationId());
+        }
         //状态(1:未检疫,2:已检疫,3:数据失效,4:已举报)
         if (ObjectUtils.isNotEmpty(inspectRecordParam.getAnimalType())) {
             queryWrapper.eq(NbmhInspect::getAnimalType, inspectRecordParam.getAnimalType());
