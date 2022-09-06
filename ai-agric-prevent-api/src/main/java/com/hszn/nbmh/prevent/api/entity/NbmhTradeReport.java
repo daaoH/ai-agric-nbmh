@@ -55,6 +55,12 @@ public class NbmhTradeReport implements Serializable {
     private String reportNumber;
 
     /**
+     * 报告种类 0商家报备；1养殖户报备
+     */
+    @Schema(name="reportType", description="报告种类 0商家报备；1养殖户报备")
+    private Integer reportType;
+
+    /**
      * 养殖户id
      */
     @Schema(name="farmerId", description="养殖户id")
