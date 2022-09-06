@@ -1,5 +1,6 @@
 package com.hszn.nbmh.good.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.generator.config.querys.GaussQuery;
 import com.hszn.nbmh.common.core.enums.CommonEnum;
@@ -22,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
@@ -58,13 +60,13 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
          */
 //        NbmhGoodsSku goodsSku = checkGoods(skuId);
         NbmhGoodsSku goodsSku = goodsSkuService.getById(skuId);
-        if(ObjectUtils.isEmpty(goodsSku)){
+        if (ObjectUtils.isEmpty(goodsSku)) {
             throw new ServiceException((CommonEnum.DATA_NOT_EXIST.getMsg()));
         }
 
         Result<NbmhShopInfo> ret = shopInfoService.detail(goodsSku.getShopId());
         NbmhShopInfo shopInfo = new NbmhShopInfo();
-        if(ret.getCode() == 200){
+        if (ret.getCode() == 200) {
             shopInfo = ret.getData();
         }
 
@@ -105,28 +107,30 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     public CartVo getCart() {
         CartVo cartVo = new CartVo();
         AuthUser authUser = SecurityUtils.getUser();
-        if(ObjectUtils.isEmpty(authUser)){
+        if (ObjectUtils.isEmpty(authUser)) {
             //用户没有登录
             return null;
-        }else{
+        } else {
             String cartKey = "";
             if (authUser.getId() != null) {
                 cartKey = ShoppingCartService.getCacheKeys(authUser.getId());
             }
 
             List<CartItemVo> cartItems = getCartItems(cartKey);
-            Map<Long, List<CartItemVo>> maps = cartItems.stream().collect(Collectors.groupingBy(c -> c.getShopId()));
-            List<ShopCartItemVo> cartItemVos = new ArrayList<>();
-            for(Long key : maps.keySet()){
-                ShopCartItemVo itemVo = new ShopCartItemVo();
-                Result<NbmhShopInfo> ret = shopInfoService.detail(key);
-                NbmhShopInfo shopInfo = ret.getData();
-                itemVo.setShopInfo(shopInfo);
-                itemVo.setItems(maps.get(key));
-                cartItemVos.add(itemVo);
-            }
+            if (CollectionUtil.isNotEmpty(cartItems)) {
+                Map<Long, List<CartItemVo>> maps = cartItems.stream().collect(Collectors.groupingBy(c -> c.getShopId()));
+                List<ShopCartItemVo> cartItemVos = new ArrayList<>();
+                for (Long key : maps.keySet()) {
+                    ShopCartItemVo itemVo = new ShopCartItemVo();
+                    Result<NbmhShopInfo> ret = shopInfoService.detail(key);
+                    NbmhShopInfo shopInfo = ret.getData();
+                    itemVo.setShopInfo(shopInfo);
+                    itemVo.setItems(maps.get(key));
+                    cartItemVos.add(itemVo);
+                }
 
-            cartVo.setShopCartItems(cartItemVos);
+                cartVo.setShopCartItems(cartItemVos);
+            }
             return cartVo;
         }
     }
@@ -148,7 +152,14 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public CartItemVo getCartItem(Long skuId) {
-        return null;
+        //拿到要操作的购物车信息
+        BoundHashOperations<String, Object, Object> cartOps = getCartOps();
+
+        String redisValue = (String) cartOps.get(skuId.toString());
+
+        CartItemVo cartItemVo = JSON.parseObject(redisValue, CartItemVo.class);
+
+        return cartItemVo;
     }
 
     @Override
@@ -158,6 +169,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     /**
      * 选中购物项
+     *
      * @param skuId
      * @param check
      */
@@ -176,6 +188,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     /**
      * 修改购物项数据
+     *
      * @param skuId
      * @param num
      */
@@ -193,12 +206,17 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     /**
      * 删除购物项
+     *
      * @param skuId
      */
     @Override
-    public void deleteIdCartInfo(Long skuId) {
+    public void deleteCartItem(List<Long> skuId) {
         BoundHashOperations<String, Object, Object> carts = getCartOps();
-        carts.delete(skuId.toString());
+        if (CollectionUtil.isNotEmpty(skuId)) {
+            for (Long id : skuId) {
+                carts.delete(id.toString());
+            }
+        }
     }
 
     //检测商品的有效性
@@ -218,7 +236,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private BoundHashOperations<String, Object, Object> getCartOps() {
         //先得到当前用户信息
         AuthUser userInfoTo = SecurityUtils.getUser();
-        if(ObjectUtils.isEmpty(userInfoTo)){
+        if (ObjectUtils.isEmpty(userInfoTo)) {
             throw new ServiceException("请先登录");
         }
         String cartKey = "";

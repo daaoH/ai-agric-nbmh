@@ -14,6 +14,11 @@ public interface ServiceNameConstant {
     String USER_SERVICE = "user-service";
 
     /**
+     * 后台管理用户服务
+     */
+    String SYS_USER_SERVICE = "admin-service";
+
+    /**
      * 鉴权服务
      */
     String AUTH_SERVICE = "auth-service";

@@ -3,6 +3,9 @@ package com.hszn.nbmh.common.security.service;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
+import com.hszn.nbmh.admin.api.entity.SysUser;
+import com.hszn.nbmh.admin.api.params.vo.SysAuthUser;
+import com.hszn.nbmh.admin.api.params.vo.SysLoginUser;
 import com.hszn.nbmh.common.core.constant.CommonConstant;
 import com.hszn.nbmh.common.core.constant.SecurityConstants;
 import com.hszn.nbmh.common.core.utils.Result;
@@ -70,37 +73,42 @@ public interface CustomUserDetailsService extends UserDetailsService, Ordered {
 		return authUser;
 	}
 
-	default UserDetails getUserDetails(Result<LoginUser> result) {
-		LoginUser info = RetOps.of(result).getData().orElseThrow(() -> new UsernameNotFoundException("用户不存在"));
+	default UserDetails getUserDetails(Result<SysLoginUser> result) {
+		SysLoginUser info = RetOps.of(result).getData().orElseThrow(() -> new UsernameNotFoundException("用户不存在"));
 
 		Set<String> dbAuthsSet = new HashSet<>();
 
-		Collection<GrantedAuthority> authorities = AuthorityUtils
-				.createAuthorityList(dbAuthsSet.toArray(new String[0]));
-		NbmhUser user = info.getUser();
+		if (ArrayUtil.isNotEmpty(info.getRoles())) {
+			// 获取角色
+			Arrays.stream(info.getRoles()).forEach(role -> dbAuthsSet.add(SecurityConstants.ROLE + role));
+			// 获取资源
+			dbAuthsSet.addAll(Arrays.asList(info.getPermissions()));
 
-		boolean mutilRole = false;
-		List<Integer> userRoles = new ArrayList<>();
-		if(CollectionUtil.isNotEmpty(info.getExtraInfo())){
-			if (info.getExtraInfo().size() > 1) {
-				mutilRole = true;
-			}
-			userRoles.addAll(info.getExtraInfo().stream().map(e -> e.getType()).collect(Collectors.toList()));
 		}
 
-		// 构造security用户
-		AuthUser authUser = new AuthUser(user.getId(), user.getUserName(),
-				SecurityConstants.BCRYPT + user.getPassword(), user.getPhone(), true, true, true,
-				StrUtil.equals(user.getStatus().toString(), CommonConstant.STATUS_NORMAL), authorities, mutilRole, userRoles, user, info.getExtraInfo());
+		Collection<GrantedAuthority> authorities = AuthorityUtils
+				.createAuthorityList(dbAuthsSet.toArray(new String[0]));
+		SysUser user = info.getSysUser();
 
-		return authUser;
+		// 构造security用户
+		return new SysAuthUser(user.getId(), user.getDeptId(), user.getUserName(),
+				SecurityConstants.BCRYPT + user.getPassword(), user.getPhone(), true, true, true,
+				StrUtil.equals(user.getStatus().toString(), CommonConstant.STATUS_NORMAL), authorities);
 	}
 
 	/**
-	 * 通过用户实体查询
+	 * 通过app用户实体查询
 	 * @return
 	 */
 	default UserDetails loadUserByUser(AuthUser authUser) {
+		return this.loadUserByUsername(authUser.getUsername());
+	}
+
+	/**
+	 * 通过后台管理用户实体查询
+	 * @return
+	 */
+	default UserDetails loadSysUserByUser(SysAuthUser authUser) {
 		return this.loadUserByUsername(authUser.getUsername());
 	}
 

@@ -4,6 +4,7 @@ import com.hszn.nbmh.common.redis.cache.CachePrefix;
 import com.hszn.nbmh.good.api.params.vo.CartItemVo;
 import com.hszn.nbmh.good.api.params.vo.CartVo;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -70,5 +71,5 @@ public interface ShoppingCartService {
      * 删除购物项
      * @param skuId
      */
-    void deleteIdCartInfo(Long skuId);
+    void deleteCartItem(List<Long> skuId);
 }

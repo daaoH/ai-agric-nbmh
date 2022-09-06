@@ -8,6 +8,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hszn.nbmh.common.core.enums.CommonEnum;
 import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.common.security.annotation.Inner;
+import com.hszn.nbmh.common.security.service.AuthUser;
+import com.hszn.nbmh.common.security.util.SecurityUtils;
 import com.hszn.nbmh.good.api.entity.NbmhComment;
 import com.hszn.nbmh.good.api.entity.NbmhGoods;
 import com.hszn.nbmh.good.api.entity.NbmhGoodsAttribute;
@@ -95,9 +97,10 @@ public class NbmhGoodsController {
 
         //异步记录用户足迹
         executor.execute(() -> {
+            AuthUser authUser = SecurityUtils.getUser();
             NbmhUserFootprint footprint = new NbmhUserFootprint();
             footprint.setGoodsId(goodId);
-            footprint.setUserId(1L);
+            footprint.setUserId(authUser.getId());
             footprint.setCreateTime(new Date());
             footprint.setUpdateTime(new Date());
             footprintService.addFootprint(footprint);

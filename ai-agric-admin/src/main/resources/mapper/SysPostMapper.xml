@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hszn.nbmh.admin.mapper.SysPostMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hszn.nbmh.admin.api.entity.SysPost">
+        <id column="id" property="id" />
+        <result column="post_code" property="postCode" />
+        <result column="post_name" property="postName" />
+        <result column="post_sort" property="postSort" />
+        <result column="status" property="status" />
+        <result column="create_time" property="createTime" />
+        <result column="create_by" property="createBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="remark" property="remark" />
+    </resultMap>
+
+    <!-- 通过用户ID，查询岗位信息-->
+    <select id="listPostsByUserId" resultType="com.hszn.nbmh.admin.api.entity.SysPost">
+		SELECT p.id,
+			   p.post_name,
+			   p.post_code,
+			   p.post_sort,
+			   p.del_flag,
+			   p.create_time,
+			   p.update_time,
+			   p.update_by,
+			   p.create_by,
+			   p.remark
+		FROM sys_post p,
+			 sys_user_post up
+		WHERE p.id = up.post_id
+		  AND p.status = 0
+		  and up.user_id = #{userId}
+	</select>
+</mapper>

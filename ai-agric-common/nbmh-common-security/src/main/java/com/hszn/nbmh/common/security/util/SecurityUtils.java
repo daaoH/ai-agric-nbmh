@@ -1,6 +1,7 @@
 package com.hszn.nbmh.common.security.util;
 
 import cn.hutool.core.util.StrUtil;
+import com.hszn.nbmh.admin.api.params.vo.SysAuthUser;
 import com.hszn.nbmh.common.core.constant.SecurityConstants;
 import com.hszn.nbmh.common.security.service.AuthUser;
 import lombok.experimental.UtilityClass;
@@ -26,12 +27,23 @@ public class SecurityUtils {
 	}
 
 	/**
-	 * 获取用户
+	 * 获取app用户
 	 */
 	public AuthUser getUser(Authentication authentication) {
 		Object principal = authentication.getPrincipal();
 		if (principal instanceof AuthUser) {
 			return (AuthUser) principal;
+		}
+		return null;
+	}
+
+	/**
+	 * 获取管理系统用户
+	 */
+	public SysAuthUser getSysUser(Authentication authentication) {
+		Object principal = authentication.getPrincipal();
+		if (principal instanceof SysAuthUser) {
+			return (SysAuthUser) principal;
 		}
 		return null;
 	}
@@ -48,10 +60,21 @@ public class SecurityUtils {
 	}
 
 	/**
+	 * 获取用户
+	 */
+	public SysAuthUser getSysUser() {
+		Authentication authentication = getAuthentication();
+		if (authentication == null) {
+			return null;
+		}
+		return getSysUser(authentication);
+	}
+
+	/**
 	 * 获取用户角色信息
 	 * @return 角色集合
 	 */
-	public List<Long> getRoles() {
+	public List<Long> getSysRoles() {
 		Authentication authentication = getAuthentication();
 		Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 

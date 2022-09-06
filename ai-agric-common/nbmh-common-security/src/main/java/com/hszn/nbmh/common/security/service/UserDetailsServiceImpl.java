@@ -1,5 +1,7 @@
 package com.hszn.nbmh.common.security.service;
 
+import com.hszn.nbmh.admin.api.feign.RemoteSysUserService;
+import com.hszn.nbmh.admin.api.params.vo.SysLoginUser;
 import com.hszn.nbmh.common.core.constant.SecurityConstants;
 import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.user.api.feign.RemoteUserService;
@@ -18,7 +20,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements CustomUserDetailsService {
 
-	private final RemoteUserService remoteUserService;
+	private final RemoteSysUserService remoteSysUserService;
 
 	/**
 	 * 用户名密码登录
@@ -29,7 +31,7 @@ public class UserDetailsServiceImpl implements CustomUserDetailsService {
 	@SneakyThrows
 	public UserDetails loadUserByUsername(String username) {
 
-		Result<LoginUser> result = remoteUserService.queryUserByPhone(username, SecurityConstants.FROM_IN);
+		Result<SysLoginUser> result = remoteSysUserService.info(username, SecurityConstants.FROM_IN);
 		UserDetails userDetails = getUserDetails(result);
 
 		return userDetails;

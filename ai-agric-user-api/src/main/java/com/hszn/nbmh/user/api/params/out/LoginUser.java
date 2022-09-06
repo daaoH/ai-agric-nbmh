@@ -2,8 +2,6 @@ package com.hszn.nbmh.user.api.params.out;
 
 import com.hszn.nbmh.user.api.entity.NbmhUser;
 import com.hszn.nbmh.user.api.entity.NbmhUserExtraInfo;
-import com.hszn.nbmh.user.api.entity.SysPost;
-import com.hszn.nbmh.user.api.entity.SysRole;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 

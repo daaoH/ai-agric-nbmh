@@ -22,6 +22,11 @@
             <version>1.0</version>
         </dependency>
         <dependency>
+            <groupId>com.hszn.nbmh.admin</groupId>
+            <artifactId>ai-agric-admin-api</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
             <groupId>com.hszn.nbmh.common.core</groupId>
             <artifactId>nbmh-common-core</artifactId>
             <version>1.0</version>

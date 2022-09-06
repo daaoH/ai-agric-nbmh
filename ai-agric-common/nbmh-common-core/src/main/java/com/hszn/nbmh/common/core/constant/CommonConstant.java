@@ -31,4 +31,14 @@ public interface CommonConstant {
      * JSON 资源
      */
     String CONTENT_TYPE = "application/json; charset=utf-8";
+
+    /**
+     * 菜单树根节点
+     */
+    Long MENU_TREE_ROOT_ID = -1L;
+
+    /**
+     * 菜单
+     */
+    String MENU = "0";
 }
