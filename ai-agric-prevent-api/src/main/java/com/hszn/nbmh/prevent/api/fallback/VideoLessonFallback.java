@@ -51,4 +51,9 @@ public class VideoLessonFallback implements RemoteVideoLessonService {
     public Result delete(Long id) {
         return Result.failed(CommonEnum.FALL_BACK_MSG.getMsg());
     }
+
+    @Override
+    public Result audit(NbmhVideoLesson nbmhVideoLesson) {
+        return Result.failed(CommonEnum.FALL_BACK_MSG.getMsg());
+    }
 }

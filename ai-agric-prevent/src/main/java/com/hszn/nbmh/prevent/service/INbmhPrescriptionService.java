@@ -1,10 +1,9 @@
-package com.hszn.nbmh.user.service;
+package com.hszn.nbmh.prevent.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.hszn.nbmh.user.api.entity.NbmhUserFollowExpert;
-import com.hszn.nbmh.user.api.params.out.NbmhUserFollowExpertInfo;
+import com.hszn.nbmh.prevent.api.entity.NbmhPrescription;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -12,29 +11,29 @@ import java.util.List;
 
 /**
  * <p>
- * 关注的专家记录表 服务类
+ * 处方基础信息表 服务类
  * </p>
  *
  * @author MCR
- * @since 2022-08-31
+ * @since 2022-09-06
  */
-public interface INbmhUserFollowExpertService extends IService<NbmhUserFollowExpert> {
+public interface INbmhPrescriptionService extends IService<NbmhPrescription> {
 
     /**
      * 保存
      *
-     * @param nbmhUserFollowExpertList 关注的专家列表
+     * @param NbmhPrescriptionList 处方基础信息列表
      * @return the list
      */
-    List<Integer> save(List<NbmhUserFollowExpert> nbmhUserFollowExpertList);
+    List<Integer> save(List<NbmhPrescription> NbmhPrescriptionList);
 
     /**
      * 更新
      *
-     * @param nbmhUserFollowExpertList 关注的专家列表
+     * @param NbmhPrescriptionList 处方基础信息列表
      * @return the int
      */
-    int update(List<NbmhUserFollowExpert> nbmhUserFollowExpertList);
+    int update(List<NbmhPrescription> NbmhPrescriptionList);
 
     /**
      * 分页查询
@@ -45,15 +44,16 @@ public interface INbmhUserFollowExpertService extends IService<NbmhUserFollowExp
      * @param orderItemList 排序方式
      * @return the page
      */
-    IPage<NbmhUserFollowExpert> query(@NotNull NbmhUserFollowExpert entity, int pageNum, int pageSize, List<OrderItem> orderItemList);
+    IPage<NbmhPrescription> query(@NotNull NbmhPrescription entity, int pageNum, int pageSize, List<OrderItem> orderItemList);
 
     /**
      * 查询
      *
-     * @param entity 查询条件的实体
+     * @param entity        查询条件的实体
+     * @param orderItemList 排序方式
      * @return the list
      */
-    List<NbmhUserFollowExpertInfo> list(@NotNull NbmhUserFollowExpert entity);
+    List<NbmhPrescription> list(@NotNull NbmhPrescription entity, List<OrderItem> orderItemList);
 
     /**
      * 删除.

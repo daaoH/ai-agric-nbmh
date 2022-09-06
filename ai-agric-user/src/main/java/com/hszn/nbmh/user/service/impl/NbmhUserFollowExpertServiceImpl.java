@@ -8,14 +8,24 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hszn.nbmh.common.core.utils.BeanUtils;
+import com.hszn.nbmh.user.api.entity.NbmhAnimalDoctorDetail;
+import com.hszn.nbmh.user.api.entity.NbmhUser;
+import com.hszn.nbmh.user.api.entity.NbmhUserExtraInfo;
 import com.hszn.nbmh.user.api.entity.NbmhUserFollowExpert;
+import com.hszn.nbmh.user.api.params.out.NbmhUserFollowExpertInfo;
+import com.hszn.nbmh.user.mapper.NbmhAnimalDoctorDetailMapper;
+import com.hszn.nbmh.user.mapper.NbmhUserExtraInfoMapper;
 import com.hszn.nbmh.user.mapper.NbmhUserFollowExpertMapper;
+import com.hszn.nbmh.user.mapper.NbmhUserMapper;
 import com.hszn.nbmh.user.service.INbmhUserFollowExpertService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,6 +46,14 @@ public class NbmhUserFollowExpertServiceImpl extends ServiceImpl<NbmhUserFollowE
     @Resource
     private NbmhUserFollowExpertMapper nbmhUserFollowExpertMapper;
 
+    @Resource
+    private NbmhUserMapper nbmhUserMapper;
+
+    @Resource
+    private NbmhUserExtraInfoMapper nbmhUserExtraInfoMapper;
+
+    @Resource
+    private NbmhAnimalDoctorDetailMapper nbmhAnimalDoctorDetailMapper;
 
     @Override
     @Transactional
@@ -82,14 +100,38 @@ public class NbmhUserFollowExpertServiceImpl extends ServiceImpl<NbmhUserFollowE
 
     @Override
     @Transactional(readOnly = true)
-    public List<NbmhUserFollowExpert> list(NbmhUserFollowExpert entity, List<OrderItem> orderItemList) {
+    public List<NbmhUserFollowExpertInfo> list(NbmhUserFollowExpert entity) {
 
         QueryWrapper<NbmhUserFollowExpert> queryWrapper = Wrappers.query(entity);
-        if (orderItemList != null && orderItemList.size() > 0) {
-            orderItemList.forEach(t -> queryWrapper.orderBy(true, t.isAsc(), t.getColumn()));
+
+        List<NbmhUserFollowExpert> userFollowExpertList = nbmhUserFollowExpertMapper.selectList(queryWrapper);
+        if (CollectionUtils.isEmpty(userFollowExpertList)) {
+            return null;
         }
 
-        return nbmhUserFollowExpertMapper.selectList(queryWrapper);
+        List<NbmhUserFollowExpertInfo> userFollowExpertInfoList = new ArrayList<>();
+        for (NbmhUserFollowExpert item : userFollowExpertList) {
+
+            NbmhUser nbmhUser = nbmhUserMapper.selectOne(Wrappers.query(NbmhUser.builder().id(item.getExpertId()).status(0).build()));
+            if (ObjectUtils.isEmpty(nbmhUser)) {
+                continue;
+            }
+
+            NbmhUserExtraInfo userExtraInfo = nbmhUserExtraInfoMapper.selectOne(Wrappers.query(NbmhUserExtraInfo.builder().userId(item.getExpertId()).type(2).status(0).build()));
+            if (ObjectUtils.isEmpty(userExtraInfo)) {
+                continue;
+            }
+
+            NbmhAnimalDoctorDetail doctorDetail = nbmhAnimalDoctorDetailMapper.selectOne(Wrappers.query(NbmhAnimalDoctorDetail.builder().userId(item.getExpertId()).status(0).build()));
+            if (ObjectUtils.isEmpty(doctorDetail)) {
+                continue;
+            }
+
+            userFollowExpertInfoList.add(NbmhUserFollowExpertInfo.builder().userId(item.getUserId()).userName(item.getUserName()).expertId(item.getExpertId()).expertName(item.getExpertName()).expertAvatar(nbmhUser.getAvatarUrl())
+                    .doctorType(doctorDetail.getDoctorType()).admissions(doctorDetail.getAdmissions()).workYear(userExtraInfo.getWorkYear()).goodAnimalType(doctorDetail.getGoodAnimalType()).build());
+        }
+
+        return userFollowExpertInfoList;
     }
 
     @Override

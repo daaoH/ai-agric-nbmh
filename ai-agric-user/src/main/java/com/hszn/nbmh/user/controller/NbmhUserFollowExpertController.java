@@ -7,6 +7,7 @@ import com.hszn.nbmh.common.core.enums.CommonEnum;
 import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.common.security.annotation.Inner;
 import com.hszn.nbmh.user.api.entity.NbmhUserFollowExpert;
+import com.hszn.nbmh.user.api.params.out.NbmhUserFollowExpertInfo;
 import com.hszn.nbmh.user.service.INbmhUserFollowExpertService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -78,13 +79,11 @@ public class NbmhUserFollowExpertController {
     }
 
     @Operation(summary = "查询关注的专家", method = "POST")
-    @Parameters({@Parameter(description = "排序条件集合", name = "orderItemList")})
     @PostMapping("/list")
     @Inner(false)
-    public Result<List<NbmhUserFollowExpert>> list(@RequestBody NbmhUserFollowExpert nbmhUserFollowExpert,
-                                                   @RequestParam(value = "orderItemList", required = false) List<OrderItem> orderItemList) {
+    public Result<List<NbmhUserFollowExpertInfo>> list(@RequestBody NbmhUserFollowExpert nbmhUserFollowExpert) {
 
-        return Result.ok(nbmhUserFollowExpertService.list(nbmhUserFollowExpert, orderItemList));
+        return Result.ok(nbmhUserFollowExpertService.list(nbmhUserFollowExpert));
     }
 
     @DeleteMapping("delete/{id}")

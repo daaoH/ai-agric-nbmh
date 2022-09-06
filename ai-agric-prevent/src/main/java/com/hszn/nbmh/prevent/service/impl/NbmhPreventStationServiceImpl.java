@@ -14,6 +14,7 @@ import com.hszn.nbmh.prevent.service.INbmhPreventStationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -54,7 +55,7 @@ public class NbmhPreventStationServiceImpl extends ServiceImpl<NbmhPreventStatio
     public int update(List<NbmhPreventStation> nbmhPreventStationList) {
         BeanUtils.validBean(nbmhPreventStationList, NbmhPreventStation.Update.class);
 
-        if (nbmhPreventStationList == null || nbmhPreventStationList.size() == 0) {
+        if (CollectionUtils.isEmpty(nbmhPreventStationList)) {
             return 0;
         }
 
@@ -93,10 +94,10 @@ public class NbmhPreventStationServiceImpl extends ServiceImpl<NbmhPreventStatio
     @Override
     @Transactional
     public void delete(List<Long> idList) {
-        idList.forEach(id ->{
+        idList.forEach(id -> {
 
             NbmhPreventStation entity = this.getById(id);
-            if(entity != null){
+            if (entity != null) {
                 entity.setStatus(-1).setUpdateTime(new Date());
                 nbmhPreventStationMapper.updateById(entity);
             }

@@ -46,8 +46,8 @@ public class NbmhMedicalAccept implements Serializable {
     /**
      * 诊断订单编号
      */
-    @Schema(name = "reportNumber", description = "诊断订单编号")
-    private String reportNumber;
+    @Schema(name = "medicalOrderNumber", description = "诊断订单编号")
+    private String medicalOrderNumber;
 
     /**
      * 兽医id
@@ -60,6 +60,12 @@ public class NbmhMedicalAccept implements Serializable {
      */
     @Schema(name = "doctorName", description = "兽医名称")
     private String doctorName;
+
+    /**
+     * 兽医头像
+     */
+    @Schema(name = "doctorAvatar", description = "兽医头像")
+    private String doctorAvatar;
 
     /**
      * 兽医职称
@@ -78,12 +84,6 @@ public class NbmhMedicalAccept implements Serializable {
      */
     @Schema(name = "skillDesc", description = "技能说明")
     private String skillDesc;
-
-    /**
-     * 兽医头像
-     */
-    @Schema(name = "doctorAvatar", description = "兽医头像")
-    private String doctorAvatar;
 
     /**
      * 会诊时间

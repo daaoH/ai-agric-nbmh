@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hszn.nbmh.prevent.mapper.NbmhPrescriptionMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hszn.nbmh.prevent.api.entity.NbmhPrescription">
+        <id column="id" property="id" />
+        <result column="medical_order_id" property="medicalOrderId" />
+        <result column="farmer_id" property="farmerId" />
+        <result column="farmer_name" property="farmerName" />
+        <result column="farmer_avatar" property="farmerAvatar" />
+        <result column="animal_type" property="animalType" />
+        <result column="medical_result" property="medicalResult" />
+        <result column="doctor_id" property="doctorId" />
+        <result column="doctor_name" property="doctorName" />
+        <result column="doctor_avatar" property="doctorAvatar" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="status" property="status" />
+    </resultMap>
+
+</mapper>

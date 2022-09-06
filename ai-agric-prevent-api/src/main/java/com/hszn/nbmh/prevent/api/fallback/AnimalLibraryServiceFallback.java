@@ -51,4 +51,9 @@ public class AnimalLibraryServiceFallback implements RemoteAnimalLibraryService 
     public Result delete(Long id) {
         return Result.failed(CommonEnum.FALL_BACK_MSG.getMsg());
     }
+
+    @Override
+    public Result audit(NbmhAnimalLibrary nbmhAnimalLibrary) {
+        return Result.failed(CommonEnum.FALL_BACK_MSG.getMsg());
+    }
 }

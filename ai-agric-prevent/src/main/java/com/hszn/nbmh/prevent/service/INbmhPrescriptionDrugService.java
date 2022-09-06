@@ -1,10 +1,9 @@
-package com.hszn.nbmh.user.service;
+package com.hszn.nbmh.prevent.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.hszn.nbmh.user.api.entity.NbmhUserFollowExpert;
-import com.hszn.nbmh.user.api.params.out.NbmhUserFollowExpertInfo;
+import com.hszn.nbmh.prevent.api.entity.NbmhPrescriptionDrug;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -12,29 +11,29 @@ import java.util.List;
 
 /**
  * <p>
- * 关注的专家记录表 服务类
+ * 处方药品列表 服务类
  * </p>
  *
  * @author MCR
- * @since 2022-08-31
+ * @since 2022-09-06
  */
-public interface INbmhUserFollowExpertService extends IService<NbmhUserFollowExpert> {
+public interface INbmhPrescriptionDrugService extends IService<NbmhPrescriptionDrug> {
 
     /**
      * 保存
      *
-     * @param nbmhUserFollowExpertList 关注的专家列表
+     * @param nbmhPrescriptionDrugList 处方药品列表
      * @return the list
      */
-    List<Integer> save(List<NbmhUserFollowExpert> nbmhUserFollowExpertList);
+    List<Integer> save(List<NbmhPrescriptionDrug> nbmhPrescriptionDrugList);
 
     /**
      * 更新
      *
-     * @param nbmhUserFollowExpertList 关注的专家列表
+     * @param nbmhPrescriptionDrugList 处方药品列表
      * @return the int
      */
-    int update(List<NbmhUserFollowExpert> nbmhUserFollowExpertList);
+    int update(List<NbmhPrescriptionDrug> nbmhPrescriptionDrugList);
 
     /**
      * 分页查询
@@ -45,15 +44,16 @@ public interface INbmhUserFollowExpertService extends IService<NbmhUserFollowExp
      * @param orderItemList 排序方式
      * @return the page
      */
-    IPage<NbmhUserFollowExpert> query(@NotNull NbmhUserFollowExpert entity, int pageNum, int pageSize, List<OrderItem> orderItemList);
+    IPage<NbmhPrescriptionDrug> query(@NotNull NbmhPrescriptionDrug entity, int pageNum, int pageSize, List<OrderItem> orderItemList);
 
     /**
      * 查询
      *
-     * @param entity 查询条件的实体
+     * @param entity        查询条件的实体
+     * @param orderItemList 排序方式
      * @return the list
      */
-    List<NbmhUserFollowExpertInfo> list(@NotNull NbmhUserFollowExpert entity);
+    List<NbmhPrescriptionDrug> list(@NotNull NbmhPrescriptionDrug entity, List<OrderItem> orderItemList);
 
     /**
      * 删除.

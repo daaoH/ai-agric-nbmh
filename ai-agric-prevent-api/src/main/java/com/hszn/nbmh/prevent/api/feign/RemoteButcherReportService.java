@@ -7,6 +7,7 @@ import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.prevent.api.constant.UrlPathConstant;
 import com.hszn.nbmh.prevent.api.entity.NbmhButcherReport;
 import com.hszn.nbmh.prevent.api.fallback.ButcherReportServiceFallback;
+import com.hszn.nbmh.prevent.api.params.out.NbmhButcherReportDetail;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,4 +44,7 @@ public interface RemoteButcherReportService {
 
     @DeleteMapping("delete/{id}")
     Result delete(@PathVariable Long id);
+
+    @PostMapping("/detail")
+    Result<NbmhButcherReportDetail> detail(@RequestBody NbmhButcherReport nbmhButcherReport);
 }

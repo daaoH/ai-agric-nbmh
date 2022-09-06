@@ -4,9 +4,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.hszn.nbmh.common.core.annotation.DataMasking;
 import com.hszn.nbmh.common.core.enums.DataMaskingEnum;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -22,6 +21,10 @@ import java.util.Date;
  */
 @Data
 @EqualsAndHashCode(callSuper=false)
+@Builder(toBuilder=true)
+@NoArgsConstructor
+@AllArgsConstructor
+@Accessors(chain=true)
 public class NbmhUser implements Serializable {
 
     private static final long serialVersionUID=1L;
