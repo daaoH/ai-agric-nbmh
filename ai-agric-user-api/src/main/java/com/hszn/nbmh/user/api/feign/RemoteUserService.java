@@ -23,6 +23,9 @@ public interface RemoteUserService {
     @PostMapping("/queryUserByPhone")
     Result<LoginUser> queryUserByPhone(@RequestParam("phone") String phone, @RequestHeader(SecurityConstants.FROM) String from);
 
+    @PostMapping("/getByPhone")
+    Result<LoginUser> getByPhone(@RequestParam("phone") String phone);
+
     @PostMapping("/checkUserExist")
     Result checkUserExist(@RequestParam("userName") String userName, @RequestHeader(SecurityConstants.FROM) String from);
 

@@ -123,7 +123,7 @@ public class NbmhAnimal implements Serializable {
     /**
      * 状态 0正常 1已抵押 2自屠宰 3无公害 4检疫
      */
-    @Schema(name="status", description="状态 0正常 1已抵押 2自屠宰 3无公害 4检疫")
+    @Schema(name="status", description="状态 0正常 1已抵押 2自屠宰 3无公害 4活体报备 5检疫")
     private Integer status;
 
 

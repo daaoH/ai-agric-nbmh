@@ -75,6 +75,12 @@ public class VaccinParam extends NbmhVaccin implements Serializable {
     private Long userId;
 
     /**
+     * 农户手机号
+     */
+    @Schema(name="userPhone", description="农户手机号")
+    private String userPhone;
+
+    /**
      * 农畜图片
      */
     @Schema(name="photos", description="农畜图片")
@@ -107,5 +113,8 @@ public class VaccinParam extends NbmhVaccin implements Serializable {
     @DateTimeFormat(pattern="yyyy-MM-dd")
     @JsonFormat(pattern="yyyy-MM-dd")
     private Date vaccinDate;
+
+    @Schema(description="是否为站长", name="isStationmaster")
+    private boolean isStationMaster;
 
 }

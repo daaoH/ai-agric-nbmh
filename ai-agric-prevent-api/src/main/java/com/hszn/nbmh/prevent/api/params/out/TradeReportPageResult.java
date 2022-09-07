@@ -1,10 +1,12 @@
 package com.hszn.nbmh.prevent.api.params.out;
 
 
+import com.hszn.nbmh.common.core.utils.PageModelUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author：wangjun
@@ -30,10 +32,23 @@ public class TradeReportPageResult<T> {
     private String farmerName;
 
     /**
+     * 农户地址
+     */
+    @Schema(name="farmerAddress", description="农户地址")
+    private String farmerAddress;
+
+    /**
+     * 农户身份证号
+     */
+    @Schema(name="farmerIdCard", description="农户身份证号")
+    private String farmerIdCard;
+
+    /**
      * 农户头像
      */
     @Schema(name="farmerAvatarUrl", description="农户头像")
     private String farmerAvatarUrl;
+
 
     /**
      * 农户手机号
@@ -61,6 +76,19 @@ public class TradeReportPageResult<T> {
     private String buyerPhone;
 
     /**
+     * 商贩身份证号
+     */
+    @Schema(name="buyerIdCard", description="商贩身份证号")
+    private String buyerIdCard;
+
+    /**
+     * 当前动物类型
+     */
+    @Schema(name="type", description="当前动物类型")
+    private int type;
+
+
+    /**
      * 类型集合
      */
     @Schema(name="types", description="类型集合")
@@ -71,5 +99,11 @@ public class TradeReportPageResult<T> {
      */
     @Schema(name="list", description="分页结果集")
     private List<T> list;
+
+    /**
+     * 分页结果集
+     */
+    @Schema(name="pageModelUtils", description="分页结果集")
+    private PageModelUtils pageModelUtils;
 
 }

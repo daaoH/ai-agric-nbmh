@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.hszn.nbmh.common.core.enums.CommonEnum;
 import com.hszn.nbmh.common.core.mould.QueryRequest;
+import com.hszn.nbmh.common.core.utils.PageModelUtils;
 import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.common.security.annotation.Inner;
 import com.hszn.nbmh.prevent.api.entity.NbmhAnimal;
@@ -27,10 +28,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -54,29 +52,29 @@ public class NbmhTradeReportController {
     @Autowired
     private INbmhTradeReportService tradeReportService;
 
-    @Operation(summary = "新增活体交易信息报备", method = "POST")
+    @Operation(summary="新增活体交易信息报备", method="POST")
     @PostMapping("/add")
     @Inner(false)
-    public Result add(@RequestBody NbmhTradeReport nbmhTradeReport){
+    public Result add(@RequestBody NbmhTradeReport nbmhTradeReport) {
 
-        List<Integer> idList = tradeReportService.save(Collections.singletonList(nbmhTradeReport));
-        if(idList != null && idList.size()>0){
+        List<Integer> idList=tradeReportService.save(Collections.singletonList(nbmhTradeReport));
+        if (idList != null && idList.size() > 0) {
             return Result.ok();
         }
 
         return Result.failed(CommonEnum.DATA_ADD_FAILED.getMsg());
     }
 
-    @Operation(summary = "根据ID查询活体交易信息报备", method = "POST")
+    @Operation(summary="根据ID查询活体交易信息报备", method="POST")
     @Parameters({@Parameter(description="活体交易信息报备Id", name="id")})
     @PostMapping("/{id}")
     @Inner(false)
-    public Result<NbmhTradeReport> getById(@PathVariable(value = "id") @NotBlank Long id) {
+    public Result<NbmhTradeReport> getById(@PathVariable(value="id") @NotBlank Long id) {
 
         return Result.ok(tradeReportService.getById(id));
     }
 
-    @Operation(summary = "更新活体交易信息报备", method = "PUT")
+    @Operation(summary="更新活体交易信息报备", method="PUT")
     @PutMapping
     @Inner(false)
     public Result update(@RequestBody NbmhTradeReport nbmhTradeReport) {
@@ -85,26 +83,26 @@ public class NbmhTradeReportController {
         return Result.ok();
     }
 
-    @Operation(summary = "分页查询活体交易信息", method = "POST")
+    @Operation(summary="分页查询活体交易信息", method="POST")
     @Parameters({@Parameter(description="页码", name="pageNum"), @Parameter(description="每页显示条数", name="pageSize"), @Parameter(description="排序条件集合", name="orderItemList")})
     @PostMapping("/query")
     @Inner(false)
     public Result<IPage<NbmhTradeReport>> query(@RequestBody NbmhTradeReport nbmhTradeReport,
                                                 @RequestParam @DecimalMin("1") int pageNum,
                                                 @RequestParam @DecimalMin("1") int pageSize,
-                                                @RequestParam(value = "orderItemList", required = false) List<OrderItem> orderItemList) {
+                                                @RequestParam(value="orderItemList", required=false) List<OrderItem> orderItemList) {
 
-        IPage<NbmhTradeReport> butcherReportPage = tradeReportService.query(nbmhTradeReport, pageNum, pageSize, orderItemList);
+        IPage<NbmhTradeReport> butcherReportPage=tradeReportService.query(nbmhTradeReport, pageNum, pageSize, orderItemList);
 
         return Result.ok(butcherReportPage);
     }
 
-    @Operation(summary = "查询活体交易信息", method = "POST")
+    @Operation(summary="查询活体交易信息", method="POST")
     @Parameters({@Parameter(description="排序条件集合", name="orderItemList")})
     @PostMapping("/list")
     @Inner(false)
     public Result<List<NbmhTradeReport>> list(@RequestBody NbmhTradeReport nbmhTradeReport,
-                                              @RequestParam(value = "orderItemList", required = false) List<OrderItem> orderItemList) {
+                                              @RequestParam(value="orderItemList", required=false) List<OrderItem> orderItemList) {
 
         return Result.ok(tradeReportService.list(nbmhTradeReport, orderItemList));
     }
@@ -160,23 +158,60 @@ public class NbmhTradeReportController {
 
         //动物集合
         List<NbmhAnimal> animalList=new ArrayList<>();
-
-        //分组处理数据
-        for (Map.Entry<Integer, List<NbmhAnimal>> entry : groupMap.entrySet()) {
-            types.add(entry.getValue().get(0).getType());
-            if (entry.getValue().get(0).getType() == param.getQueryEntity().getAnimalType()) {
-                animalList=animals.stream().skip((param.getPageNum() - 1) * param.getPageSize()).limit(param.getPageSize()).collect(Collectors.toList());
+        PageModelUtils pageModelUtils=new PageModelUtils();
+        if (ObjectUtils.isNotEmpty(param.getQueryEntity().getAnimalType())) {
+            //分组处理数据
+            for (Map.Entry<Integer, List<NbmhAnimal>> entry : groupMap.entrySet()) {
+                types.add(entry.getValue().get(0).getType());
+                if (entry.getValue().get(0).getType() == param.getQueryEntity().getAnimalType()) {
+                    pageModelUtils.setPageNum(param.getPageNum());
+                    pageModelUtils.setPageSize(param.getPageSize());
+                    pageModelUtils.setTotalRecords(entry.getValue().size());
+                    pageModelUtils.setList(entry.getValue());
+                    tradeReportPageResult.setType(entry.getValue().get(0).getType());
+                }
+            }
+        } else {
+            //分组处理数据
+            for (Map.Entry<Integer, List<NbmhAnimal>> entry : groupMap.entrySet()) {
+                types.add(entry.getValue().get(0).getType());
+                pageModelUtils.setPageNum(param.getPageNum());
+                pageModelUtils.setPageSize(param.getPageSize());
+                pageModelUtils.setTotalRecords(entry.getValue().size());
+                pageModelUtils.setList(entry.getValue());
+                tradeReportPageResult.setType(entry.getValue().get(0).getType());
             }
         }
         tradeReportPageResult.setBuyerId(param.getQueryEntity().getBuyerId());
         tradeReportPageResult.setBuyerName(buyerUserInfo.getExtraInfo().getRealName());
         tradeReportPageResult.setBuyerPhone(buyerUserInfo.getUser().getPhone());
+        tradeReportPageResult.setBuyerIdCard(buyerUserInfo.getExtraInfo().getIdCard());
         tradeReportPageResult.setFarmerAvatarUrl(farmerUserInfo.getUser().getAvatarUrl());
         tradeReportPageResult.setFarmerId(param.getQueryEntity().getFarmerId());
         tradeReportPageResult.setFarmerName(farmerUserInfo.getExtraInfo().getRealName());
         tradeReportPageResult.setFarmerPhone(farmerUserInfo.getUser().getPhone());
+        tradeReportPageResult.setFarmerIdCard(farmerUserInfo.getExtraInfo().getIdCard());
+        tradeReportPageResult.setFarmerAddress(farmerUserInfo.getExtraInfo().getAddress());
+        tradeReportPageResult.setTypes(removeRepeat(types));
         tradeReportPageResult.setList(animalList);
+        tradeReportPageResult.setPageModelUtils(pageModelUtils);
         return Result.ok(tradeReportPageResult);
+    }
+
+    /**
+     * list 去重   int
+     *
+     * @param types
+     */
+    public List<Integer> removeRepeat(List<Integer> types) {
+        Set set=new HashSet();
+        List newList=new ArrayList();
+        for (Integer str : types) {
+            if (set.add(str)) {
+                newList.add(str);
+            }
+        }
+        return newList;
     }
 
 }

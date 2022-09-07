@@ -28,6 +28,11 @@ public class UserServiceFallback implements RemoteUserService {
     }
 
     @Override
+    public Result<LoginUser> getByPhone(String phone) {
+        return Result.failed(CommonEnum.FALL_BACK_MSG.getMsg());
+    }
+
+    @Override
     public Result checkUserExist(String userName, String from) {
         return Result.failed(CommonEnum.DATA_NOT_EXIST.getMsg());
     }

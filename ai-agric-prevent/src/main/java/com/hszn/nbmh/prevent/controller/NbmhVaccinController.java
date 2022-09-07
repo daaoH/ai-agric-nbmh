@@ -20,17 +20,20 @@ import com.hszn.nbmh.user.api.entity.NbmhUser;
 import com.hszn.nbmh.user.api.entity.NbmhUserExtraInfo;
 import com.hszn.nbmh.user.api.feign.RemoteUserService;
 import com.hszn.nbmh.user.api.params.out.CurUserInfo;
+import com.hszn.nbmh.user.api.params.out.LoginUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.time.DateFormatUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 /**
@@ -68,20 +71,31 @@ public class NbmhVaccinController {
     //配置接口
     private final RemoteBaseConfigService baseConfigService;
 
+
+    // 初始化
+    SnowFlakeIdUtil idWorker=new SnowFlakeIdUtil(1, 0);
+
     @PostMapping("/submit")
-    @Operation(summary="防疫员端-免疫登记")
+    @Operation(summary="防疫员端-防疫登记")
     @Inner(false)
     public Result submit(@RequestBody List<VaccinParam> params) {
+        //批量数据集合
         List<NbmhVaccin> vaccins=new ArrayList<>();
+        //遍历处理数据
         for (VaccinParam param : params) {
-            // 移动端防疫信息登记同步创建动物信息
-            Long id=this.nbmhAnimalService.insert(param);
-            // 初始化
-            SnowFlakeIdUtil idWorker=new SnowFlakeIdUtil(1, 0);
+            // 校验动物是否存在
+            AnimalDetailsResult detailsResult=nbmhAnimalService.getByEarNo(param.getEarNo());
+            if (ObjectUtils.isEmpty(detailsResult.getAnimal())) {
+                // 移动端防疫信息登记同步创建动物信息
+                Long id=this.nbmhAnimalService.insert(param);
+                // 添加动物id
+                param.setAnimalId(id);
+            } else {
+                // 添加动物id
+                param.setAnimalId(detailsResult.getAnimal().getId());
+            }
             // 生成防疫编号
             param.setVaccinNo(String.valueOf(idWorker.nextId()));
-            // 添加动物id
-            param.setAnimalId(id);
             // 添加创建时间
             param.setCreateTime(new Date());
             // 添加检疫时间
@@ -89,75 +103,81 @@ public class NbmhVaccinController {
             //防疫信息组装
             vaccins.add(param);
         }
-        // 提交防疫数据
+        // 提交防疫数据+补偿积分
         if (ObjectUtils.isNotEmpty(vaccins)) {
             boolean ret=this.nbmhVaccinService.saveBatch(vaccins);
             if (ret) {
-                List<NbmhBaseConfig> baseConfigs=(List<NbmhBaseConfig>) baseConfigService.getBySubject("prevent").getData();
-                int isOpen=0;
-//                BigDecimal leaderRatio=new BigDecimal("0.00");
-                BigDecimal staffRatio=new BigDecimal("0.00");
-                BigDecimal rewardAmount=new BigDecimal("0.00");
-                for (NbmhBaseConfig baseConfig : baseConfigs) {
-                    if ("staff_ratio".equals(baseConfig.getConfigKey())) {
-                        staffRatio=new BigDecimal(baseConfig.getConfigValue()).divide(new BigDecimal(10));//半分比计算除以10得到分成比例
-                    } else if ("reward_amount".equals(baseConfig.getConfigKey())) {
-                        rewardAmount=new BigDecimal(baseConfig.getConfigValue()).multiply(new BigDecimal(params.size()));
-                    } else if ("is_open".equals(baseConfig.getConfigKey())) {
-                        isOpen=Integer.parseInt(baseConfig.getConfigValue());
-                    } else {
-//                        leaderRatio=new BigDecimal(baseConfig.getConfigValue());
-                    }
-                }
-                if (isOpen == 1) {
-                    //站长信息获取  1普通用户 2专家 3站长 4防疫员 5养殖户 6商家
-                    Result<CurUserInfo> userInfoResult=userService.queryCurUserInfo(params.get(0).getVaccinUserId(), 1);
-                    if (!ObjectUtils.isEmpty(userInfoResult)) {
-                        NbmhUserExtraInfo userExtraInfo=userInfoResult.getData().getExtraInfo();
-                        NbmhUser user=userInfoResult.getData().getUser();
-                        //当前防疫人为站长
-                        if (userExtraInfo.getParentId().equals(0L)) {
-                            user.setIntegral(user.getIntegral() + rewardAmount.intValue());
-                            //T站长积分更新
-                            userService.integralUpdate(user);
-                            this.userIntegralRecordAdd(NbmhUserIntegralRecord.builder().userId(params.get(0).getFarmId())
-                                    .userName(!ObjectUtils.isEmpty(params.get(0).getFarmerName()) ? params.get(0).getFarmerName() : "")
-                                    .userAvatarUrl(!ObjectUtils.isEmpty(params.get(0).getFarmerAvatar()) ? params.get(0).getFarmerAvatar() : "")
-                                    .vaccinId(user.getId()).vaccinUser(user.getUserName())
-                                    .vaccinAvatarUrl(!ObjectUtils.isEmpty(user.getAvatarUrl()) ? user.getAvatarUrl() : "")
-                                    .source(3).integral(rewardAmount.intValue()).status(0).createTime(new Date()).isIncome(1).build());
-                        } else {//当前防疫人为防疫员
-                            //防疫员积分换算 四舍五入
-                            int newStaffRatio=rewardAmount.multiply(staffRatio).setScale(0, BigDecimal.ROUND_HALF_UP).intValue();
-                            this.userIntegralRecordAdd(NbmhUserIntegralRecord.builder().userId(params.get(0).getFarmId())
-                                    .userName(!ObjectUtils.isEmpty(params.get(0).getFarmerName()) ? params.get(0).getFarmerName() : "")
-                                    .userAvatarUrl(!ObjectUtils.isEmpty(params.get(0).getFarmerAvatar()) ? params.get(0).getFarmerAvatar() : "")
-                                    .vaccinId(user.getId()).vaccinUser(user.getUserName())
-                                    .vaccinAvatarUrl(!ObjectUtils.isEmpty(user.getAvatarUrl()) ? user.getAvatarUrl() : "")
-                                    .source(3).integral(newStaffRatio).status(0).createTime(new Date()).isIncome(1).build());
-                            //防疫员积分更新
-                            user.setIntegral(user.getIntegral() + newStaffRatio);
-                            userService.integralUpdate(user);
-                            //站长积分换算
-                            int stationMasterIntegral=rewardAmount.subtract(rewardAmount.multiply(staffRatio).setScale(0, BigDecimal.ROUND_HALF_UP)).intValue();
-                            this.userIntegralRecordAdd(NbmhUserIntegralRecord.builder().userId(params.get(0).getFarmId())
-                                    .userName(!ObjectUtils.isEmpty(params.get(0).getFarmerName()) ? params.get(0).getFarmerName() : "")
-                                    .userAvatarUrl(!ObjectUtils.isEmpty(params.get(0).getFarmerAvatar()) ? params.get(0).getFarmerAvatar() : "")
-                                    .vaccinId(user.getId()).vaccinUser(user.getUserName())
-                                    .vaccinAvatarUrl(!ObjectUtils.isEmpty(user.getAvatarUrl()) ? user.getAvatarUrl() : "")
-                                    .source(4).integral(stationMasterIntegral).status(0).createTime(new Date()).isIncome(1).build());
-                            Result<CurUserInfo> stationmasterResult=userService.queryCurUserInfo(userExtraInfo.getParentId(), 1);
-                            NbmhUser stationmaster=stationmasterResult.getData().getUser();
-                            stationmaster.setIntegral(stationmaster.getIntegral() + stationMasterIntegral);
-                            userService.integralUpdate(user);
-                        }
-                    }
-                }
+                this.integralHandle(vaccins);
                 return Result.ok();
             }
-            return Result.failed(CommonEnum.DATA_ADD_FAILED.getMsg());
         }
-        return Result.failed("录入数据有误!请确认数据信息的正确性!");
+        return Result.failed(CommonEnum.DATA_ADD_FAILED.getMsg());
+    }
+
+
+    @PostMapping("/offLineSubmit")
+    @Operation(summary="防疫员端-离线防疫登记")
+    @Inner(false)
+    public Result offLineSubmit(@RequestBody List<VaccinParam> params) {
+
+        List<VaccinParam> resultAccinParams=new ArrayList<>();
+        //批量数据集合
+        List<NbmhVaccin> vaccins=new ArrayList<>();
+        //遍历处理数据
+        for (VaccinParam param : params) {
+            // 校验动物是否存在
+            AnimalDetailsResult detailsResult=nbmhAnimalService.getByEarNo(param.getEarNo());
+
+            LoginUser loginUser=userService.getByPhone(param.getUserPhone()).getData();
+            if (ObjectUtils.isEmpty(loginUser) ||
+                    ObjectUtils.isEmpty(loginUser.getUser()) ||
+                    ObjectUtils.isEmpty(loginUser.getExtraInfo())) {
+                resultAccinParams.add(param);
+                continue;
+            }
+            NbmhUserExtraInfo extraInfo=new NbmhUserExtraInfo();
+            for (NbmhUserExtraInfo e : loginUser.getExtraInfo()) {
+                if (e.getType() == 5) {
+                    //对象转换
+                    BeanUtils.copyProperties(e, extraInfo);
+                    break;
+                }
+            }
+            if (ObjectUtils.isEmpty(detailsResult.getAnimal())) {
+                param.setUserId(loginUser.getUser().getId());
+                param.setStatus(0);
+                // 移动端防疫信息登记同步创建动物信息
+                Long id=this.nbmhAnimalService.insert(param);
+                // 添加动物id
+                param.setAnimalId(id);
+            } else {
+                // 添加动物id
+                param.setAnimalId(detailsResult.getAnimal().getId());
+            }
+            param.setFarmerId(loginUser.getUser().getId());
+            param.setFarmerPhone(loginUser.getUser().getPhone());
+            param.setFarmerName(extraInfo.getRealName());
+            param.setFarmerAvatar(loginUser.getUser().getAvatarUrl());
+            param.setFarmerIdNo(extraInfo.getIdCard());
+            param.setFarmerAddress(extraInfo.getAddress());
+            // 生成防疫编号
+            param.setVaccinNo(String.valueOf(idWorker.nextId()));
+            // 添加创建时间
+            param.setCreateTime(new Date());
+            // 添加检疫时间
+            param.setVaccinTime(new Date());
+            //防疫信息组装
+            vaccins.add(param);
+        }
+        // 提交防疫数据+补偿积分
+        if (ObjectUtils.isNotEmpty(vaccins)) {
+            boolean ret=this.nbmhVaccinService.saveBatch(vaccins);
+            if (ret) {
+                this.integralHandle(vaccins);
+                return Result.ok(resultAccinParams);
+            }
+        }
+        return Result.failed(CommonEnum.DATA_ADD_FAILED.getMsg());
     }
 
 
@@ -399,7 +419,7 @@ public class NbmhVaccinController {
 
 
     /**
-     * list 去重
+     * list 去重 String
      *
      * @param arr
      */
@@ -429,14 +449,99 @@ public class NbmhVaccinController {
     }
 
 
+
+
+
     /**
-     * 添加积分记录
+     * 积分换算
      *
-     * @param param
+     * @param params
      */
-    public void userIntegralRecordAdd(NbmhUserIntegralRecord param) {
-        nbmhUserIntegralRecordService.save(param);
+    public void integralHandle(List<NbmhVaccin> params) {
+        List<NbmhBaseConfig> baseConfigs=(List<NbmhBaseConfig>) baseConfigService.getBySubject("prevent").getData();
+        int isOpen=0;//是否开启
+        BigDecimal staffRatio=new BigDecimal("0.00"); //防疫员分成比例
+        BigDecimal rewardAmount=new BigDecimal("0.00");//每次总积分数
+        for (NbmhBaseConfig baseConfig : baseConfigs) {
+            if ("staff_ratio".equals(baseConfig.getConfigKey())) {
+                staffRatio=new BigDecimal(baseConfig.getConfigValue()).divide(new BigDecimal(10));//半分比计算除以10得到分成比例
+            } else if ("reward_amount".equals(baseConfig.getConfigKey())) {
+                rewardAmount=new BigDecimal(baseConfig.getConfigValue());
+            } else if ("is_open".equals(baseConfig.getConfigKey())) {
+                isOpen=Integer.parseInt(baseConfig.getConfigValue());
+            } else {
+                continue;
+            }
+        }
+        if (isOpen == 1) {
+            //积分记录处理结果集
+            List<NbmhUserIntegralRecord> userIntegralRecords=new ArrayList<>();
+            //遍历处理数据
+            for (NbmhVaccin v : params) {
+                //站长信息获取  1普通用户 2专家 3站长 4防疫员 5养殖户 6商家
+                CurUserInfo userInfoResult=userService.queryCurUserInfo(v.getVaccinUserId(), 4).getData();
+                if (ObjectUtils.isNotEmpty(userInfoResult) && ObjectUtils.isNotEmpty(userInfoResult.getUser())) {
+                    NbmhUserExtraInfo userExtraInfo=userInfoResult.getExtraInfo();
+                    NbmhUser user=userInfoResult.getUser();
+
+                    NbmhUserIntegralRecord NbmhUserIntegralRecord=new NbmhUserIntegralRecord();
+                    NbmhUserIntegralRecord.setUserId(v.getFarmerId());
+                    NbmhUserIntegralRecord.setUserName(v.getFarmerName());
+                    NbmhUserIntegralRecord.setUserAvatarUrl(v.getFarmerAvatar());
+                    NbmhUserIntegralRecord.setVaccinId(v.getVaccinUserId());
+                    NbmhUserIntegralRecord.setVaccinUser(v.getVaccinUser());
+                    NbmhUserIntegralRecord.setVaccinAvatarUrl(user.getAvatarUrl());
+                    NbmhUserIntegralRecord.setStatus(0);
+                    NbmhUserIntegralRecord.setCreateTime(new Date());
+                    NbmhUserIntegralRecord.setIsIncome(1);
+
+                    //当前防疫人为站长
+                    if (ObjectUtils.isEmpty(userExtraInfo)) {
+                        user.setIntegral(user.getIntegral() + rewardAmount.intValue());
+                        //T站长积分更新
+                        userService.integralUpdate(user);
+                        NbmhUserIntegralRecord.setSource(2);
+                        NbmhUserIntegralRecord.setIntegral(rewardAmount.intValue());
+                        userIntegralRecords.add(NbmhUserIntegralRecord);
+                    } else {//当前防疫人为防疫员
+                        //防疫员积分换算 四舍五入
+                        int newStaffRatio=rewardAmount.multiply(staffRatio).setScale(0, BigDecimal.ROUND_HALF_UP).intValue();
+                        NbmhUserIntegralRecord.setSource(2);
+                        NbmhUserIntegralRecord.setIntegral(newStaffRatio);
+                        userIntegralRecords.add(NbmhUserIntegralRecord);
+                        //防疫员积分更新
+                        user.setIntegral(user.getIntegral() + newStaffRatio);
+                        userService.integralUpdate(user);
+                        //站长积分换算
+                        int stationMasterIntegral=rewardAmount.subtract(rewardAmount.multiply(staffRatio).setScale(0, BigDecimal.ROUND_HALF_UP)).intValue();
+
+
+                        NbmhUserIntegralRecord stationMasterIntegralRecord=new NbmhUserIntegralRecord();
+                        stationMasterIntegralRecord.setUserId(v.getFarmerId());
+                        stationMasterIntegralRecord.setUserName(v.getFarmerName());
+                        stationMasterIntegralRecord.setUserAvatarUrl(v.getFarmerAvatar());
+                        stationMasterIntegralRecord.setVaccinId(v.getVaccinUserId());
+                        stationMasterIntegralRecord.setVaccinUser(v.getVaccinUser());
+                        stationMasterIntegralRecord.setVaccinAvatarUrl(user.getAvatarUrl());
+                        stationMasterIntegralRecord.setStatus(0);
+                        stationMasterIntegralRecord.setCreateTime(new Date());
+                        stationMasterIntegralRecord.setIsIncome(1);
+                        stationMasterIntegralRecord.setSource(4);
+                        stationMasterIntegralRecord.setIntegral(stationMasterIntegral);
+                        userIntegralRecords.add(stationMasterIntegralRecord);
+
+                        CurUserInfo stationmasterResult=userService.queryCurUserInfo(userExtraInfo.getParentId(), 3).getData();
+                        NbmhUser stationmaster=stationmasterResult.getUser();
+                        stationmaster.setIntegral(stationmaster.getIntegral() + stationMasterIntegral);
+                        userService.integralUpdate(user);
+                    }
+                }
+            }
+
+            //添加积分记录
+            if (ObjectUtils.isNotEmpty(userIntegralRecords)) {
+                nbmhUserIntegralRecordService.saveBatch(userIntegralRecords);
+            }
+        }
     }
-
-
 }
