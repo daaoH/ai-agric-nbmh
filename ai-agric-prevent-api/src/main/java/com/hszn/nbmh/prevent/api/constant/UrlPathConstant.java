@@ -73,4 +73,14 @@ public interface UrlPathConstant {
      */
     String VIDEO_LESSON = "/nbmh-video-lesson";
 
+    /**
+     * 处方基础信息
+     */
+    String PRESCRIPTION = "/nbmh-prevent-station";
+
+    /**
+     * 处方药品管理
+     */
+    String PRESCRIPTION_DRUG = "/nbmh-prevent-station";
+
 }

@@ -12,6 +12,7 @@ import com.hszn.nbmh.user.api.entity.NbmhAnimalDoctorDetail;
 import com.hszn.nbmh.user.mapper.NbmhAnimalDoctorDetailMapper;
 import com.hszn.nbmh.user.service.INbmhAnimalDoctorDetailService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -102,6 +103,19 @@ public class NbmhAnimalDoctorDetailServiceImpl extends ServiceImpl<NbmhAnimalDoc
                 nbmhAnimalDoctorDetailMapper.updateById(entity);
             }
         });
+    }
+
+    @Override
+    @Transactional
+    public synchronized int updateAcceptOrderNum(Long doctorId) {
+
+        NbmhAnimalDoctorDetail animalDoctorDetail = nbmhAnimalDoctorDetailMapper.selectOne(Wrappers.lambdaQuery(NbmhAnimalDoctorDetail.builder().id(doctorId).build()));
+        if (ObjectUtils.isEmpty(animalDoctorDetail)) {
+            return 0;
+        }
+
+        animalDoctorDetail.setAcceptOrderNum(animalDoctorDetail.getAcceptOrderNum() + 1);
+        return nbmhAnimalDoctorDetailMapper.updateById(animalDoctorDetail);
     }
 
 }

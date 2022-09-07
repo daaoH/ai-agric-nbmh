@@ -155,7 +155,7 @@ public class NbmhFarmServiceImpl extends ServiceImpl<NbmhFarmMapper, NbmhFarm> i
     @Transactional(readOnly = true)
     public List<NbmhFarmResult> listByPreventStationId(Long preventStationId) {
 
-        QueryWrapper<NbmhFarm> queryWrapper = Wrappers.query(NbmhFarm.builder().preventStationId(preventStationId).build());
+        QueryWrapper<NbmhFarm> queryWrapper = Wrappers.query(NbmhFarm.builder().preventStationId(preventStationId).status(0).build());
         List<NbmhFarm> farmList = nbmhFarmMapper.selectList(queryWrapper);
 
         if (CollectionUtils.isEmpty(farmList)) {

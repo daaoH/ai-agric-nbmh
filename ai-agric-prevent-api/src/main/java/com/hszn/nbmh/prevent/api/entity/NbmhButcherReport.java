@@ -43,16 +43,16 @@ public class NbmhButcherReport implements Serializable {
     private Long id;
 
     /**
-     * 防疫站id
-     */
-    @Schema(name = "preventStationId", description = "防疫站id")
-    private Long preventStationId;
-
-    /**
      * 报备编号
      */
     @Schema(name = "reportNumber", description = "报备编号")
     private String reportNumber;
+
+    /**
+     * 防疫站id
+     */
+    @Schema(name = "preventStationId", description = "防疫站id")
+    private Long preventStationId;
 
     /**
      * 养殖户id

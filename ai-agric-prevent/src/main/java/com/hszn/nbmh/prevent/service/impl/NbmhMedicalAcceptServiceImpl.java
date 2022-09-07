@@ -11,6 +11,7 @@ import com.hszn.nbmh.common.core.utils.BeanUtils;
 import com.hszn.nbmh.prevent.api.entity.NbmhMedicalAccept;
 import com.hszn.nbmh.prevent.mapper.NbmhMedicalAcceptMapper;
 import com.hszn.nbmh.prevent.service.INbmhMedicalAcceptService;
+import com.hszn.nbmh.user.api.feign.RemoteAnimalDoctorDetailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +36,9 @@ import java.util.stream.Collectors;
 public class NbmhMedicalAcceptServiceImpl extends ServiceImpl<NbmhMedicalAcceptMapper, NbmhMedicalAccept> implements INbmhMedicalAcceptService {
     @Resource
     private NbmhMedicalAcceptMapper nbmhMedicalAcceptMapper;
+
+    @Resource
+    private RemoteAnimalDoctorDetailService remoteAnimalDoctorDetailService;
 
     @Override
     @Transactional
@@ -62,6 +66,25 @@ public class NbmhMedicalAcceptServiceImpl extends ServiceImpl<NbmhMedicalAcceptM
         return nbmhMedicalAcceptList.stream().map(entity -> {
 
             entity.setUpdateTime(new Date());
+
+            return nbmhMedicalAcceptMapper.update(entity, Wrappers.<NbmhMedicalAccept>lambdaUpdate().eq(NbmhMedicalAccept::getId, entity.getId()));
+        }).reduce(0, Integer::sum);
+    }
+
+    @Override
+    @Transactional
+    public int acceptOrder(List<NbmhMedicalAccept> nbmhMedicalAcceptList) {
+        BeanUtils.validBean(nbmhMedicalAcceptList, NbmhMedicalAccept.Update.class);
+
+        if (CollectionUtils.isEmpty(nbmhMedicalAcceptList)) {
+            return 0;
+        }
+
+        return nbmhMedicalAcceptList.stream().map(entity -> {
+
+            entity.setUpdateTime(new Date());
+
+            remoteAnimalDoctorDetailService.updateAcceptOrderNum(entity.getDoctorId());
 
             return nbmhMedicalAcceptMapper.update(entity, Wrappers.<NbmhMedicalAccept>lambdaUpdate().eq(NbmhMedicalAccept::getId, entity.getId()));
         }).reduce(0, Integer::sum);

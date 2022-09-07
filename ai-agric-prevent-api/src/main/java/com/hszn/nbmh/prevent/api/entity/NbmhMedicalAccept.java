@@ -12,6 +12,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Null;
 import javax.validation.groups.Default;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -47,7 +48,7 @@ public class NbmhMedicalAccept implements Serializable {
      * 诊断订单编号
      */
     @Schema(name = "medicalOrderNumber", description = "诊断订单编号")
-    private String medicalOrderNumber;
+    private Long medicalOrderNumber;
 
     /**
      * 兽医id
@@ -62,16 +63,16 @@ public class NbmhMedicalAccept implements Serializable {
     private String doctorName;
 
     /**
-     * 兽医头像
-     */
-    @Schema(name = "doctorAvatar", description = "兽医头像")
-    private String doctorAvatar;
-
-    /**
      * 兽医职称
      */
     @Schema(name = "doctorJobTags", description = "兽医职称")
     private String doctorJobTags;
+
+    /**
+     * 兽医头像
+     */
+    @Schema(name = "doctorAvatar", description = "兽医头像")
+    private String doctorAvatar;
 
     /**
      * 工作年限
@@ -114,6 +115,12 @@ public class NbmhMedicalAccept implements Serializable {
      */
     @Schema(name = "medicalResult", description = "诊断结果")
     private String medicalResult;
+
+    /**
+     * 诊断收费金额
+     */
+    @Schema(name="medicalMoney", description="诊断收费金额")
+    private BigDecimal medicalMoney;
 
     /**
      * 创建时间

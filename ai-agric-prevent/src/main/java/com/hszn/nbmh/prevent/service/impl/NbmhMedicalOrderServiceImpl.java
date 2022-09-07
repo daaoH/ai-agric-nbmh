@@ -7,12 +7,17 @@ import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hszn.nbmh.common.core.utils.BeanUtils;
+import com.hszn.nbmh.common.core.exception.ServiceException;
 import com.hszn.nbmh.common.core.utils.SnowFlakeIdUtil;
+import com.hszn.nbmh.prevent.api.entity.NbmhMedicalAccept;
 import com.hszn.nbmh.prevent.api.entity.NbmhMedicalOrder;
+import com.hszn.nbmh.prevent.api.params.input.NbmhMedicalOrderParam;
 import com.hszn.nbmh.prevent.mapper.NbmhMedicalOrderMapper;
+import com.hszn.nbmh.prevent.service.INbmhMedicalAcceptService;
 import com.hszn.nbmh.prevent.service.INbmhMedicalOrderService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -37,25 +42,39 @@ public class NbmhMedicalOrderServiceImpl extends ServiceImpl<NbmhMedicalOrderMap
     @Resource
     private NbmhMedicalOrderMapper nbmhMedicalOrderMapper;
 
+    @Autowired
+    private INbmhMedicalAcceptService nbmhMedicalAcceptService;
+
     @Override
     @Transactional
-    public List<Integer> save(List<NbmhMedicalOrder> nbmhMedicalOrderList) {
-        BeanUtils.validBean(nbmhMedicalOrderList, NbmhMedicalOrder.Save.class);
+    public List<Integer> save(List<NbmhMedicalOrderParam> nbmhMedicalOrderParamList) {
 
-        return nbmhMedicalOrderList.stream().map(entity -> {
+        return nbmhMedicalOrderParamList.stream().map(entity -> {
 
             Date createTime = new Date();
             entity.setId(new SnowFlakeIdUtil(1, 0).nextId()).setCreateTime(createTime).setUpdateTime(createTime).setStatus(1);
 
-            return nbmhMedicalOrderMapper.insert(entity);
+            NbmhMedicalOrder nbmhMedicalOrder = new NbmhMedicalOrder();
+            BeanUtils.copyProperties(entity, nbmhMedicalOrder);
+
+            int ret = nbmhMedicalOrderMapper.insert(nbmhMedicalOrder);
+
+            List<NbmhMedicalAccept> medicalAcceptList = entity.getMedicalAcceptList();
+            if (CollectionUtils.isEmpty(medicalAcceptList)) {
+                throw new ServiceException("未指定接诊专家，无法下单");
+            }
+
+            medicalAcceptList.forEach(item -> item.setMedicalOrderNumber(entity.getId()).setOrderStatus(0).setCreateTime(createTime).setUpdateTime(createTime).setStatus(1));
+
+            nbmhMedicalAcceptService.saveBatch(medicalAcceptList);
+
+            return ret;
         }).collect(Collectors.toList());
     }
 
     @Override
     @Transactional
     public int update(List<NbmhMedicalOrder> nbmhMedicalOrderList) {
-        BeanUtils.validBean(nbmhMedicalOrderList, NbmhMedicalOrder.Update.class);
-
         if (CollectionUtils.isEmpty(nbmhMedicalOrderList)) {
             return 0;
         }

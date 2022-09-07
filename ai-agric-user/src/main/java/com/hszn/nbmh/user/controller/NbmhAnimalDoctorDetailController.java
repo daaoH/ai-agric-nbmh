@@ -95,5 +95,12 @@ public class NbmhAnimalDoctorDetailController {
         return Result.ok();
     }
 
+    @Operation(summary = "更新兽医专家接诊次数", method = "POST")
+    @PostMapping
+    public Result updateAcceptOrderNum(@RequestParam(value = "doctorId") Long doctorId) {
+
+        nbmhAnimalDoctorDetailService.updateAcceptOrderNum(doctorId);
+        return Result.ok();
+    }
 
 }

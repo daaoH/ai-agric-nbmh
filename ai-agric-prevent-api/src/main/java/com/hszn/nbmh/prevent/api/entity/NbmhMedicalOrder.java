@@ -132,14 +132,14 @@ public class NbmhMedicalOrder implements Serializable {
     /**
      * 是否已支付定金
      */
-    @Schema(name="payFrontMoney", description="是否已支付定金")
-    private Integer payFrontMoney;
+    @Schema(name="isPayFrontMoney", description="是否已支付定金")
+    private Integer isPayFrontMoney;
 
     /**
      * 是否已支付所有费用
      */
-    @Schema(name="payMedicalMoney", description="是否已支付所有费用")
-    private Integer payMedicalMoney;
+    @Schema(name="isPayMedicalMoney", description="是否已支付所有费用")
+    private Integer isPayMedicalMoney;
 
     /**
      * 创建时间

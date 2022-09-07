@@ -61,4 +61,12 @@ public interface INbmhMedicalAcceptService extends IService<NbmhMedicalAccept> {
      * @param idList the id list
      */
     void delete(@NotEmpty List<Long> idList);
+
+    /**
+     * 兽医接单
+     *
+     * @param nbmhMedicalAcceptList 动物诊疗接单记录列表
+     * @return the int
+     */
+    int acceptOrder(List<NbmhMedicalAccept> nbmhMedicalAcceptList);
 }

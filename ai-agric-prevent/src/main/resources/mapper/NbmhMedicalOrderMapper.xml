@@ -19,11 +19,11 @@
         <result column="free_status" property="freeStatus" />
         <result column="medical_money" property="medicalMoney" />
         <result column="front_money" property="frontMoney" />
-        <result column="pay_front_money" property="payFrontMoney" />
+        <result column="is_pay_front_money" property="isPayFrontMoney" />
+        <result column="is_pay_medical_money" property="isPayMedicalMoney" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
         <result column="status" property="status" />
-        <result column="pay_medical_money" property="payMedicalMoney" />
     </resultMap>
 
 </mapper>

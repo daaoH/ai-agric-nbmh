@@ -1,29 +1,29 @@
-package com.hszn.nbmh.prevent.api.fallback;
+package com.hszn.nbmh.user.api.fallback;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.hszn.nbmh.common.core.enums.CommonEnum;
 import com.hszn.nbmh.common.core.utils.Result;
-import com.hszn.nbmh.prevent.api.entity.NbmhMedicalAccept;
-import com.hszn.nbmh.prevent.api.feign.RemoteMedicalAcceptService;
+import com.hszn.nbmh.user.api.entity.NbmhAnimalDoctorDetail;
+import com.hszn.nbmh.user.api.feign.RemoteAnimalDoctorDetailService;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 /**
  * <p>
- * 动物诊疗接单记录 暴露接口熔断类
+ * 兽医详情 暴露接口熔断类
  * </p>
  *
  * @author MCR
- * @since 2022-09-02
+ * @since 2022-09-06
  */
-
 @Component
-public class MedicalAcceptFallback implements RemoteMedicalAcceptService {
+public class AnimalDoctorDetailServiceFallback implements RemoteAnimalDoctorDetailService {
+
 
     @Override
-    public Result add(NbmhMedicalAccept entity) {
+    public Result add(NbmhAnimalDoctorDetail entity) {
         return Result.failed(CommonEnum.FALL_BACK_MSG.getMsg());
     }
 
@@ -33,17 +33,17 @@ public class MedicalAcceptFallback implements RemoteMedicalAcceptService {
     }
 
     @Override
-    public Result update(NbmhMedicalAccept entity) {
+    public Result update(NbmhAnimalDoctorDetail entity) {
         return Result.failed(CommonEnum.FALL_BACK_MSG.getMsg());
     }
 
     @Override
-    public Result<IPage<NbmhMedicalAccept>> query(NbmhMedicalAccept entity, int pageNum, int pageSize, List<OrderItem> orderItemList) {
+    public Result<IPage<NbmhAnimalDoctorDetail>> query(NbmhAnimalDoctorDetail entity, int pageNum, int pageSize, List<OrderItem> orderItemList) {
         return Result.failed(CommonEnum.FALL_BACK_MSG.getMsg());
     }
 
     @Override
-    public Result<List<NbmhMedicalAccept>> list(NbmhMedicalAccept entity, List<OrderItem> orderItemList) {
+    public Result<List<NbmhAnimalDoctorDetail>> list(NbmhAnimalDoctorDetail entity, List<OrderItem> orderItemList) {
         return Result.failed(CommonEnum.FALL_BACK_MSG.getMsg());
     }
 
@@ -53,7 +53,8 @@ public class MedicalAcceptFallback implements RemoteMedicalAcceptService {
     }
 
     @Override
-    public Result acceptOrder(NbmhMedicalAccept nbmhMedicalAccept) {
+    public Result updateAcceptOrderNum(Long doctorId) {
         return Result.failed(CommonEnum.FALL_BACK_MSG.getMsg());
     }
+
 }

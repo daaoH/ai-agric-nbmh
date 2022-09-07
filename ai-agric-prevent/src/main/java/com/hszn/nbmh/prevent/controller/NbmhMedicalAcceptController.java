@@ -97,5 +97,13 @@ public class NbmhMedicalAcceptController {
         return Result.ok();
     }
 
+    @Operation(summary = "兽医确认接单", method = "POST")
+    @PostMapping("/acceptOrder")
+    @Inner(false)
+    public Result acceptOrder(@RequestBody NbmhMedicalAccept nbmhMedicalAccept) {
+
+        NbmhMedicalAcceptService.acceptOrder(Collections.singletonList(nbmhMedicalAccept));
+        return Result.ok();
+    }
 
 }

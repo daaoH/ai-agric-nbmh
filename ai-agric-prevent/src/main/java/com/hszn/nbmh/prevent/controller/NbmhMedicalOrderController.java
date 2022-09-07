@@ -7,6 +7,7 @@ import com.hszn.nbmh.common.core.enums.CommonEnum;
 import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.common.security.annotation.Inner;
 import com.hszn.nbmh.prevent.api.entity.NbmhMedicalOrder;
+import com.hszn.nbmh.prevent.api.params.input.NbmhMedicalOrderParam;
 import com.hszn.nbmh.prevent.service.INbmhMedicalOrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -39,9 +40,9 @@ public class NbmhMedicalOrderController {
     @Operation(summary = "新增诊断下单记录", method = "POST")
     @PostMapping("/add")
     @Inner(false)
-    public Result add(@RequestBody NbmhMedicalOrder nbmhMedicalOrder) {
+    public Result add(@RequestBody NbmhMedicalOrderParam medicalOrderParam) {
 
-        List<Integer> idList = nbmhMedicalOrderService.save(Collections.singletonList(nbmhMedicalOrder));
+        List<Integer> idList = nbmhMedicalOrderService.save(Collections.singletonList(medicalOrderParam));
         if (idList != null && idList.size() > 0) {
             return Result.ok();
         }

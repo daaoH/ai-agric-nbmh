@@ -128,7 +128,7 @@ public class NbmhUserFollowExpertServiceImpl extends ServiceImpl<NbmhUserFollowE
             }
 
             userFollowExpertInfoList.add(NbmhUserFollowExpertInfo.builder().userId(item.getUserId()).userName(item.getUserName()).expertId(item.getExpertId()).expertName(item.getExpertName()).expertAvatar(nbmhUser.getAvatarUrl())
-                    .doctorType(doctorDetail.getDoctorType()).admissions(doctorDetail.getAdmissions()).workYear(userExtraInfo.getWorkYear()).goodAnimalType(doctorDetail.getGoodAnimalType()).build());
+                    .doctorType(doctorDetail.getDoctorType()).admissions(doctorDetail.getAcceptOrderNum()).workYear(userExtraInfo.getWorkYear()).goodAnimalType(doctorDetail.getGoodAnimalType()).build());
         }
 
         return userFollowExpertInfoList;

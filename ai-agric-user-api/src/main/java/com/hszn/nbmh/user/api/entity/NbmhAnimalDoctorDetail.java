@@ -56,8 +56,8 @@ public class NbmhAnimalDoctorDetail implements Serializable {
     /**
      * 累计接诊次数
      */
-    @Schema(name = "admissions", description = "累计接诊次数")
-    private Integer admissions;
+    @Schema(name = "acceptOrderNum", description = "累计接诊次数")
+    private Integer acceptOrderNum;
 
     /**
      * 兽医类型0:非官方，1:官方

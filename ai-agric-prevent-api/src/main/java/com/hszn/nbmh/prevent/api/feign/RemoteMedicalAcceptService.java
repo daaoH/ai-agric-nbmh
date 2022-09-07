@@ -43,4 +43,7 @@ public interface RemoteMedicalAcceptService {
 
     @DeleteMapping("delete/{id}")
     Result delete(@PathVariable Long id);
+
+    @PostMapping("/acceptOrder")
+    Result acceptOrder(@RequestBody NbmhMedicalAccept nbmhMedicalAccept);
 }

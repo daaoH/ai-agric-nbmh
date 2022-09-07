@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hszn.nbmh.prevent.api.entity.NbmhMedicalOrder;
+import com.hszn.nbmh.prevent.api.params.input.NbmhMedicalOrderParam;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -22,10 +23,10 @@ public interface INbmhMedicalOrderService extends IService<NbmhMedicalOrder> {
     /**
      * 保存
      *
-     * @param nbmhMedicalOrderList 诊断下单记录列表
+     * @param nbmhMedicalOrderParamList 诊断下单记录列表
      * @return the list
      */
-    List<Integer> save(List<NbmhMedicalOrder> nbmhMedicalOrderList);
+    List<Integer> save(List<NbmhMedicalOrderParam> nbmhMedicalOrderParamList);
 
     /**
      * 更新

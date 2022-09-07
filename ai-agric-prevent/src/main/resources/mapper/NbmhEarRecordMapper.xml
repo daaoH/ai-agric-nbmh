@@ -7,6 +7,7 @@
         <id column="id" property="id" />
         <result column="animal_id" property="animalId" />
         <result column="ear_no" property="earNo" />
+        <result column="animal_pic" property="animalPic" />
         <result column="animal_age" property="animalAge" />
         <result column="animal_weight" property="animalWeight" />
         <result column="user_id" property="userId" />

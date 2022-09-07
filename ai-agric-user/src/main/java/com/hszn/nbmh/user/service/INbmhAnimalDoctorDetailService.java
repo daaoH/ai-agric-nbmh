@@ -61,4 +61,12 @@ public interface INbmhAnimalDoctorDetailService extends IService<NbmhAnimalDocto
      * @param idList the id list
      */
     void delete(@NotEmpty List<Long> idList);
+
+    /**
+     * 更新兽医专家接诊次数
+     *
+     * @param doctorId 兽医Id
+     * @return the int
+     */
+    int updateAcceptOrderNum(Long doctorId);
 }

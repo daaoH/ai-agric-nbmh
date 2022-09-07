@@ -5,8 +5,8 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.hszn.nbmh.prevent.api.entity.NbmhButcherReport">
         <id column="id" property="id"/>
-        <result column="prevent_station_id" property="preventStationId"/>
         <result column="report_number" property="reportNumber"/>
+        <result column="prevent_station_id" property="preventStationId"/>
         <result column="farmer_id" property="farmerId"/>
         <result column="farmer_name" property="farmerName"/>
         <result column="farmer_phone" property="farmerPhone"/>
