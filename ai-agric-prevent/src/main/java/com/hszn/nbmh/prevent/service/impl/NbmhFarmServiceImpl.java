@@ -14,13 +14,16 @@ import com.hszn.nbmh.common.core.utils.BeanUtils;
 import com.hszn.nbmh.prevent.api.entity.AnimalJsonEntity;
 import com.hszn.nbmh.prevent.api.entity.NbmhAnimal;
 import com.hszn.nbmh.prevent.api.entity.NbmhFarm;
-import com.hszn.nbmh.prevent.mapper.NbmhAnimalMapper;
+import com.hszn.nbmh.prevent.api.params.out.NbmhFarmResult;
 import com.hszn.nbmh.prevent.mapper.NbmhFarmMapper;
 import com.hszn.nbmh.prevent.service.INbmhFarmService;
+import com.hszn.nbmh.user.api.entity.NbmhUser;
+import com.hszn.nbmh.user.api.feign.RemoteUserService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import javax.validation.constraints.NotEmpty;
@@ -45,7 +48,7 @@ public class NbmhFarmServiceImpl extends ServiceImpl<NbmhFarmMapper, NbmhFarm> i
     private NbmhFarmMapper nbmhFarmMapper;
 
     @Resource
-    private NbmhAnimalMapper nbmhAnimalMapper;
+    private RemoteUserService remoteUserService;
 
     @Override
     @Transactional
@@ -89,7 +92,7 @@ public class NbmhFarmServiceImpl extends ServiceImpl<NbmhFarmMapper, NbmhFarm> i
     public int updateAnimalJson(NbmhAnimal animal, int updateType) {
 
         NbmhFarm nbmhFarm = nbmhFarmMapper.selectById(animal.getFarmId());
-        if(nbmhFarm == null){
+        if (nbmhFarm == null) {
             throw new ServiceException("养殖场信息不存在");
         }
 
@@ -146,6 +149,34 @@ public class NbmhFarmServiceImpl extends ServiceImpl<NbmhFarmMapper, NbmhFarm> i
                 nbmhFarmMapper.updateById(entity);
             }
         });
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<NbmhFarmResult> listByPreventStationId(Long preventStationId) {
+
+        QueryWrapper<NbmhFarm> queryWrapper = Wrappers.query(NbmhFarm.builder().preventStationId(preventStationId).build());
+        List<NbmhFarm> farmList = nbmhFarmMapper.selectList(queryWrapper);
+
+        if (CollectionUtils.isEmpty(farmList)) {
+            return null;
+        }
+
+        List<NbmhFarmResult> farmResultList = new ArrayList<>();
+        for (NbmhFarm item : farmList) {
+            NbmhFarmResult nbmhFarmResult = NbmhFarmResult.builder().id(item.getId()).farmerId(item.getFarmerId()).farmName(item.getFarmName()).farmAddress(item.getFarmAddress()).preventStationId(item.getPreventStationId())
+                    .manageScope(item.getManageScope()).farmScale(item.getFarmScale()).manageYear(item.getManageYear()).teamNum(item.getTeamNum()).farmAnimalJson(item.getFarmAnimalJson()).latitude(item.getLatitude())
+                    .longitude(item.getLongitude()).userId(item.getUserId()).userName(item.getUserName()).createTime(item.getCreateTime()).updateTime(item.getUpdateTime()).status(item.getStatus()).build();
+
+            NbmhUser nbmhUser = remoteUserService.getById(item.getFarmerId()).getData();
+            if (ObjectUtils.isEmpty(nbmhUser)) {
+                continue;
+            }
+
+            farmResultList.add(nbmhFarmResult.setFarmerName(nbmhUser.getUserName()).setFarmerPhone(nbmhUser.getPhone()));
+        }
+
+        return farmResultList;
     }
 
 }

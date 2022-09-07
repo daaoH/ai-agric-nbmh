@@ -62,4 +62,9 @@ public class UserServiceFallback implements RemoteUserService {
         return Result.failed(CommonEnum.DATA_QUERY_FAILED.getMsg());
     }
 
+    @Override
+    public Result<NbmhUser> getById(Long id) {
+        return Result.failed(CommonEnum.DATA_QUERY_FAILED.getMsg());
+    }
+
 }

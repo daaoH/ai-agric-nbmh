@@ -16,6 +16,7 @@ import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.common.core.utils.SnowFlakeIdUtil;
 import com.hszn.nbmh.common.core.utils.SortUtil;
 import com.hszn.nbmh.common.security.annotation.Inner;
+import com.hszn.nbmh.prevent.api.entity.NbmhFarm;
 import com.hszn.nbmh.prevent.api.entity.NbmhUserIntegralRecord;
 import com.hszn.nbmh.prevent.api.feign.RemoteUserIntegralService;
 import com.hszn.nbmh.third.entity.NbmhBaseConfig;
@@ -54,6 +55,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -599,6 +601,15 @@ public class NbmhUserController {
         animalDoctorList.forEach(animalDoctor -> animalDoctor.setMedicalStatus(1));
 
         return Result.ok(animalDoctorList);
+    }
+
+    @Operation(summary = "根据ID查询用户基础信息", method = "GET")
+    @Parameters({@Parameter(description="根据ID查询用户基础信息", name="id")})
+    @PostMapping("/{id}")
+    @Inner(false)
+    public Result<NbmhUser> getById(@PathVariable(value = "id") @NotBlank Long id) {
+
+        return Result.ok(userService.getById(id));
     }
 
     /***

@@ -40,6 +40,11 @@ public interface UserPathConstant {
      * 二维码生成
      */
     String QRCODE = "/cloud-qrcode";
+
+    /**
+     * 兽医详情
+     */
+    String NBMH_ANIMAL_DOCTOR_DETAIL = "/nbmh-animal-doctor-detail";
 }
 
 

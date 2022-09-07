@@ -12,11 +12,9 @@ import com.hszn.nbmh.user.api.params.input.RegisterParam;
 import com.hszn.nbmh.user.api.params.out.CurUserInfo;
 import com.hszn.nbmh.user.api.params.out.LoginUser;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @FeignClient(contextId = "remoteUserService", value = ServiceNameConstant.USER_SERVICE, path = UserPathConstant.NBMH_USER, fallback = UserServiceFallback.class)
@@ -46,4 +44,7 @@ public interface RemoteUserService {
 
     @PostMapping("/animalDoctor/nearby")
     Result<List<NbmhAnimalDoctorDetail>> nearby(@RequestBody NbmhAnimalDoctorDetail nbmhAnimalDoctorDetail, @RequestParam("distance") double distance, @RequestParam("userLng") double userLng, @RequestParam("userLat") double userLat);
+
+    @PostMapping("/{id}")
+    Result<NbmhUser> getById(@PathVariable(value = "id") @NotBlank Long id);
 }

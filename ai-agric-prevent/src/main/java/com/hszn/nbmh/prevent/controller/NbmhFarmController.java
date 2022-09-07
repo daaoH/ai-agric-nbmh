@@ -6,11 +6,8 @@ import com.hszn.nbmh.common.core.enums.CommonEnum;
 import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.common.security.annotation.Inner;
 import com.hszn.nbmh.prevent.api.entity.NbmhFarm;
+import com.hszn.nbmh.prevent.api.params.out.NbmhFarmResult;
 import com.hszn.nbmh.prevent.service.INbmhFarmService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -21,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import java.util.Collections;
 import java.util.List;
 
@@ -33,7 +29,7 @@ import java.util.List;
  * @author MCR
  * @since 2022-08-16
  */
-@Tag(name="养殖场信息")
+@Tag(name = "养殖场信息")
 @Validated
 @RestController
 @RequestMapping("/nbmh-farm")
@@ -57,7 +53,7 @@ public class NbmhFarmController {
     }
 
     @Operation(summary = "根据ID查询养殖场信息", method = "GET")
-    @Parameters({@Parameter(description="养殖场信息Id", name="id")})
+    @Parameters({@Parameter(description = "养殖场信息Id", name = "id")})
     @PostMapping("/{id}")
     @Inner(false)
     public Result<NbmhFarm> getById(@PathVariable(value = "id") @NotBlank Long id) {
@@ -75,7 +71,7 @@ public class NbmhFarmController {
     }
 
     @Operation(summary = "分页查询养殖场信息", method = "POST")
-    @Parameters({@Parameter(description="页码", name="pageNum"), @Parameter(description="每页显示条数", name="pageSize"), @Parameter(description="排序条件集合", name="orderItemList")})
+    @Parameters({@Parameter(description = "页码", name = "pageNum"), @Parameter(description = "每页显示条数", name = "pageSize"), @Parameter(description = "排序条件集合", name = "orderItemList")})
     @PostMapping("/query")
     @Inner(false)
     public Result<IPage<NbmhFarm>> query(@RequestBody NbmhFarm nbmhFarm,
@@ -89,7 +85,7 @@ public class NbmhFarmController {
     }
 
     @Operation(summary = "查询养殖场信息", method = "POST")
-    @Parameters({@Parameter(description="排序条件集合", name="orderItemList")})
+    @Parameters({@Parameter(description = "排序条件集合", name = "orderItemList")})
     @PostMapping("/list")
     @Inner(false)
     public Result<List<NbmhFarm>> list(@RequestBody NbmhFarm nbmhFarm,
@@ -105,6 +101,14 @@ public class NbmhFarmController {
 
         nbmhFarmService.delete(Collections.singletonList(id));
         return Result.ok();
+    }
+
+    @Operation(summary = "离线防疫--根据防疫站Id获取养殖场列表", method = "POST")
+    @PostMapping("/listByPreventStationId")
+    @Inner(false)
+    public Result<List<NbmhFarmResult>> listByPreventStationId(Long preventStationId) {
+
+        return Result.ok(nbmhFarmService.listByPreventStationId(preventStationId));
     }
 
 }

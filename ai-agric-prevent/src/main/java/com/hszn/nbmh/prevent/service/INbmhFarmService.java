@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hszn.nbmh.prevent.api.entity.NbmhAnimal;
 import com.hszn.nbmh.prevent.api.entity.NbmhFarm;
+import com.hszn.nbmh.prevent.api.params.out.NbmhFarmResult;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotEmpty;
@@ -42,15 +43,15 @@ public interface INbmhFarmService extends IService<NbmhFarm> {
      * 批量更新养殖场动物JSON数据
      *
      * @param animalList 动物列表
-     * @param updateType   更新类型
+     * @param updateType 更新类型
      */
     void updateAnimalJson(List<NbmhAnimal> animalList, int updateType);
 
     /**
      * 更新养殖场动物JSON数据
      *
-     * @param animal    动物
-     * @param updateType  更新类型
+     * @param animal     动物
+     * @param updateType 更新类型
      * @return the int
      */
     int updateAnimalJson(NbmhAnimal animal, int updateType);
@@ -81,6 +82,14 @@ public interface INbmhFarmService extends IService<NbmhFarm> {
      * @param idList the id list
      */
     void delete(@NotEmpty List<Long> idList);
+
+    /**
+     * 离线防疫--根据防疫站Id获取养殖场列表
+     *
+     * @param preventStationId 防疫站ID
+     * @return the list
+     */
+    List<NbmhFarmResult> listByPreventStationId(Long preventStationId);
 
 }
 
