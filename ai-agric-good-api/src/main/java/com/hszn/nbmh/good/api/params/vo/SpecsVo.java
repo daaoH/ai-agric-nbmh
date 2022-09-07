@@ -2,6 +2,10 @@ package com.hszn.nbmh.good.api.params.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import org.jasypt.encryption.BigDecimalEncryptor;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @Author：袁德民
@@ -17,17 +21,12 @@ public class SpecsVo {
      * 商品规格名称
      */
     @Schema(description = "商品规格名称")
-    private String specification;
+    private String name;
 
     /**
-     * 商品规格值
+     * 商品规格项集合
      */
-    @Schema(description = "商品规格值")
-    private String value;
+    @Schema(description = "商品规格项集合")
+    private List<GoodSpecs> goodSpecs;
 
-    /**
-     * 商品规格图片
-     */
-    @Schema(description = "商品规格图片")
-    private String picUrl;
 }

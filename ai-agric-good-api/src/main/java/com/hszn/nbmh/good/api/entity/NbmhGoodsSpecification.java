@@ -1,6 +1,8 @@
 package com.hszn.nbmh.good.api.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+
+import java.math.BigDecimal;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
@@ -47,6 +49,12 @@ public class NbmhGoodsSpecification implements Serializable {
      */
     @Schema(description = "商品规格值")
     private String value;
+
+    /**
+     * 价格
+     */
+    @Schema(description = "价格")
+    private BigDecimal price;
 
     /**
      * 商品规格图片

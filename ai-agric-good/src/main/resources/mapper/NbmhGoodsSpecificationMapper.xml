@@ -8,6 +8,7 @@
         <result column="goods_id" property="goodsId" />
         <result column="specification" property="specification" />
         <result column="value" property="value" />
+        <result column="price" property="price" />
         <result column="pic_url" property="picUrl" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />

@@ -2,6 +2,8 @@ package com.hszn.nbmh.order.api.entity;
 
 import java.util.Date;
 import java.io.Serializable;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -13,6 +15,7 @@ import lombok.EqualsAndHashCode;
  * @author yuan
  * @since 2022-09-05
  */
+@Schema(description = "发票信息")
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class NbmhReceipt implements Serializable {
@@ -27,56 +30,67 @@ public class NbmhReceipt implements Serializable {
     /**
      * 用户ID
      */
+    @Schema(description = "用户ID")
     private Long userId;
 
     /**
      * 用户名
      */
+    @Schema(description = "用户名")
     private String userName;
 
     /**
      * 订单id
      */
+    @Schema(description = "订单id")
     private Long orderId;
 
     /**
      * 发票内容
      */
+    @Schema(description = "发票内容")
     private String receiptContent;
 
     /**
      * 发票详情
      */
+    @Schema(description = "发票详情")
     private String receiptDetail;
 
     /**
      * 发票金额
      */
+    @Schema(description = "发票金额")
     private String receiptPrice;
 
     /**
      * 发票状态
      */
+    @Schema(description = "发票状态")
     private Integer receiptStatus;
 
     /**
      * 发票抬头
      */
+    @Schema(description = "发票抬头")
     private String receiptTitle;
 
     /**
      * 店铺ID
      */
+    @Schema(description = "店铺ID")
     private Long shopId;
 
     /**
      * 店铺名称
      */
+    @Schema(description = "店铺名称")
     private String shopName;
 
     /**
      * 纳税人识别号
      */
+    @Schema(description = "纳税人识别号")
     private String taxpayer;
 
     /**
@@ -92,7 +106,7 @@ public class NbmhReceipt implements Serializable {
     /**
      * 状态0正常 -1删除
      */
-    private Boolean status;
+    private Integer status;
 
 
 }

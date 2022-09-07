@@ -1,5 +1,6 @@
 package com.hszn.nbmh.order.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -8,15 +9,20 @@ import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.common.core.utils.SnowFlakeIdUtil;
 import com.hszn.nbmh.common.security.service.AuthUser;
 import com.hszn.nbmh.common.security.util.SecurityUtils;
+import com.hszn.nbmh.good.api.params.vo.CartItemVo;
+import com.hszn.nbmh.good.api.params.vo.ShopCartItemVo;
 import com.hszn.nbmh.order.api.entity.NbmhOrder;
 import com.hszn.nbmh.order.api.entity.NbmhOrderItem;
 import com.hszn.nbmh.order.api.params.OrderSearchParam;
 import com.hszn.nbmh.order.api.params.input.CreateOrderParam;
+import com.hszn.nbmh.order.api.params.input.SettlementParam;
+import com.hszn.nbmh.order.api.params.out.SettlementReturn;
 import com.hszn.nbmh.order.mapper.NbmhOrderMapper;
 import com.hszn.nbmh.order.service.INbmhOrderItemService;
 import com.hszn.nbmh.order.service.INbmhOrderService;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hszn.nbmh.shop.api.entity.NbmhShopInfo;
 import com.hszn.nbmh.user.api.feign.RemoteUserService;
 import com.hszn.nbmh.user.api.params.out.CurUserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -110,6 +117,23 @@ public class NbmhOrderServiceImpl extends ServiceImpl<NbmhOrderMapper, NbmhOrder
         Long orderId = snowFlakeIdUtil.nextId();
 
         return String.valueOf(orderId);
+    }
+
+    @Override
+    public List<SettlementReturn> settlement(SettlementParam param) {
+        List<SettlementReturn> rets = new ArrayList<>();
+        List<ShopCartItemVo> cartItems = param.getCartItems();
+        if(CollectionUtil.isNotEmpty(cartItems)){
+            cartItems.forEach(item -> {
+                SettlementReturn ret = new SettlementReturn();
+                ShopCartItemVo shopCartItemVo = new ShopCartItemVo();
+                shopCartItemVo.setShopInfo(item.getShopInfo());
+                shopCartItemVo.setItems(item.getItems());
+                ret.setCartItems(shopCartItemVo);
+                rets.add(ret);
+            });
+        }
+        return rets;
     }
 
     private void checkLogistics(CreateOrderParam order) {

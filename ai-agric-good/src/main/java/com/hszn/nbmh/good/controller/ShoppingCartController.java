@@ -65,5 +65,15 @@ public class ShoppingCartController {
         return Result.ok();
     }
 
+    @Operation(description = "勾选购物项")
+    @Parameter(name = "sukIds", description = "商品skuid集合")
+    @Parameter(name = "check", description = "是否选中 选中1 未选中0")
+    @PostMapping("/checkItems")
+    public Result checkItem(@RequestBody List<Long> skuIds, @RequestParam("check") Integer check){
+        cartService.checkItems(skuIds, check);
+        return Result.ok();
+    }
+
+
 
 }

@@ -33,10 +33,13 @@ public class CartItemVo {
      */
     private List<String> skuAttrValues;
 
+    @Schema(description = "价格")
     private BigDecimal price;
 
+    @Schema(description = "数量")
     private Integer count;
 
+    @Schema(description = "总价")
     private BigDecimal totalPrice;
 
     public Long getSkuId() {

@@ -219,6 +219,15 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         }
     }
 
+    @Override
+    public void checkItems(List<Long> skuIds, Integer check) {
+        if(CollectionUtil.isNotEmpty(skuIds)){
+            skuIds.forEach(id -> {
+                checkItem(id, check);
+            });
+        }
+    }
+
     //检测商品的有效性
     private NbmhGoodsSku checkGoods(Long skuId) {
         NbmhGoodsSku goodsSku = goodsSkuService.getGoodsSkuFromCache(skuId);

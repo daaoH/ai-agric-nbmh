@@ -13,6 +13,7 @@ import com.hszn.nbmh.common.security.util.SecurityUtils;
 import com.hszn.nbmh.good.api.entity.NbmhComment;
 import com.hszn.nbmh.good.api.entity.NbmhGoods;
 import com.hszn.nbmh.good.api.entity.NbmhGoodsAttribute;
+import com.hszn.nbmh.good.api.params.input.AddGoodsParams;
 import com.hszn.nbmh.good.api.params.input.QueryGoodsParams;
 import com.hszn.nbmh.good.api.params.out.GoodDetailReturn;
 import com.hszn.nbmh.good.api.params.vo.CommentVo;
@@ -129,7 +130,6 @@ public class NbmhGoodsController {
     }
 
 
-    @Inner(false)
     @Operation(description = "根据类别id获取商品列表")
     @Parameter(description = "商品类别id")
     @PostMapping("/queryGoodsByCategoryId")
@@ -146,7 +146,6 @@ public class NbmhGoodsController {
     }
 
 
-    @Inner(false)
     @Operation(description = "根据参数取筛选商品")
     @PostMapping("/queryGoodsByParams")
     public Result<IPage<NbmhGoods>> queryGoodsByParams(@RequestBody QueryGoodsParams params, @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum, @RequestParam(value = "pageSize", defaultValue = "12") Integer pageSize){
@@ -157,6 +156,13 @@ public class NbmhGoodsController {
         }
 
         return Result.failed(CommonEnum.DATA_NOT_EXIST.getMsg());
+    }
+
+    @Operation(description = "添加商品")
+    @PostMapping("/addGoods")
+    public Result addGoods(@RequestBody AddGoodsParams params){
+        goodsService.addGoods(params);
+        return Result.ok();
     }
 
 

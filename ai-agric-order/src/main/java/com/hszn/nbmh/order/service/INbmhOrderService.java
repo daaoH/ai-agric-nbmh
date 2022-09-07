@@ -6,6 +6,10 @@ import com.hszn.nbmh.order.api.entity.NbmhOrder;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hszn.nbmh.order.api.params.OrderSearchParam;
 import com.hszn.nbmh.order.api.params.input.CreateOrderParam;
+import com.hszn.nbmh.order.api.params.input.SettlementParam;
+import com.hszn.nbmh.order.api.params.out.SettlementReturn;
+
+import java.util.List;
 
 /**
  * <p>
@@ -30,4 +34,6 @@ public interface INbmhOrderService extends IService<NbmhOrder> {
      * @return
      */
     String createOrder(CreateOrderParam order);
+
+    List<SettlementReturn> settlement(SettlementParam param);
 }

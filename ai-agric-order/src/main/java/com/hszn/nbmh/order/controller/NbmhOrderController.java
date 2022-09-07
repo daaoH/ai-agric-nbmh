@@ -8,6 +8,8 @@ import com.hszn.nbmh.common.core.utils.SnowFlakeIdUtil;
 import com.hszn.nbmh.order.api.entity.NbmhOrder;
 import com.hszn.nbmh.order.api.params.OrderSearchParam;
 import com.hszn.nbmh.order.api.params.input.CreateOrderParam;
+import com.hszn.nbmh.order.api.params.input.SettlementParam;
+import com.hszn.nbmh.order.api.params.out.SettlementReturn;
 import com.hszn.nbmh.order.service.INbmhOrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * <p>
@@ -41,6 +45,13 @@ public class NbmhOrderController {
         return Result.ok(orderService.search(param));
     }
 
+
+    @Operation(description = "购物车结算")
+    @PostMapping("/settlement")
+    public Result<List<SettlementReturn>> preOrder(@RequestBody SettlementParam param){
+        List<SettlementReturn> settlements = orderService.settlement(param);
+        return Result.ok(settlements);
+    }
 
     @Operation(description = "生成订单")
     @PostMapping("/createOrder")

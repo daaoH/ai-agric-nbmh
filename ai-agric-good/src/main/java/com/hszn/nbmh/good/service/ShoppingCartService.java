@@ -50,7 +50,7 @@ public interface ShoppingCartService {
      * 清空购物车的数据
      * @param cartKey
      */
-    public void clearCartInfo(String cartKey);
+    void clearCartInfo(String cartKey);
 
     /**
      * 勾选购物项
@@ -72,4 +72,11 @@ public interface ShoppingCartService {
      * @param skuId
      */
     void deleteCartItem(List<Long> skuId);
+
+    /**
+     * 多选勾选购物项
+     * @param skuIds
+     * @param check
+     */
+    void checkItems(List<Long> skuIds, Integer check);
 }
