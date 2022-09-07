@@ -92,6 +92,8 @@ public class NbmhTradeReportServiceImpl extends ServiceImpl<NbmhTradeReportMappe
                 throw new ServiceException("动物信息未找到");
             }
 
+            animalMapper.updateById(animal.setStatus(4));
+
             animalList.add(animal);
             nbmhInspectList.add(NbmhInspect.builder().animalId(Long.valueOf(animalId)).animalType(entity.getAnimalType()).earNo(animal.getEarNo()).reportNumber(entity.getReportNumber())
                     .buyerName(entity.getBuyerName()).buyerPhone(entity.getBuyerPhone()).buyerCard(entity.getBuyerCard()).userId(entity.getFarmerId()).createTime(new Date())
