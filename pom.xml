@@ -17,6 +17,7 @@
 
     <modules>
         <module>ai-agric-admin</module>
+        <module>ai-agric-admin-api</module>
         <module>ai-agric-app</module>
         <module>ai-agric-auth</module>
         <module>ai-agric-auth-api</module>
