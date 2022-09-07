@@ -57,4 +57,13 @@ public interface INbmhCouponService extends IService<NbmhCoupon> {
      * @return
      */
     List<NbmhCouponHistory> findUsableCoupon(List<GoodsParam> params);
+
+    /**
+     * 修改用户优惠券状态
+     *
+     * @param id
+     * @param status
+     * @return
+     */
+    boolean updateCouponStatus(Long id, Integer status);
 }

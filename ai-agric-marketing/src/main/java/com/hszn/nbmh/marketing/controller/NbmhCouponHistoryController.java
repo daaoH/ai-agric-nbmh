@@ -1,6 +1,7 @@
 package com.hszn.nbmh.marketing.controller;
 
 
+import com.hszn.nbmh.marketing.service.INbmhCouponHistoryService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,5 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/coupon-history")
 public class NbmhCouponHistoryController {
+
+    private final INbmhCouponHistoryService couponHistoryService;
+
+    public NbmhCouponHistoryController(INbmhCouponHistoryService couponHistoryService) {
+        this.couponHistoryService = couponHistoryService;
+    }
+
 
 }

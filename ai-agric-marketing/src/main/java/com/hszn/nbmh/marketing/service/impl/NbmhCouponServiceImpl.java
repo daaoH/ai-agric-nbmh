@@ -199,4 +199,12 @@ public class NbmhCouponServiceImpl extends ServiceImpl<NbmhCouponMapper, NbmhCou
         });
         return result;
     }
+
+    @Override
+    public boolean updateCouponStatus(Long id, Integer status) {
+        NbmhCouponHistory history = new NbmhCouponHistory();
+        history.setStatus(status);
+        history.setId(id);
+        return couponHistoryService.updateById(history);
+    }
 }

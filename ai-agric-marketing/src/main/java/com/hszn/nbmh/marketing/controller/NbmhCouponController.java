@@ -86,4 +86,36 @@ public class NbmhCouponController {
         return Result.ok(result);
     }
 
+    /**
+     * 锁定优惠券
+     *
+     * @return
+     */
+    @Operation(description = "锁定优惠券,参数为ID")
+    @Inner(value = false)
+    @GetMapping("lockCoupon")
+    public Result<String> lockCoupon(@RequestParam("id") Long id) {
+        boolean result = couponService.updateCouponStatus(id, 9);
+        if (result) {
+            return Result.ok("操作成功");
+        }
+        return Result.ok("操作失败");
+    }
+
+    /**
+     * 使用优惠券
+     *
+     * @return
+     */
+    @Operation(description = "使用优惠券,参数为ID")
+    @Inner(value = false)
+    @GetMapping("consumeCoupon")
+    public Result<String> consumeCoupon(@RequestParam("id") Long id) {
+        boolean result = couponService.updateCouponStatus(id, 1);
+        if (result) {
+            return Result.ok("操作成功");
+        }
+        return Result.ok("操作失败");
+    }
+
 }
