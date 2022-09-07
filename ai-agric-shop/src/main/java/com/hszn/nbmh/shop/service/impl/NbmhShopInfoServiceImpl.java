@@ -5,8 +5,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hszn.nbmh.admin.api.params.vo.SysAuthUser;
 import com.hszn.nbmh.common.core.mould.QueryRequest;
 import com.hszn.nbmh.common.core.utils.SortUtil;
+import com.hszn.nbmh.common.security.util.SecurityUtils;
 import com.hszn.nbmh.shop.api.entity.NbmhShopInfo;
 import com.hszn.nbmh.shop.api.params.input.ShopEditParam;
 import com.hszn.nbmh.shop.api.params.input.ShopInfoParam;
@@ -71,8 +73,11 @@ public class NbmhShopInfoServiceImpl extends ServiceImpl<NbmhShopInfoMapper, Nbm
 
     @Override
     public NbmhShopInfo currentShopInfo() {
-        // TODO: 2022/9/2 获取当前用户id
-        Long userId = 123L;
+        SysAuthUser sysUser = SecurityUtils.getSysUser();
+        if (sysUser == null) {
+            throw new RuntimeException("获取用户信息失败");
+        }
+        Long userId = sysUser.getId();
         LambdaQueryWrapper<NbmhShopInfo> wrapper = Wrappers.lambdaQuery(NbmhShopInfo.class).eq(NbmhShopInfo::getUserId, userId);
         List<NbmhShopInfo> shopInfos = baseMapper.selectList(wrapper);
         if (CollectionUtils.isEmpty(shopInfos)) {

@@ -2,7 +2,9 @@ package com.hszn.nbmh.marketing.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hszn.nbmh.admin.api.params.vo.SysAuthUser;
 import com.hszn.nbmh.common.core.utils.SnowFlakeIdUtil;
+import com.hszn.nbmh.common.security.util.SecurityUtils;
 import com.hszn.nbmh.marketing.api.entity.NbmhCoupon;
 import com.hszn.nbmh.marketing.api.entity.NbmhCouponCategoryRelation;
 import com.hszn.nbmh.marketing.api.entity.NbmhCouponGoodsRelation;
@@ -96,42 +98,48 @@ public class NbmhCouponServiceImpl extends ServiceImpl<NbmhCouponMapper, NbmhCou
         Integer level = couponInfo.getUserLevel();
         //领取限制数量
         Integer perLimit = couponInfo.getPerLimit();
-        // TODO: 2022/9/3   统一获取用户信息
-        int userLevel = 5;
-        String userName = "";
-        Long userId = 1L;
-        //只有达到领取等级才继续
-        if (userLevel >= level) {
-            //过滤userId,查看已领取数量
-            long count = getAcceptHistory.stream().filter(e -> e.getUserId() != null).count();
-            //没超过领取数量才继续
-            if (count < perLimit) {
-                NbmhCouponHistory history = NbmhCouponHistory.builder()
-                        .couponId(couponInfo.getId())
-                        .acquireType(getType)
-                        .couponName(couponInfo.getCouponName())
-                        .amount(couponInfo.getAmount())
-                        .minPoint(couponInfo.getMinPoint())
-                        .startTime(couponInfo.getStartTime())
-                        .endTime(couponInfo.getEndTime())
-                        .userId(userId)
-                        .userName(userName)
-                        .couponShopId(couponInfo.getShopId())
-                        .couponUseType(couponInfo.getUseType())
-                        //未使用
-                        .status(0)
-                        .build();
-                couponHistoryService.save(history);
-                return true;
-            }
+        SysAuthUser sysUser = SecurityUtils.getSysUser();
+        if (sysUser == null) {
+            throw new RuntimeException("获取用户信息失败");
         }
+        Long userId = sysUser.getId();
+        int userLevel = 5;
+        String userName = sysUser.getName();
+        //只有达到领取等级才继续 目前没有涉及用户等级
+//        if (userLevel >= level) {
+        //过滤userId,查看已领取数量
+        long count = getAcceptHistory.stream().filter(e -> e.getUserId() != null).count();
+        //没超过领取数量才继续
+        if (count < perLimit) {
+            NbmhCouponHistory history = NbmhCouponHistory.builder()
+                    .couponId(couponInfo.getId())
+                    .acquireType(getType)
+                    .couponName(couponInfo.getCouponName())
+                    .amount(couponInfo.getAmount())
+                    .minPoint(couponInfo.getMinPoint())
+                    .startTime(couponInfo.getStartTime())
+                    .endTime(couponInfo.getEndTime())
+                    .userId(userId)
+                    .userName(userName)
+                    .couponShopId(couponInfo.getShopId())
+                    .couponUseType(couponInfo.getUseType())
+                    //未使用
+                    .status(0)
+                    .build();
+            couponHistoryService.save(history);
+            return true;
+        }
+//        }
         return false;
     }
 
     @Override
     public List<CouponAcceptOut> getAcceptHistory(Long couponId) {
-        // TODO: 2022/9/3 统一获取当前用户
-        Long userId = 123L;
+        SysAuthUser sysUser = SecurityUtils.getSysUser();
+        if (sysUser == null) {
+            throw new RuntimeException("获取用户信息失败");
+        }
+        Long userId = sysUser.getId();
         return baseMapper.getAcceptHistory(couponId, userId);
     }
 
