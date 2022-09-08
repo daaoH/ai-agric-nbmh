@@ -46,6 +46,7 @@ public class NbmhUser implements Serializable {
 //    @DataMasking(maskEnum=DataMaskingEnum.HALF_MASK)
     private String phone;
 
+
     /**
      * 密码
      */
