@@ -43,7 +43,7 @@ public class NbmhUser implements Serializable {
     /**
      * 手机号码
      */
-    @DataMasking(maskEnum=DataMaskingEnum.HALF_MASK)
+//    @DataMasking(maskEnum=DataMaskingEnum.HALF_MASK)
     private String phone;
 
     /**
