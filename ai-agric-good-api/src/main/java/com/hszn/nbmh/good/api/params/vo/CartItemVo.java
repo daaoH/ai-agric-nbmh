@@ -2,6 +2,7 @@ package com.hszn.nbmh.good.api.params.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -12,11 +13,12 @@ import java.util.List;
  * @Modified By:
  */
 @Schema(description = "购物车数据项")
-public class CartItemVo {
+public class CartItemVo implements Serializable {
 
     @Schema(description = "购物车数据项")
     private Long shopId;
 
+    @Schema(description = "购物车商品id")
     private Long skuId;
 
     @Schema(description = "是否选中 true选中 false不选中")

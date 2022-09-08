@@ -22,7 +22,7 @@ public class CreateOrderParam implements Serializable {
      * 购物车商品项
      */
     @Schema(description = "购物项数据")
-    private List<PreOrderParam> orderItems;
+    private List<PreOrderParam> preOrderItems;
 
     /**
      *　收货人地址

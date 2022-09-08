@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hszn.nbmh.user.mapper.NbmhRechargeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hszn.nbmh.user.api.entity.NbmhRecharge">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="user_name" property="userName" />
+        <result column="pay_status" property="payStatus" />
+        <result column="recharge_money" property="rechargeMoney" />
+        <result column="recharge_sn" property="rechargeSn" />
+        <result column="recharge_way" property="rechargeWay" />
+        <result column="pay_time" property="payTime" />
+        <result column="transaction_id" property="transactionId" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="status" property="status" />
+    </resultMap>
+
+</mapper>

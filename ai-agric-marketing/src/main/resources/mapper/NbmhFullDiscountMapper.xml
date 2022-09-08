@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hszn.nbmh.marketing.mapper.NbmhFullDiscountMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hszn.nbmh.marketing.api.entity.NbmhFullDiscount">
+        <id column="id" property="id" />
+        <result column="tenant_id" property="tenantId" />
+        <result column="shop_id" property="shopId" />
+        <result column="shop_name" property="shopName" />
+        <result column="title" property="title" />
+        <result column="end_time" property="endTime" />
+        <result column="activity_name" property="activityName" />
+        <result column="scope_id" property="scopeId" />
+        <result column="scope_type" property="scopeType" />
+        <result column="start_time" property="startTime" />
+        <result column="coupon_id" property="couponId" />
+        <result column="description" property="description" />
+        <result column="full_minus" property="fullMinus" />
+        <result column="full_money" property="fullMoney" />
+        <result column="full_rate" property="fullRate" />
+        <result column="gift_id" property="giftId" />
+        <result column="coupon_flag" property="couponFlag" />
+        <result column="free_freight_flag" property="freeFreightFlag" />
+        <result column="full_minus_flag" property="fullMinusFlag" />
+        <result column="full_rate_flag" property="fullRateFlag" />
+        <result column="gift_flag" property="giftFlag" />
+        <result column="point_flag" property="pointFlag" />
+        <result column="point" property="point" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="status" property="status" />
+    </resultMap>
+
+</mapper>

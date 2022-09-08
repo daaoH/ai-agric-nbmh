@@ -4,6 +4,7 @@ import com.hszn.nbmh.shop.api.entity.NbmhShopInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -14,7 +15,7 @@ import java.util.List;
  */
 @Schema(description = "购物车数据项")
 @Data
-public class ShopCartItemVo {
+public class ShopCartItemVo implements Serializable {
 
     /**
      * 店铺信息

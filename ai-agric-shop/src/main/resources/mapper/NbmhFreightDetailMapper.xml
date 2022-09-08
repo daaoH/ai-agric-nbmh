@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hszn.nbmh.shop.mapper.NbmhFreightDetailMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hszn.nbmh.shop.api.entity.NbmhFreightDetail">
+        <id column="id" property="id" />
+        <result column="freight_template_id" property="freightTemplateId" />
+        <result column="area" property="area" />
+        <result column="area_id" property="areaId" />
+        <result column="continue_unit" property="continueUnit" />
+        <result column="continue_price" property="continuePrice" />
+        <result column="first_unit" property="firstUnit" />
+        <result column="first_price" property="firstPrice" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="status" property="status" />
+    </resultMap>
+
+</mapper>

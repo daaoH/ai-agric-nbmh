@@ -61,7 +61,7 @@
         SELECT
         <include refid="Base_Column" />
         FROM nbmh_purchase_publish pp LEFT JOIN nbmh_user_extra_info ue ON pp.user_id = ue.user_id
-        WHERE pp.user_id = #{params.userId}
+        WHERE pp.status = 0
         <if test="params.type != null">
             AND pp.product_type = #{params.type}
         </if>

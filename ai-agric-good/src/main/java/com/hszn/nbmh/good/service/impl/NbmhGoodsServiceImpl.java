@@ -30,6 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import javax.annotation.Untainted;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -95,6 +96,7 @@ public class NbmhGoodsServiceImpl extends ServiceImpl<NbmhGoodsMapper, NbmhGoods
         List<SpecsVo> specs = params.getSpecs();
         if(CollectionUtil.isNotEmpty(specs)){
             List<NbmhGoodsSpecification> goodsSpecifications = new ArrayList<>();
+            List<NbmhGoodsSku> goodsSkus = new ArrayList<>();
             for(SpecsVo specsVo : specs){
                 for(GoodSpecs goodSpecs : specsVo.getGoodSpecs()){
                     NbmhGoodsSpecification specification = new NbmhGoodsSpecification();
@@ -103,10 +105,21 @@ public class NbmhGoodsServiceImpl extends ServiceImpl<NbmhGoodsMapper, NbmhGoods
                     specification.setSpecification(specsVo.getName());
                     specification.setValue(goodSpecs.getValue());
                     goodsSpecifications.add(specification);
+
+                    NbmhGoodsSku goodsSku = new NbmhGoodsSku();
+                    goodsSku.setId(snowFlakeUtil.nextId());
+                    goodsSku.setShopId(params.getShopId());
+                    goodsSku.setStock(params.getStock());
+                    goodsSku.setGoodsId(id);
+                    goodsSku.setGoodsName(params.getName());
+                    goodsSku.setPrice(new BigDecimal(goodSpecs.getValue()));
+                    goodsSku.setSkuName(params.getName()+" "+goodSpecs.getSpecification());
+                    goodsSkus.add(goodsSku);
                 }
             }
             specificationService.saveBatch(goodsSpecifications);
+            skuService.saveBatch(goodsSkus);
         }
-        return false;
+        return true;
     }
 }

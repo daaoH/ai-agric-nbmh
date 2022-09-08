@@ -161,8 +161,12 @@ public class NbmhGoodsController {
     @Operation(description = "添加商品")
     @PostMapping("/addGoods")
     public Result addGoods(@RequestBody AddGoodsParams params){
-        goodsService.addGoods(params);
-        return Result.ok();
+        boolean add = goodsService.addGoods(params);
+        if(add) {
+            return Result.ok();
+        }
+
+        return Result.failed(CommonEnum.DATA_ADD_FAILED.getMsg());
     }
 
 

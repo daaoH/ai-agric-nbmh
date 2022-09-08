@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hszn.nbmh.common.core.mould.QueryRequest;
 import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.common.core.utils.SnowFlakeIdUtil;
+import com.hszn.nbmh.common.security.annotation.Inner;
 import com.hszn.nbmh.order.api.entity.NbmhOrder;
 import com.hszn.nbmh.order.api.params.OrderSearchParam;
 import com.hszn.nbmh.order.api.params.input.CreateOrderParam;
@@ -53,6 +54,7 @@ public class NbmhOrderController {
         return Result.ok(settlements);
     }
 
+    @Inner(false)
     @Operation(description = "生成订单")
     @PostMapping("/createOrder")
     public Result createOrder(@RequestBody CreateOrderParam order){

@@ -19,9 +19,15 @@ import java.util.List;
 @Data
 public class PreOrderParam implements Serializable {
 
+    /**
+     * 店铺和购物项信息
+     */
     @Schema(description = "店铺和购物项信息")
     private ShopCartItemVo cartItems;
 
+    /**
+     * 购物项总金额
+     */
     @Schema(description = "购物项总金额")
     private BigDecimal amount;
 
