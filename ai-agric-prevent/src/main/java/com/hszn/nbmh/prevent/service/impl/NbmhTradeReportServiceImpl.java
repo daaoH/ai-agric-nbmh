@@ -8,10 +8,8 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hszn.nbmh.common.core.exception.ServiceException;
-import com.hszn.nbmh.common.core.utils.BeanUtils;
 import com.hszn.nbmh.common.core.utils.SnowFlakeIdUtil;
 import com.hszn.nbmh.prevent.api.entity.NbmhAnimal;
-import com.hszn.nbmh.prevent.api.entity.NbmhButcherReport;
 import com.hszn.nbmh.prevent.api.entity.NbmhInspect;
 import com.hszn.nbmh.prevent.api.entity.NbmhTradeReport;
 import com.hszn.nbmh.prevent.mapper.NbmhAnimalMapper;
@@ -60,8 +58,6 @@ public class NbmhTradeReportServiceImpl extends ServiceImpl<NbmhTradeReportMappe
     @Transactional
     public List<Integer> save(List<NbmhTradeReport> nbmhTradeReportList) {
 
-        BeanUtils.validBean(nbmhTradeReportList, NbmhTradeReport.Save.class);
-
         return nbmhTradeReportList.stream().map(entity -> {
 
             Date createTime=new Date();
@@ -109,7 +105,6 @@ public class NbmhTradeReportServiceImpl extends ServiceImpl<NbmhTradeReportMappe
     @Override
     @Transactional
     public int update(List<NbmhTradeReport> nbmhTradeReportList) {
-        BeanUtils.validBean(nbmhTradeReportList, NbmhButcherReport.Update.class);
 
         if (nbmhTradeReportList == null || nbmhTradeReportList.size() == 0) {
             return 0;

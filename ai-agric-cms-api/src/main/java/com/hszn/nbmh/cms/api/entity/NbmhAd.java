@@ -38,8 +38,8 @@ public class NbmhAd implements Serializable {
     /**
      * 主键id
      */
-    @Null(groups = {NbmhAd.Save.class})
-    @NotBlank(groups = {NbmhAd.Update.class, NbmhAd.Delete.class})
+    @Null(message = "新增数据时Id必须为null", groups = {Save.class})
+    @NotNull(message = "更新或删除数据时Id不能为空", groups = {Update.class, Delete.class})
     @TableId(value = "id", type = IdType.AUTO)
     @Schema(name = "id", description = "主键id")
     private Long id;
@@ -47,6 +47,7 @@ public class NbmhAd implements Serializable {
     /**
      * 广告标题
      */
+    @NotBlank(message = "新增数据时广告标题title不能为空", groups = {Save.class})
     @Schema(name = "title", description = "广告标题")
     private String title;
 
@@ -65,6 +66,7 @@ public class NbmhAd implements Serializable {
     /**
      * 广告宣传图片
      */
+    @NotBlank(message = "新增数据时广告宣传图片url不能为空", groups = {Save.class})
     @Schema(name = "url", description = "广告宣传图片")
     private String url;
 

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hszn.nbmh.user.api.entity.NbmhUserFollowExpert;
 import com.hszn.nbmh.user.api.params.out.NbmhUserFollowExpertInfo;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -18,6 +19,7 @@ import java.util.List;
  * @author MCR
  * @since 2022-08-31
  */
+@Validated
 public interface INbmhUserFollowExpertService extends IService<NbmhUserFollowExpert> {
 
     /**
@@ -50,10 +52,11 @@ public interface INbmhUserFollowExpertService extends IService<NbmhUserFollowExp
     /**
      * 查询
      *
-     * @param entity 查询条件的实体
+     * @param entity        查询条件的实体
+     * @param orderItemList 排序方式
      * @return the list
      */
-    List<NbmhUserFollowExpertInfo> list(@NotNull NbmhUserFollowExpert entity);
+    List<NbmhUserFollowExpertInfo> list(@NotNull NbmhUserFollowExpert entity, List<OrderItem> orderItemList);
 
     /**
      * 删除.

@@ -1,8 +1,8 @@
 package com.hszn.nbmh.prevent.api.fallback;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.hszn.nbmh.common.core.enums.CommonEnum;
+import com.hszn.nbmh.common.core.mould.QueryCondition;
 import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.prevent.api.entity.NbmhMedicalSchedule;
 import com.hszn.nbmh.prevent.api.feign.RemoteMedicalScheduleService;
@@ -38,12 +38,12 @@ public class MedicalScheduleFallback implements RemoteMedicalScheduleService {
     }
 
     @Override
-    public Result<IPage<NbmhMedicalSchedule>> query(NbmhMedicalSchedule entity, int pageNum, int pageSize, List<OrderItem> orderItemList) {
+    public Result<IPage<NbmhMedicalSchedule>> query(QueryCondition<NbmhMedicalSchedule> queryCondition, int pageNum, int pageSize) {
         return Result.failed(CommonEnum.FALL_BACK_MSG.getMsg());
     }
 
     @Override
-    public Result<List<NbmhMedicalSchedule>> list(NbmhMedicalSchedule entity, List<OrderItem> orderItemList) {
+    public Result<List<NbmhMedicalSchedule>> list(QueryCondition<NbmhMedicalSchedule> queryCondition) {
         return Result.failed(CommonEnum.FALL_BACK_MSG.getMsg());
     }
 

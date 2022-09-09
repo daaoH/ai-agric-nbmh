@@ -10,12 +10,15 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 /**
  * <p>
@@ -26,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2022-08-19
  */
 @Tag(name = "阿里云--短信服务")
+@Validated
 @RestController
 @RequestMapping("/aliyun-sms")
 public class SmsController {
@@ -37,7 +41,8 @@ public class SmsController {
     @Parameters({@Parameter(description = "用户手机号码", name = "phoneNumber")})
     @PostMapping("/sendSms")
     @Inner(false)
-    public Result sendSms(@RequestParam String phoneNumber) {
+    public Result sendSms(@RequestParam @NotBlank(message = "手机号码不能为空")
+                          @Pattern(regexp = "^1[345678]\\d{9}$", message = "手机号码格式有误") String phoneNumber) {
 
         SmsResponseEntity response = smsService.sendSms(phoneNumber);
         if (response != null) {
@@ -51,10 +56,9 @@ public class SmsController {
     @Parameters({@Parameter(description = "用户手机号码", name = "phoneNumber"), @Parameter(description = "验证码", name = "code")})
     @PostMapping("/validateCode")
     @Inner(false)
-    public Result validateCode(@RequestParam String phoneNumber, @RequestParam String code) {
-        if (StringUtils.isBlank(phoneNumber) || StringUtils.isBlank(code)) {
-            return Result.failed("手机号或验证码不能为空");
-        }
+    public Result validateCode(@RequestParam @NotBlank(message = "手机号不能为空")
+                               @Pattern(regexp = "^1[345678]\\d{9}$", message = "手机号码格式有误") String phoneNumber,
+                               @RequestParam @NotBlank(message = "验证码不能为空") String code) {
 
         SmsValidateEntity response = smsService.validateCode(phoneNumber, code);
         if (response != null) {

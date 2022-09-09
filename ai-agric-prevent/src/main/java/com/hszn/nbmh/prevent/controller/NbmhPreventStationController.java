@@ -7,19 +7,16 @@ import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.common.security.annotation.Inner;
 import com.hszn.nbmh.prevent.api.entity.NbmhPreventStation;
 import com.hszn.nbmh.prevent.service.INbmhPreventStationService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.List;
 
@@ -32,7 +29,8 @@ import java.util.List;
  * @since 2022-08-15
  */
 
-@Tag(name="防疫站信息管理")
+@Tag(name = "防疫站信息管理")
+@Validated
 @RestController
 @RequestMapping("/nbmh-prevent-station")
 public class NbmhPreventStationController {
@@ -42,7 +40,7 @@ public class NbmhPreventStationController {
 
     @Operation(summary = "新增防疫站信息", method = "POST")
     @PostMapping("/add")
-    public Result add(@RequestBody NbmhPreventStation nbmhPreventStation) {
+    public Result add(@RequestBody @Validated({NbmhPreventStation.Save.class}) NbmhPreventStation nbmhPreventStation) {
 
         List<Integer> idList = nbmhPreventStationService.save(Collections.singletonList(nbmhPreventStation));
         if (idList != null && idList.size() > 0) {
@@ -54,34 +52,31 @@ public class NbmhPreventStationController {
 
     @Operation(summary = "根据ID查询防疫站信息", method = "GET")
     @PostMapping("/{id}")
-    public Result<NbmhPreventStation> getById(@PathVariable(value = "id") @NotBlank Long id) {
+    public Result<NbmhPreventStation> getById(@PathVariable(value = "id") @NotNull Long id) {
 
         return Result.ok(nbmhPreventStationService.getById(id));
     }
 
     @Operation(summary = "更新防疫站信息", method = "PUT")
     @PutMapping
-    public Result update(@RequestBody NbmhPreventStation nbmhPreventStation) {
+    public Result update(@RequestBody @Validated({NbmhPreventStation.Update.class}) NbmhPreventStation nbmhPreventStation) {
 
         nbmhPreventStationService.update(Collections.singletonList(nbmhPreventStation));
         return Result.ok();
     }
 
     @Operation(summary = "分页查询防疫站信息", method = "POST")
-    @Parameters({@Parameter(description="页码", name="pageNum"), @Parameter(description="每页显示条数", name="pageSize"), @Parameter(description="排序条件集合", name="orderItemList")})
+    @Parameters({@Parameter(description = "页码", name = "pageNum"), @Parameter(description = "每页显示条数", name = "pageSize")})
     @PostMapping("/query")
     public Result<IPage<NbmhPreventStation>> query(@RequestBody NbmhPreventStation nbmhPreventStation,
                                                    @RequestParam @DecimalMin("1") int pageNum,
-                                                   @RequestParam @DecimalMin("1") int pageSize,
-                                                   @RequestParam(value = "orderItemList", required = false) List<OrderItem> orderItemList) {
+                                                   @RequestParam @DecimalMin("1") int pageSize) {
 
-        IPage<NbmhPreventStation> butcherReportPage = nbmhPreventStationService.query(nbmhPreventStation, pageNum, pageSize, orderItemList);
-
-        return Result.ok(butcherReportPage);
+        return Result.ok(nbmhPreventStationService.query(nbmhPreventStation, pageNum, pageSize, null));
     }
 
     @Operation(summary = "查询防疫站信息", method = "POST")
-    @Parameters({@Parameter(description="排序条件集合", name="orderItemList")})
+    @Parameters({@Parameter(description = "排序条件集合", name = "orderItemList")})
     @PostMapping("/list")
     @Inner(false)
     public Result<List<NbmhPreventStation>> list(@RequestBody NbmhPreventStation nbmhPreventStation,

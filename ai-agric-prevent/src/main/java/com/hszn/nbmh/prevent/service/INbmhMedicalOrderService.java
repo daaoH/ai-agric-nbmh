@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hszn.nbmh.prevent.api.entity.NbmhMedicalOrder;
 import com.hszn.nbmh.prevent.api.params.input.NbmhMedicalOrderParam;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -18,6 +19,7 @@ import java.util.List;
  * @author MCR
  * @since 2022-08-31
  */
+@Validated
 public interface INbmhMedicalOrderService extends IService<NbmhMedicalOrder> {
 
     /**

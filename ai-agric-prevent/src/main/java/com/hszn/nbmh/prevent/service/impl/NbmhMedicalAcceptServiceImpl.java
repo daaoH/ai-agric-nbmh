@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hszn.nbmh.common.core.utils.BeanUtils;
 import com.hszn.nbmh.prevent.api.entity.NbmhMedicalAccept;
 import com.hszn.nbmh.prevent.mapper.NbmhMedicalAcceptMapper;
 import com.hszn.nbmh.prevent.service.INbmhMedicalAcceptService;
@@ -43,7 +42,6 @@ public class NbmhMedicalAcceptServiceImpl extends ServiceImpl<NbmhMedicalAcceptM
     @Override
     @Transactional
     public List<Integer> save(List<NbmhMedicalAccept> nbmhMedicalAcceptList) {
-        BeanUtils.validBean(nbmhMedicalAcceptList, NbmhMedicalAccept.Save.class);
 
         return nbmhMedicalAcceptList.stream().map(entity -> {
 
@@ -57,7 +55,6 @@ public class NbmhMedicalAcceptServiceImpl extends ServiceImpl<NbmhMedicalAcceptM
     @Override
     @Transactional
     public int update(List<NbmhMedicalAccept> nbmhMedicalAcceptList) {
-        BeanUtils.validBean(nbmhMedicalAcceptList, NbmhMedicalAccept.Update.class);
 
         if (CollectionUtils.isEmpty(nbmhMedicalAcceptList)) {
             return 0;
@@ -74,7 +71,6 @@ public class NbmhMedicalAcceptServiceImpl extends ServiceImpl<NbmhMedicalAcceptM
     @Override
     @Transactional
     public int acceptOrder(List<NbmhMedicalAccept> nbmhMedicalAcceptList) {
-        BeanUtils.validBean(nbmhMedicalAcceptList, NbmhMedicalAccept.Update.class);
 
         if (CollectionUtils.isEmpty(nbmhMedicalAcceptList)) {
             return 0;

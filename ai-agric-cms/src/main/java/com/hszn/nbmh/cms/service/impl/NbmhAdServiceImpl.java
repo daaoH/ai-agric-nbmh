@@ -10,7 +10,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hszn.nbmh.cms.api.entity.NbmhAd;
 import com.hszn.nbmh.cms.mapper.NbmhAdMapper;
 import com.hszn.nbmh.cms.service.INbmhAdService;
-import com.hszn.nbmh.common.core.utils.BeanUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,13 +31,12 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class NbmhAdServiceImpl extends ServiceImpl<NbmhAdMapper, NbmhAd> implements INbmhAdService {
-    
+
     @Resource
     private NbmhAdMapper nbmhAdMapper;
 
     @Override
     public List<Integer> save(List<NbmhAd> nbmhAdList) {
-        BeanUtils.validBean(nbmhAdList, NbmhAd.Save.class);
 
         return nbmhAdList.stream().map(entity -> {
 
@@ -52,7 +50,6 @@ public class NbmhAdServiceImpl extends ServiceImpl<NbmhAdMapper, NbmhAd> impleme
     @Override
     @Transactional
     public int update(List<NbmhAd> nbmhAdList) {
-        BeanUtils.validBean(nbmhAdList, NbmhAd.Update.class);
 
         if (nbmhAdList == null || nbmhAdList.size() == 0) {
             return 0;
@@ -93,10 +90,11 @@ public class NbmhAdServiceImpl extends ServiceImpl<NbmhAdMapper, NbmhAd> impleme
     @Override
     @Transactional
     public void delete(List<Long> idList) {
-        idList.forEach(id ->{
+
+        idList.forEach(id -> {
 
             NbmhAd entity = this.getById(id);
-            if(entity != null){
+            if (entity != null) {
                 entity.setStatus(-1).setUpdateTime(new Date());
                 nbmhAdMapper.updateById(entity);
             }

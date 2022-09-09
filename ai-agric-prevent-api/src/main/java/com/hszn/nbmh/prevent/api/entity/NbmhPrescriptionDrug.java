@@ -9,6 +9,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import javax.validation.groups.Default;
 import java.io.Serializable;
@@ -37,8 +38,8 @@ public class NbmhPrescriptionDrug implements Serializable {
     /**
      * 主键id
      */
-    @Null(groups = {NbmhPrescriptionDrug.Save.class})
-    @NotBlank(groups = {NbmhPrescriptionDrug.Update.class, NbmhPrescriptionDrug.Delete.class})
+    @Null(message = "新增数据时Id必须为null", groups = {Save.class})
+    @NotNull(message = "更新或删除数据时Id不能为空", groups = {Update.class, Delete.class})
     @TableId(value = "id", type = IdType.AUTO)
     @Schema(name = "id", description = "主键id")
     private Long id;
@@ -46,12 +47,21 @@ public class NbmhPrescriptionDrug implements Serializable {
     /**
      * 处方基础信息id
      */
+    @NotNull(message = "新增数据时处方基础信息prescriptionId不能为空", groups = {Save.class})
     @Schema(name = "prescriptionId", description = "处方基础信息id")
     private Long prescriptionId;
 
     /**
+     * 药品Id
+     */
+    @NotNull(message = "新增数据时药品drugId不能为空", groups = {Save.class})
+    @Schema(name = "drugId", description = "药品名称")
+    private Long drugId;
+
+    /**
      * 药品名称
      */
+    @NotBlank(message = "新增数据时药品名称drugName不能为空", groups = {Save.class})
     @Schema(name = "drugName", description = "药品名称")
     private String drugName;
 
@@ -88,19 +98,19 @@ public class NbmhPrescriptionDrug implements Serializable {
     /**
      * 创建时间
      */
-    @Schema(name="createTime", description="创建时间")
+    @Schema(name = "createTime", description = "创建时间")
     private Date createTime;
 
     /**
      * 更新时间
      */
-    @Schema(name="updateTime", description="更新时间")
+    @Schema(name = "updateTime", description = "更新时间")
     private Date updateTime;
 
     /**
      * 状态 0正常 -1停止
      */
-    @Schema(name="status", description="状态 0正常 -1停止")
+    @Schema(name = "status", description = "状态 0正常 -1停止")
     private Integer status;
 
     public interface Save extends Default {

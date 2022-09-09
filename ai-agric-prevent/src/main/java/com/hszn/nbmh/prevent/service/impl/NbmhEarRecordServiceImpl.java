@@ -8,7 +8,6 @@ import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hszn.nbmh.common.core.utils.BeanUtils;
 import com.hszn.nbmh.prevent.api.entity.NbmhAnimal;
 import com.hszn.nbmh.prevent.api.entity.NbmhEarRecord;
 import com.hszn.nbmh.prevent.api.entity.NbmhTradeReport;
@@ -52,7 +51,6 @@ public class NbmhEarRecordServiceImpl extends ServiceImpl<NbmhEarRecordMapper, N
     @Override
     @Transactional
     public List<Integer> save(List<NbmhEarRecord> nbmhEarRecordList) {
-        BeanUtils.validBean(nbmhEarRecordList, NbmhEarRecord.Save.class);
 
         return nbmhEarRecordList.stream().map(entity -> {
 
@@ -98,7 +96,6 @@ public class NbmhEarRecordServiceImpl extends ServiceImpl<NbmhEarRecordMapper, N
     @Override
     @Transactional
     public int update(List<NbmhEarRecord> nbmhEarRecordList) {
-        BeanUtils.validBean(nbmhEarRecordList, NbmhEarRecord.Update.class);
 
         if (nbmhEarRecordList == null || nbmhEarRecordList.size() == 0) {
             return 0;

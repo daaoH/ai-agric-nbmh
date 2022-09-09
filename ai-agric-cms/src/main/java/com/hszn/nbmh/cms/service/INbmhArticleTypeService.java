@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hszn.nbmh.cms.api.entity.NbmhArticleType;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -17,6 +18,7 @@ import java.util.List;
  * @author MCR
  * @since 2022-08-20
  */
+@Validated
 public interface INbmhArticleTypeService extends IService<NbmhArticleType> {
 
     /**
@@ -26,6 +28,14 @@ public interface INbmhArticleTypeService extends IService<NbmhArticleType> {
      * @return the list
      */
     List<Integer> save(List<NbmhArticleType> nbmhArticleTypeList);
+
+    /**
+     * 根据文章类型Id查询文章类型信息
+     *
+     * @param typeId 文章类型Id
+     * @return the NbmhArticleType
+     */
+    NbmhArticleType getByTypeId(@NotNull Long typeId);
 
     /**
      * 更新
@@ -58,7 +68,7 @@ public interface INbmhArticleTypeService extends IService<NbmhArticleType> {
     /**
      * 删除.
      *
-     * @param idList    the id list
+     * @param idList the id list
      */
     void delete(@NotEmpty List<Long> idList);
 

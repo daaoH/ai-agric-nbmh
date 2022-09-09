@@ -75,6 +75,7 @@ public class NbmhMedicalOrderServiceImpl extends ServiceImpl<NbmhMedicalOrderMap
     @Override
     @Transactional
     public int update(List<NbmhMedicalOrder> nbmhMedicalOrderList) {
+
         if (CollectionUtils.isEmpty(nbmhMedicalOrderList)) {
             return 0;
         }

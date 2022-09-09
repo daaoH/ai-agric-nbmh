@@ -1,8 +1,8 @@
 package com.hszn.nbmh.prevent.api.fallback;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.hszn.nbmh.common.core.enums.CommonEnum;
+import com.hszn.nbmh.common.core.mould.QueryCondition;
 import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.prevent.api.entity.NbmhAnimalLibrary;
 import com.hszn.nbmh.prevent.api.feign.RemoteAnimalLibraryService;
@@ -38,12 +38,12 @@ public class AnimalLibraryServiceFallback implements RemoteAnimalLibraryService 
     }
 
     @Override
-    public Result<IPage<NbmhAnimalLibrary>> query(NbmhAnimalLibrary entity, int pageNum, int pageSize, List<OrderItem> orderItemList) {
+    public Result<IPage<NbmhAnimalLibrary>> query(QueryCondition<NbmhAnimalLibrary> queryCondition, int pageNum, int pageSize) {
         return Result.failed(CommonEnum.FALL_BACK_MSG.getMsg());
     }
 
     @Override
-    public Result<List<NbmhAnimalLibrary>> list(NbmhAnimalLibrary entity, List<OrderItem> orderItemList) {
+    public Result<List<NbmhAnimalLibrary>> list(QueryCondition<NbmhAnimalLibrary> queryCondition) {
         return Result.failed(CommonEnum.FALL_BACK_MSG.getMsg());
     }
 

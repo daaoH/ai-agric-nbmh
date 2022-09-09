@@ -1,12 +1,10 @@
 package com.hszn.nbmh.cms.api.fallback;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.hszn.nbmh.cms.api.entity.NbmhArticle;
-import com.hszn.nbmh.cms.api.feign.RemoteAdService;
-import com.hszn.nbmh.cms.api.feign.RemoteAgreementService;
 import com.hszn.nbmh.cms.api.feign.RemoteArticleService;
 import com.hszn.nbmh.common.core.enums.CommonEnum;
+import com.hszn.nbmh.common.core.mould.QueryCondition;
 import com.hszn.nbmh.common.core.utils.Result;
 import org.springframework.stereotype.Component;
 
@@ -40,12 +38,12 @@ public class NbmhArticleServiceFallback implements RemoteArticleService {
     }
 
     @Override
-    public Result<IPage<NbmhArticle>> query(NbmhArticle entity, int pageNum, int pageSize, List<OrderItem> orderItemList) {
+    public Result<IPage<NbmhArticle>> query(QueryCondition<NbmhArticle> queryCondition, int pageNum, int pageSize) {
         return Result.failed(CommonEnum.FALL_BACK_MSG.getMsg());
     }
 
     @Override
-    public Result<List<NbmhArticle>> list(NbmhArticle entity, List<OrderItem> orderItemList) {
+    public Result<List<NbmhArticle>> list(QueryCondition<NbmhArticle> queryCondition) {
         return Result.failed(CommonEnum.FALL_BACK_MSG.getMsg());
     }
 

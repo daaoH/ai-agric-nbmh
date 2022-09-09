@@ -6,15 +6,14 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hszn.nbmh.cms.api.entity.NbmhArticleType;
 import com.hszn.nbmh.cms.mapper.NbmhArticleTypeMapper;
 import com.hszn.nbmh.cms.service.INbmhArticleTypeService;
-
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hszn.nbmh.common.core.utils.BeanUtils;
-import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
@@ -32,13 +31,12 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class NbmhArticleTypeServiceImpl extends ServiceImpl<NbmhArticleTypeMapper, NbmhArticleType> implements INbmhArticleTypeService {
-    
+
     @Resource
     private NbmhArticleTypeMapper nbmhArticleTypeMapper;
 
     @Override
     public List<Integer> save(List<NbmhArticleType> nbmhArticleTypeList) {
-        BeanUtils.validBean(nbmhArticleTypeList, NbmhArticleType.Save.class);
 
         return nbmhArticleTypeList.stream().map(entity -> {
 
@@ -50,9 +48,15 @@ public class NbmhArticleTypeServiceImpl extends ServiceImpl<NbmhArticleTypeMappe
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public NbmhArticleType getByTypeId(Long typeId) {
+
+        return nbmhArticleTypeMapper.selectOne(Wrappers.query(NbmhArticleType.builder().typeId(typeId).build()));
+    }
+
+    @Override
     @Transactional
     public int update(List<NbmhArticleType> nbmhArticleTypeList) {
-        BeanUtils.validBean(nbmhArticleTypeList, NbmhArticleType.Update.class);
 
         if (nbmhArticleTypeList == null || nbmhArticleTypeList.size() == 0) {
             return 0;
@@ -93,12 +97,12 @@ public class NbmhArticleTypeServiceImpl extends ServiceImpl<NbmhArticleTypeMappe
     @Override
     @Transactional
     public void delete(List<Long> idList) {
-        idList.forEach(id ->{
+        idList.forEach(id -> {
 
-            NbmhArticleType entity = this.getById(id);
-            if(entity != null){
+            NbmhArticleType entity = nbmhArticleTypeMapper.selectOne(Wrappers.query(NbmhArticleType.builder().typeId(id).build()));
+            if (entity != null) {
                 entity.setStatus(-1).setUpdateTime(new Date());
-                nbmhArticleTypeMapper.updateById(entity);
+                nbmhArticleTypeMapper.update(entity, Wrappers.<NbmhArticleType>lambdaUpdate().eq(NbmhArticleType::getTypeId, entity.getTypeId()));
             }
         });
     }

@@ -9,6 +9,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import javax.validation.groups.Default;
 import java.io.Serializable;
@@ -37,8 +38,8 @@ public class NbmhArticle implements Serializable {
     /**
      * 主键id
      */
-    @Null(groups = {NbmhArticle.Save.class})
-    @NotBlank(groups = {NbmhArticle.Update.class, NbmhArticle.Delete.class})
+    @Null(message = "新增数据时Id必须为null", groups = {Save.class})
+    @NotNull(message = "更新或删除数据时Id不能为空", groups = {Update.class, Delete.class})
     @TableId(value = "id", type = IdType.AUTO)
     @Schema(name = "id", description = "主键id")
     private Long id;
@@ -52,12 +53,14 @@ public class NbmhArticle implements Serializable {
     /**
      * 标题
      */
+    @NotBlank(message = "新增数据时标题title不能为空", groups = {Save.class})
     @Schema(name = "title", description = "标题")
     private String title;
 
     /**
      * 内容
      */
+    @NotBlank(message = "新增数据时内容content不能为空", groups = {Save.class})
     @Schema(name = "content", description = "内容")
     private String content;
 
@@ -94,6 +97,7 @@ public class NbmhArticle implements Serializable {
     /**
      * 用户 id
      */
+    @NotNull(message = "新增数据时用户Id不能为空", groups = {Save.class})
     @Schema(name = "userId", description = "用户 id")
     private Long userId;
 

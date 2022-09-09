@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.hszn.nbmh.prevent.api.entity.NbmhButcherReport;
 import com.hszn.nbmh.prevent.api.params.out.ButcherStatisticsResult;
 import com.hszn.nbmh.prevent.api.params.out.NbmhButcherReportDetail;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -19,6 +20,7 @@ import java.util.List;
  * @author MCR
  * @since 2022-08-15
  */
+@Validated
 public interface INbmhButcherReportService extends IService<NbmhButcherReport> {
 
     /**
@@ -78,6 +80,6 @@ public interface INbmhButcherReportService extends IService<NbmhButcherReport> {
      * @param entity 查询条件的实体
      * @return the detail
      */
-    NbmhButcherReportDetail detail(NbmhButcherReport entity);
+    NbmhButcherReportDetail detail(@NotNull NbmhButcherReport entity);
 
 }

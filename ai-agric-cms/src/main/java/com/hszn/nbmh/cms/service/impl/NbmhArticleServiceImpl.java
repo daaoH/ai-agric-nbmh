@@ -6,15 +6,14 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hszn.nbmh.cms.api.entity.NbmhArticle;
 import com.hszn.nbmh.cms.mapper.NbmhArticleMapper;
 import com.hszn.nbmh.cms.service.INbmhArticleService;
-
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hszn.nbmh.common.core.utils.BeanUtils;
-import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
@@ -37,7 +36,6 @@ public class NbmhArticleServiceImpl extends ServiceImpl<NbmhArticleMapper, NbmhA
 
     @Override
     public List<Integer> save(List<NbmhArticle> nbmhArticleList) {
-        BeanUtils.validBean(nbmhArticleList, NbmhArticle.Save.class);
 
         return nbmhArticleList.stream().map(entity -> {
 
@@ -51,7 +49,6 @@ public class NbmhArticleServiceImpl extends ServiceImpl<NbmhArticleMapper, NbmhA
     @Override
     @Transactional
     public int update(List<NbmhArticle> nbmhArticleList) {
-        BeanUtils.validBean(nbmhArticleList, NbmhArticle.Update.class);
 
         if (nbmhArticleList == null || nbmhArticleList.size() == 0) {
             return 0;

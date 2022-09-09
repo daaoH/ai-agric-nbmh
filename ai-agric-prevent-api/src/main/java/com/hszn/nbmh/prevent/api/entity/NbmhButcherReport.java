@@ -7,6 +7,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import javax.validation.groups.Default;
 import java.io.Serializable;
@@ -36,8 +37,8 @@ public class NbmhButcherReport implements Serializable {
     /**
      * 主键id
      */
-    @Null(groups = {NbmhButcherReport.Save.class})
-    @NotBlank(groups = {NbmhButcherReport.Update.class, NbmhButcherReport.Delete.class})
+    @Null(message = "新增数据时Id必须为null", groups = {Save.class})
+    @NotNull(message = "更新或删除数据时Id不能为空", groups = {Update.class, Delete.class})
     @TableId(value = "id", type = IdType.AUTO)
     @Schema(name = "id", description = "主键id")
     private Long id;
@@ -51,54 +52,63 @@ public class NbmhButcherReport implements Serializable {
     /**
      * 防疫站id
      */
+    @NotNull(message = "新增数据时防疫站preventStationId不能为空", groups = {Save.class})
     @Schema(name = "preventStationId", description = "防疫站id")
     private Long preventStationId;
 
     /**
      * 养殖户id
      */
+    @NotNull(message = "新增数据时养殖户farmerId不能为空", groups = {Save.class})
     @Schema(name = "farmerId", description = "养殖户id")
     private Long farmerId;
 
     /**
      * 养殖户名称
      */
+    @NotBlank(message = "新增数据时养殖户名称farmerName不能为空", groups = {Save.class})
     @Schema(name = "farmerName", description = "养殖户名称")
     private String farmerName;
 
     /**
      * 养殖户电话
      */
+    @NotBlank(message = "新增数据时养殖户电话farmerPhone不能为空", groups = {Save.class})
     @Schema(name = "farmerPhone", description = "养殖户电话")
     private String farmerPhone;
 
     /**
      * 养殖户规模
      */
+    @NotBlank(message = "新增数据时养殖户规模farmerType不能为空", groups = {Save.class})
     @Schema(name = "farmerType", description = "养殖户规模")
     private String farmerType;
 
     /**
      * 养殖户身份证号码
      */
+    @NotBlank(message = "新增数据时养殖户身份证号码farmerCard不能为空", groups = {Save.class})
     @Schema(name = "farmerCard", description = "养殖户身份证号码")
     private String farmerCard;
 
     /**
      * 养殖户头像
      */
+    @NotBlank(message = "新增数据时养殖户头像farmerAvatar不能为空", groups = {Save.class})
     @Schema(name = "farmerAvatar", description = "养殖户头像")
     private String farmerAvatar;
 
     /**
      * 养殖户地址
      */
+    @NotBlank(message = "新增数据时养殖户地址farmerAddress不能为空", groups = {Save.class})
     @Schema(name = "farmerAddress", description = "养殖户地址")
     private String farmerAddress;
 
     /**
      * 耳标
      */
+    @NotBlank(message = "新增数据时动物耳标earNo不能为空", groups = {Save.class})
     @TableField(condition = SqlCondition.LIKE)
     @Schema(name = "earNo", description = "耳标号")
     private String earNo;
@@ -154,6 +164,7 @@ public class NbmhButcherReport implements Serializable {
     /**
      * 动物id
      */
+    @NotBlank(message = "新增数据时动物animalId不能为空", groups = {Save.class})
     @Schema(name = "animalId", description = "动物id")
     private String animalId;
 
@@ -194,13 +205,13 @@ public class NbmhButcherReport implements Serializable {
     private Integer status;
 
     /**
-     * 报备人id
+     * 报备人（防疫员）id
      */
     @Schema(name = "userId", description = "报备人id")
     private Long userId;
 
     /**
-     * 报备人姓名
+     * 报备人（防疫员）姓名
      */
     @Schema(name = "userName", description = "报备人姓名")
     private String userName;

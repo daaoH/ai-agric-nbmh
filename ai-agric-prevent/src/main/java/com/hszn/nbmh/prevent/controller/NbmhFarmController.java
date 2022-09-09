@@ -1,7 +1,6 @@
 package com.hszn.nbmh.prevent.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.hszn.nbmh.common.core.enums.CommonEnum;
 import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.common.security.annotation.Inner;
@@ -17,7 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.List;
 
@@ -42,7 +41,7 @@ public class NbmhFarmController {
     @Operation(summary = "新增养殖场信息", method = "POST")
     @PostMapping("/add")
     @Inner(false)
-    public Result add(@RequestBody NbmhFarm nbmhFarm) {
+    public Result add(@RequestBody @Validated({NbmhFarm.Save.class}) NbmhFarm nbmhFarm) {
 
         List<Integer> idList = nbmhFarmService.save(Collections.singletonList(nbmhFarm));
         if (idList != null && idList.size() > 0) {
@@ -56,7 +55,7 @@ public class NbmhFarmController {
     @Parameters({@Parameter(description = "养殖场信息Id", name = "id")})
     @PostMapping("/{id}")
     @Inner(false)
-    public Result<NbmhFarm> getById(@PathVariable(value = "id") @NotBlank Long id) {
+    public Result<NbmhFarm> getById(@PathVariable(value = "id") @NotNull(message = "养殖场信息id不能为空") Long id) {
 
         return Result.ok(nbmhFarmService.getById(id));
     }
@@ -64,40 +63,35 @@ public class NbmhFarmController {
     @Operation(summary = "更新养殖场信息", method = "PUT")
     @PutMapping
     @Inner(false)
-    public Result update(@RequestBody NbmhFarm nbmhFarm) {
+    public Result update(@RequestBody @Validated({NbmhFarm.Update.class}) NbmhFarm nbmhFarm) {
 
         nbmhFarmService.update(Collections.singletonList(nbmhFarm));
         return Result.ok();
     }
 
     @Operation(summary = "分页查询养殖场信息", method = "POST")
-    @Parameters({@Parameter(description = "页码", name = "pageNum"), @Parameter(description = "每页显示条数", name = "pageSize"), @Parameter(description = "排序条件集合", name = "orderItemList")})
+    @Parameters({@Parameter(description = "页码", name = "pageNum"), @Parameter(description = "每页显示条数", name = "pageSize")})
     @PostMapping("/query")
     @Inner(false)
     public Result<IPage<NbmhFarm>> query(@RequestBody NbmhFarm nbmhFarm,
                                          @RequestParam @DecimalMin("1") int pageNum,
-                                         @RequestParam @DecimalMin("1") int pageSize,
-                                         @RequestParam(value = "orderItemList", required = false) List<OrderItem> orderItemList) {
+                                         @RequestParam @DecimalMin("1") int pageSize) {
 
-        IPage<NbmhFarm> butcherReportPage = nbmhFarmService.query(nbmhFarm, pageNum, pageSize, orderItemList);
-
-        return Result.ok(butcherReportPage);
+        return Result.ok(nbmhFarmService.query(nbmhFarm, pageNum, pageSize, null));
     }
 
     @Operation(summary = "查询养殖场信息", method = "POST")
-    @Parameters({@Parameter(description = "排序条件集合", name = "orderItemList")})
     @PostMapping("/list")
     @Inner(false)
-    public Result<List<NbmhFarm>> list(@RequestBody NbmhFarm nbmhFarm,
-                                       @RequestParam(value = "orderItemList", required = false) List<OrderItem> orderItemList) {
+    public Result<List<NbmhFarm>> list(@RequestBody NbmhFarm nbmhFarm) {
 
-        return Result.ok(nbmhFarmService.list(nbmhFarm, orderItemList));
+        return Result.ok(nbmhFarmService.list(nbmhFarm, null));
     }
 
+    @Operation(summary = "删除养殖场信息", method = "DELETE")
     @DeleteMapping("delete/{id}")
-    @Operation(summary = "删除养殖场信息")
     @Inner(false)
-    public Result delete(@PathVariable Long id) {
+    public Result delete(@PathVariable(value = "id") @NotNull(message = "养殖场信息id不能为空") Long id) {
 
         nbmhFarmService.delete(Collections.singletonList(id));
         return Result.ok();
@@ -106,7 +100,7 @@ public class NbmhFarmController {
     @Operation(summary = "离线防疫--根据防疫站Id获取养殖场列表", method = "POST")
     @PostMapping("/listByPreventStationId")
     @Inner(false)
-    public Result<List<NbmhFarmResult>> listByPreventStationId(Long preventStationId) {
+    public Result<List<NbmhFarmResult>> listByPreventStationId(@RequestParam @NotNull(message = "防疫站Id不能为空") Long preventStationId) {
 
         return Result.ok(nbmhFarmService.listByPreventStationId(preventStationId));
     }

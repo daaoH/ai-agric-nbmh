@@ -9,6 +9,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import javax.validation.groups.Default;
 import java.io.Serializable;
@@ -35,8 +36,8 @@ public class NbmhVideoLesson implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Null(groups = {NbmhVideoLesson.Save.class})
-    @NotBlank(groups = {NbmhVideoLesson.Update.class, NbmhVideoLesson.Delete.class})
+    @Null(message = "新增数据时Id必须为null", groups = {Save.class})
+    @NotNull(message = "更新或删除数据时Id不能为空", groups = {Update.class, Delete.class})
     @TableId(value = "id", type = IdType.AUTO)
     @Schema(name = "id", description = "主键id")
     private Integer id;
@@ -44,18 +45,21 @@ public class NbmhVideoLesson implements Serializable {
     /**
      * 视频发布人用户id
      */
+    @NotNull(message = "新增数据时视频发布人用户userId不能为空", groups = {Save.class})
     @Schema(name = "userId", description = "视频发布人用户id")
     private Long userId;
 
     /**
      * 视频发布人真实姓名
      */
+    @NotBlank(message = "新增数据时协视频发布人真实姓名userName不能为空", groups = {Save.class})
     @Schema(name = "userName", description = "视频发布人真实姓名")
     private String userName;
 
     /**
      * 视频发布人头像
      */
+    @NotBlank(message = "新增数据时视频发布人头像userAvatar不能为空", groups = {Save.class})
     @Schema(name = "userAvatar", description = "视频发布人头像")
     private String userAvatar;
 
@@ -68,24 +72,28 @@ public class NbmhVideoLesson implements Serializable {
     /**
      * 视频标题
      */
+    @NotBlank(message = "新增数据时视频标题videoTitle不能为空", groups = {Save.class})
     @Schema(name = "videoTitle", description = "视频标题")
     private String videoTitle;
 
     /**
      * 视频类型所属类目ID
      */
+    @NotNull(message = "新增数据时视频类型所属类目categoryId不能为空", groups = {Save.class})
     @Schema(name = "categoryId", description = "视频类型所属类目ID")
     private Integer categoryId;
 
     /**
      * 视频封面
      */
+    @NotBlank(message = "新增数据时视频封面videoCover不能为空", groups = {Save.class})
     @Schema(name = "videoCover", description = "视频封面")
     private String videoCover;
 
     /**
      * 视频地址
      */
+    @NotBlank(message = "新增数据时视频地址videoUrl不能为空", groups = {Save.class})
     @Schema(name = "videoUrl", description = "视频地址")
     private String videoUrl;
 
@@ -98,6 +106,7 @@ public class NbmhVideoLesson implements Serializable {
     /**
      * 视频简介
      */
+    @NotBlank(message = "新增数据时视频简介videoDesc不能为空", groups = {Save.class})
     @Schema(name = "videoDesc", description = "视频简介")
     private String videoDesc;
 

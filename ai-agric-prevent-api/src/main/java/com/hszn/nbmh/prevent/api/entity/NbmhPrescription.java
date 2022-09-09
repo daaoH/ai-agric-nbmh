@@ -9,6 +9,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import javax.validation.groups.Default;
 import java.io.Serializable;
@@ -37,8 +38,8 @@ public class NbmhPrescription implements Serializable {
     /**
      * 主键id
      */
-    @Null(groups = {NbmhPrescription.Save.class})
-    @NotBlank(groups = {NbmhPrescription.Update.class, NbmhPrescription.Delete.class})
+    @Null(message = "新增数据时Id必须为null", groups = {Save.class})
+    @NotNull(message = "更新或删除数据时Id不能为空", groups = {Update.class, Delete.class})
     @TableId(value = "id", type = IdType.AUTO)
     @Schema(name = "id", description = "主键id")
     private Long id;
@@ -46,24 +47,28 @@ public class NbmhPrescription implements Serializable {
     /**
      * 动物诊疗订单id
      */
+    @NotNull(message = "新增数据时动物诊疗订单medicalOrderId不能为空", groups = {Save.class})
     @Schema(name = "medicalOrderId", description = "动物诊疗订单id")
     private Long medicalOrderId;
 
     /**
      * 养殖户id
      */
+    @NotNull(message = "新增数据时养殖户farmerId不能为空", groups = {Save.class})
     @Schema(name = "farmerId", description = "养殖户id")
     private Long farmerId;
 
     /**
      * 养殖户名称
      */
+    @NotBlank(message = "新增数据时养殖户名称farmerName不能为空", groups = {Save.class})
     @Schema(name = "farmerName", description = "养殖户名称")
     private String farmerName;
 
     /**
      * 养殖户头像
      */
+    @NotBlank(message = "新增数据时养殖户头像farmerAvatar不能为空", groups = {Save.class})
     @Schema(name = "farmerAvatar", description = "养殖户头像")
     private String farmerAvatar;
 
@@ -82,18 +87,21 @@ public class NbmhPrescription implements Serializable {
     /**
      * 兽医id
      */
+    @NotNull(message = "新增数据时兽医doctorId不能为空", groups = {Save.class})
     @Schema(name = "doctorId", description = "兽医id")
     private Long doctorId;
 
     /**
      * 兽医名称
      */
+    @NotBlank(message = "新增数据时兽医名称doctorName不能为空", groups = {Save.class})
     @Schema(name = "doctorName", description = "兽医名称")
     private String doctorName;
 
     /**
      * 兽医头像
      */
+    @NotBlank(message = "新增数据时兽医头像doctorAvatar不能为空", groups = {Save.class})
     @Schema(name = "doctorAvatar", description = "兽医头像")
     private String doctorAvatar;
 

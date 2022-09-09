@@ -1,7 +1,6 @@
 package com.hszn.nbmh.prevent.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.hszn.nbmh.common.core.enums.CommonEnum;
 import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.common.security.annotation.Inner;
@@ -14,10 +13,11 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.List;
 
@@ -31,7 +31,7 @@ import java.util.List;
  */
 
 @Tag(name = "屠宰/无害化报备")
-//@Validated
+@Validated
 @RestController
 @RequestMapping("/nbmh-butcher-report")
 public class NbmhButcherReportController {
@@ -42,7 +42,7 @@ public class NbmhButcherReportController {
     @Operation(summary = "新增屠宰/无害化申报信息", method = "POST")
     @PostMapping("/add")
     @Inner(false)
-    public Result add(@RequestBody NbmhButcherReport nbmhButcherReport) {
+    public Result add(@RequestBody @Validated({NbmhButcherReport.Save.class}) NbmhButcherReport nbmhButcherReport) {
 
         List<Integer> idList = butcherReportService.save(Collections.singletonList(nbmhButcherReport));
         if (idList != null && idList.size() > 0) {
@@ -56,7 +56,7 @@ public class NbmhButcherReportController {
     @Parameters({@Parameter(description = "屠宰/无害化申报信息记录Id", name = "id")})
     @PostMapping("/{id}")
     @Inner(false)
-    public Result<NbmhButcherReport> getById(@PathVariable(value = "id") @NotBlank Long id) {
+    public Result<NbmhButcherReport> getById(@PathVariable(value = "id") @NotNull(message = "屠宰/无害化申报id不能为空") Long id) {
 
         return Result.ok(butcherReportService.getById(id));
     }
@@ -64,40 +64,35 @@ public class NbmhButcherReportController {
     @Operation(summary = "更新屠宰/无害化申报信息", method = "PUT")
     @PutMapping
     @Inner(false)
-    public Result update(@RequestBody NbmhButcherReport nbmhButcherReport) {
+    public Result update(@RequestBody @Validated({NbmhButcherReport.Update.class}) NbmhButcherReport nbmhButcherReport) {
 
         butcherReportService.update(Collections.singletonList(nbmhButcherReport));
         return Result.ok();
     }
 
     @Operation(summary = "分页查询屠宰/无害化申报信息", method = "POST")
-    @Parameters({@Parameter(description = "页码", name = "pageNum"), @Parameter(description = "每页显示条数", name = "pageSize"), @Parameter(description = "排序条件集合", name = "orderItemList")})
+    @Parameters({@Parameter(description = "页码", name = "pageNum"), @Parameter(description = "每页显示条数", name = "pageSize")})
     @PostMapping("/query")
     @Inner(false)
     public Result<IPage<NbmhButcherReport>> query(@RequestBody NbmhButcherReport nbmhButcherReport,
                                                   @RequestParam @DecimalMin("1") int pageNum,
-                                                  @RequestParam @DecimalMin("1") int pageSize,
-                                                  @RequestParam(value = "orderItemList", required = false) List<OrderItem> orderItemList) {
+                                                  @RequestParam @DecimalMin("1") int pageSize) {
 
-        IPage<NbmhButcherReport> butcherReportPage = butcherReportService.query(nbmhButcherReport, pageNum, pageSize, orderItemList);
-
-        return Result.ok(butcherReportPage);
+        return Result.ok(butcherReportService.query(nbmhButcherReport, pageNum, pageSize, null));
     }
 
     @Operation(summary = "查询屠宰/无害化申报信息", method = "POST")
-    @Parameters({@Parameter(description = "排序条件集合", name = "orderItemList")})
     @PostMapping("/list")
     @Inner(false)
-    public Result<List<NbmhButcherReport>> list(@RequestBody NbmhButcherReport nbmhButcherReport,
-                                                @RequestParam(value = "orderItemList", required = false) List<OrderItem> orderItemList) {
+    public Result<List<NbmhButcherReport>> list(@RequestBody NbmhButcherReport nbmhButcherReport) {
 
-        return Result.ok(butcherReportService.list(nbmhButcherReport, orderItemList));
+        return Result.ok(butcherReportService.list(nbmhButcherReport, null));
     }
 
-    @Operation(summary = "删除屠宰/无害化申报信息")
+    @Operation(summary = "删除屠宰/无害化申报信息", method = "DELETE")
     @DeleteMapping("delete/{id}")
     @Inner(false)
-    public Result delete(@PathVariable Long id) {
+    public Result delete(@PathVariable(value = "id") @NotNull(message = "屠宰/无害化申报id不能为空") Long id) {
 
         butcherReportService.delete(Collections.singletonList(id));
         return Result.ok();

@@ -1,17 +1,18 @@
 package com.hszn.nbmh.cms.api.feign;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.hszn.nbmh.cms.api.constant.UrlPathConstant;
 import com.hszn.nbmh.cms.api.entity.NbmhArticleType;
 import com.hszn.nbmh.cms.api.fallback.NbmhArticleTypeServiceFallback;
 import com.hszn.nbmh.common.core.constant.ServiceNameConstant;
+import com.hszn.nbmh.common.core.mould.QueryCondition;
 import com.hszn.nbmh.common.core.utils.Result;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -30,17 +31,19 @@ public interface RemoteArticleTypeService {
     Result add(@RequestBody NbmhArticleType entity);
 
     @GetMapping("/{id}")
-    Result getById(@PathVariable(value = "id") @NotBlank Long id);
+    Result getById(@PathVariable(value = "id") @NotNull Long id);
 
     @PutMapping
-     Result update(@RequestBody NbmhArticleType entity);
+    Result update(@RequestBody NbmhArticleType entity);
 
     @PostMapping("/query")
-     Result<IPage<NbmhArticleType>> query(@RequestBody NbmhArticleType entity, @RequestParam @DecimalMin("1") int pageNum, @RequestParam @DecimalMin("1") int pageSize, @RequestParam List<OrderItem> orderItemList);
+    Result<IPage<NbmhArticleType>> query(@RequestBody QueryCondition<NbmhArticleType> queryCondition,
+                                         @RequestParam @DecimalMin("1") int pageNum,
+                                         @RequestParam @DecimalMin("1") int pageSize);
 
     @PostMapping("/list")
-     Result<List<NbmhArticleType>> list(@RequestBody NbmhArticleType entity, @RequestParam List<OrderItem> orderItemList);
+    Result<List<NbmhArticleType>> list(@RequestBody QueryCondition<NbmhArticleType> queryCondition);
 
     @DeleteMapping("delete/{id}")
-     Result delete(@PathVariable Long id);
+    Result delete(@PathVariable Long id);
 }

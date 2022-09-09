@@ -1,9 +1,8 @@
 package com.hszn.nbmh.prevent.controller;
 
-
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.hszn.nbmh.common.core.enums.CommonEnum;
+import com.hszn.nbmh.common.core.mould.QueryCondition;
 import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.common.security.annotation.Inner;
 import com.hszn.nbmh.prevent.api.entity.NbmhVideoLesson;
@@ -13,10 +12,11 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,6 +29,7 @@ import java.util.List;
  * @since 2022-08-31
  */
 @Tag(name = "视频课堂视频")
+@Validated
 @RestController
 @RequestMapping("/nbmh-video-lesson")
 public class NbmhVideoLessonController {
@@ -39,7 +40,7 @@ public class NbmhVideoLessonController {
     @Operation(summary = "新增视频课堂视频", method = "POST")
     @PostMapping("/add")
     @Inner(false)
-    public Result add(@RequestBody NbmhVideoLesson nbmhVideoLesson) {
+    public Result add(@RequestBody @Validated({NbmhVideoLesson.Save.class}) NbmhVideoLesson nbmhVideoLesson) {
 
         List<Integer> idList = nbmhVideoLessonService.save(Collections.singletonList(nbmhVideoLesson));
         if (idList != null && idList.size() > 0) {
@@ -52,7 +53,7 @@ public class NbmhVideoLessonController {
     @Operation(summary = "根据ID查询视频课堂视频", method = "GET")
     @PostMapping("/{id}")
     @Inner(false)
-    public Result<NbmhVideoLesson> getById(@PathVariable(value = "id") @NotBlank Long id) {
+    public Result<NbmhVideoLesson> getById(@PathVariable(value = "id") @NotNull(message = "视频课堂视频Id不能为空") Long id) {
 
         return Result.ok(nbmhVideoLessonService.getById(id));
     }
@@ -60,40 +61,35 @@ public class NbmhVideoLessonController {
     @Operation(summary = "更新视频课堂视频", method = "PUT")
     @PutMapping
     @Inner(false)
-    public Result update(@RequestBody NbmhVideoLesson nbmhVideoLesson) {
+    public Result update(@RequestBody @Validated({NbmhVideoLesson.Update.class}) NbmhVideoLesson nbmhVideoLesson) {
 
         nbmhVideoLessonService.update(Collections.singletonList(nbmhVideoLesson));
         return Result.ok();
     }
 
     @Operation(summary = "分页查询视频课堂视频", method = "POST")
-    @Parameters({@Parameter(description = "页码", name = "pageNum"), @Parameter(description = "每页显示条数", name = "pageSize"), @Parameter(description = "排序条件集合", name = "orderItemList")})
+    @Parameters({@Parameter(description = "页码", name = "pageNum"), @Parameter(description = "每页显示条数", name = "pageSize")})
     @PostMapping("/query")
     @Inner(false)
-    public Result<IPage<NbmhVideoLesson>> query(@RequestBody NbmhVideoLesson nbmhVideoLesson,
+    public Result<IPage<NbmhVideoLesson>> query(@RequestBody QueryCondition<NbmhVideoLesson> queryCondition,
                                                 @RequestParam @DecimalMin("1") int pageNum,
-                                                @RequestParam @DecimalMin("1") int pageSize,
-                                                @RequestParam(value = "orderItemList", required = false) List<OrderItem> orderItemList) {
+                                                @RequestParam @DecimalMin("1") int pageSize) {
 
-        IPage<NbmhVideoLesson> butcherReportPage = nbmhVideoLessonService.query(nbmhVideoLesson, pageNum, pageSize, orderItemList);
-
-        return Result.ok(butcherReportPage);
+        return Result.ok(nbmhVideoLessonService.query(queryCondition.getEntity(), pageNum, pageSize, queryCondition.getOrderItemList()));
     }
 
     @Operation(summary = "查询视频课堂视频", method = "POST")
-    @Parameters({@Parameter(description = "排序条件集合", name = "orderItemList")})
     @PostMapping("/list")
     @Inner(false)
-    public Result<List<NbmhVideoLesson>> list(@RequestBody NbmhVideoLesson nbmhVideoLesson,
-                                              @RequestParam(value = "orderItemList", required = false) List<OrderItem> orderItemList) {
+    public Result<List<NbmhVideoLesson>> list(@RequestBody QueryCondition<NbmhVideoLesson> queryCondition) {
 
-        return Result.ok(nbmhVideoLessonService.list(nbmhVideoLesson, orderItemList));
+        return Result.ok(nbmhVideoLessonService.list(queryCondition.getEntity(), queryCondition.getOrderItemList()));
     }
 
+    @Operation(summary = "删除视频课堂视频", method = "DELETE")
     @DeleteMapping("delete/{id}")
-    @Operation(summary = "删除视频课堂视频")
     @Inner(false)
-    public Result delete(@PathVariable Long id) {
+    public Result delete(@PathVariable(value = "id") @NotNull(message = "视频课堂视频Id不能为空") Long id) {
 
         nbmhVideoLessonService.delete(Collections.singletonList(id));
         return Result.ok();

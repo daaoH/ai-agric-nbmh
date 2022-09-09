@@ -1,8 +1,8 @@
 package com.hszn.nbmh.prevent.api.fallback;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.hszn.nbmh.common.core.enums.CommonEnum;
+import com.hszn.nbmh.common.core.mould.QueryCondition;
 import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.prevent.api.entity.NbmhMedicalAccept;
 import com.hszn.nbmh.prevent.api.feign.RemoteMedicalAcceptService;
@@ -38,12 +38,12 @@ public class MedicalAcceptFallback implements RemoteMedicalAcceptService {
     }
 
     @Override
-    public Result<IPage<NbmhMedicalAccept>> query(NbmhMedicalAccept entity, int pageNum, int pageSize, List<OrderItem> orderItemList) {
+    public Result<IPage<NbmhMedicalAccept>> query(QueryCondition<NbmhMedicalAccept> queryCondition, int pageNum, int pageSize) {
         return Result.failed(CommonEnum.FALL_BACK_MSG.getMsg());
     }
 
     @Override
-    public Result<List<NbmhMedicalAccept>> list(NbmhMedicalAccept entity, List<OrderItem> orderItemList) {
+    public Result<List<NbmhMedicalAccept>> list(QueryCondition<NbmhMedicalAccept> queryCondition) {
         return Result.failed(CommonEnum.FALL_BACK_MSG.getMsg());
     }
 

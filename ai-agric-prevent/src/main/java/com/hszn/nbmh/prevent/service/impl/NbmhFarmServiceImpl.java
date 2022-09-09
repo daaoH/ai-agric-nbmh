@@ -10,7 +10,6 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hszn.nbmh.common.core.exception.ServiceException;
-import com.hszn.nbmh.common.core.utils.BeanUtils;
 import com.hszn.nbmh.prevent.api.entity.AnimalJsonEntity;
 import com.hszn.nbmh.prevent.api.entity.NbmhAnimal;
 import com.hszn.nbmh.prevent.api.entity.NbmhFarm;
@@ -53,7 +52,6 @@ public class NbmhFarmServiceImpl extends ServiceImpl<NbmhFarmMapper, NbmhFarm> i
     @Override
     @Transactional
     public List<Integer> save(List<NbmhFarm> nbmhFarmList) {
-        BeanUtils.validBean(nbmhFarmList, NbmhFarm.Save.class);
 
         return nbmhFarmList.stream().map(entity -> {
 
@@ -68,7 +66,6 @@ public class NbmhFarmServiceImpl extends ServiceImpl<NbmhFarmMapper, NbmhFarm> i
     @Override
     @Transactional
     public int update(@NotEmpty List<NbmhFarm> nbmhFarmList) {
-        BeanUtils.validBean(nbmhFarmList, NbmhFarm.Update.class);
 
         if (nbmhFarmList == null || nbmhFarmList.size() == 0) {
             return 0;

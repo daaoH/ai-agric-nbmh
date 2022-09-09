@@ -1,9 +1,8 @@
 package com.hszn.nbmh.prevent.controller;
 
-
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.hszn.nbmh.common.core.enums.CommonEnum;
+import com.hszn.nbmh.common.core.mould.QueryCondition;
 import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.common.security.annotation.Inner;
 import com.hszn.nbmh.prevent.api.entity.NbmhAnimalLibrary;
@@ -13,10 +12,11 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,6 +30,7 @@ import java.util.List;
  */
 
 @Tag(name = "动物基因库/病例库管理")
+@Validated
 @RestController
 @RequestMapping("/nbmh-animal-library")
 public class NbmhAnimalLibraryController {
@@ -40,11 +41,11 @@ public class NbmhAnimalLibraryController {
     @Operation(summary = "新增动物基因库/病例库", method = "POST")
     @PostMapping("/add")
     @Inner(false)
-    public Result add(@RequestBody NbmhAnimalLibrary nbmhAnimalLibrary) {
+    public Result add(@RequestBody @Validated({NbmhAnimalLibrary.Save.class}) NbmhAnimalLibrary nbmhAnimalLibrary) {
 
         List<Integer> idList = nbmhAnimalLibraryService.save(Collections.singletonList(nbmhAnimalLibrary));
         if (idList != null && idList.size() > 0) {
-            return Result.ok();
+            return Result.ok(idList);
         }
 
         return Result.failed(CommonEnum.DATA_ADD_FAILED.getMsg());
@@ -53,7 +54,7 @@ public class NbmhAnimalLibraryController {
     @Operation(summary = "根据ID查询动物基因库/病例库", method = "GET")
     @PostMapping("/{id}")
     @Inner(false)
-    public Result<NbmhAnimalLibrary> getById(@PathVariable(value = "id") @NotBlank Long id) {
+    public Result<NbmhAnimalLibrary> getById(@PathVariable(value = "id") @NotNull(message = "动物基因库/病例库id不能为空") Long id) {
 
         return Result.ok(nbmhAnimalLibraryService.getById(id));
     }
@@ -61,49 +62,44 @@ public class NbmhAnimalLibraryController {
     @Operation(summary = "更新动物基因库/病例库", method = "PUT")
     @PutMapping
     @Inner(false)
-    public Result update(@RequestBody NbmhAnimalLibrary nbmhAnimalLibrary) {
+    public Result update(@RequestBody @Validated({NbmhAnimalLibrary.Update.class}) NbmhAnimalLibrary nbmhAnimalLibrary) {
 
         nbmhAnimalLibraryService.update(Collections.singletonList(nbmhAnimalLibrary));
         return Result.ok();
     }
 
     @Operation(summary = "分页查询动物基因库/病例库", method = "POST")
-    @Parameters({@Parameter(description = "页码", name = "pageNum"), @Parameter(description = "每页显示条数", name = "pageSize"), @Parameter(description = "排序条件集合", name = "orderItemList")})
+    @Parameters({@Parameter(description = "页码", name = "pageNum"), @Parameter(description = "每页显示条数", name = "pageSize")})
     @PostMapping("/query")
     @Inner(false)
-    public Result<IPage<NbmhAnimalLibrary>> query(@RequestBody NbmhAnimalLibrary nbmhAnimalLibrary,
+    public Result<IPage<NbmhAnimalLibrary>> query(@RequestBody QueryCondition<NbmhAnimalLibrary> queryCondition,
                                                   @RequestParam @DecimalMin("1") int pageNum,
-                                                  @RequestParam @DecimalMin("1") int pageSize,
-                                                  @RequestParam(value = "orderItemList", required = false) List<OrderItem> orderItemList) {
+                                                  @RequestParam @DecimalMin("1") int pageSize) {
 
-        IPage<NbmhAnimalLibrary> butcherReportPage = nbmhAnimalLibraryService.query(nbmhAnimalLibrary, pageNum, pageSize, orderItemList);
-
-        return Result.ok(butcherReportPage);
+        return Result.ok(nbmhAnimalLibraryService.query(queryCondition.getEntity(), pageNum, pageSize, queryCondition.getOrderItemList()));
     }
 
     @Operation(summary = "查询动物基因库/病例库", method = "POST")
-    @Parameters({@Parameter(description = "排序条件集合", name = "orderItemList")})
     @PostMapping("/list")
     @Inner(false)
-    public Result<List<NbmhAnimalLibrary>> list(@RequestBody NbmhAnimalLibrary nbmhAnimalLibrary,
-                                                @RequestParam(value = "orderItemList", required = false) List<OrderItem> orderItemList) {
+    public Result<List<NbmhAnimalLibrary>> list(@RequestBody QueryCondition<NbmhAnimalLibrary> queryCondition) {
 
-        return Result.ok(nbmhAnimalLibraryService.list(nbmhAnimalLibrary, orderItemList));
+        return Result.ok(nbmhAnimalLibraryService.list(queryCondition.getEntity(), queryCondition.getOrderItemList()));
     }
 
+    @Operation(summary = "删除动物基因库/病例库", method = "DELETE")
     @DeleteMapping("delete/{id}")
-    @Operation(summary = "删除动物基因库/病例库")
     @Inner(false)
-    public Result delete(@PathVariable Long id) {
+    public Result delete(@PathVariable(value = "id") @NotNull(message = "动物基因库/病例库id不能为空") Long id) {
 
         nbmhAnimalLibraryService.delete(Collections.singletonList(id));
         return Result.ok();
     }
 
-    @Operation(summary = "管理员审核动物基因库/病例库", method = "PUT")
-    @PutMapping("/audit")
+    @Operation(summary = "管理员审核动物基因库/病例库", method = "POST")
+    @PostMapping("/audit")
     @Inner(false)
-    public Result audit(@RequestBody NbmhAnimalLibrary nbmhAnimalLibrary) {
+    public Result audit(@RequestBody @Validated({NbmhAnimalLibrary.Update.class}) NbmhAnimalLibrary nbmhAnimalLibrary) {
 
         nbmhAnimalLibraryService.audit(Collections.singletonList(nbmhAnimalLibrary));
         return Result.ok();

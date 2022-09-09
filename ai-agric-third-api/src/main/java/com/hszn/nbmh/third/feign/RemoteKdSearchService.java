@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(value = ServiceNameConstant.THIRD_SERVICE, path = UrlPathConstant.KD_SEARCH, fallback = KdSearchServiceFallback.class)
 public interface RemoteKdSearchService {
 
-
     @PostMapping("/searchKdInfo")
     Result searchKdInfo(@RequestParam String shipperCode, @RequestParam String logisticCode, @RequestParam(value = "mobile", required = false) String mobile);
 

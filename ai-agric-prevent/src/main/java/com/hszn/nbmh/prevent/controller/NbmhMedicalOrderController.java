@@ -1,9 +1,8 @@
 package com.hszn.nbmh.prevent.controller;
 
-
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.hszn.nbmh.common.core.enums.CommonEnum;
+import com.hszn.nbmh.common.core.mould.QueryCondition;
 import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.common.security.annotation.Inner;
 import com.hszn.nbmh.prevent.api.entity.NbmhMedicalOrder;
@@ -14,10 +13,11 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,6 +30,7 @@ import java.util.List;
  * @since 2022-08-31
  */
 @Tag(name = "诊断下单记录管理")
+@Validated
 @RestController
 @RequestMapping("/nbmh-medical-order")
 public class NbmhMedicalOrderController {
@@ -40,7 +41,7 @@ public class NbmhMedicalOrderController {
     @Operation(summary = "新增诊断下单记录", method = "POST")
     @PostMapping("/add")
     @Inner(false)
-    public Result add(@RequestBody NbmhMedicalOrderParam medicalOrderParam) {
+    public Result add(@RequestBody @Validated({NbmhMedicalOrder.Save.class}) NbmhMedicalOrderParam medicalOrderParam) {
 
         List<Integer> idList = nbmhMedicalOrderService.save(Collections.singletonList(medicalOrderParam));
         if (idList != null && idList.size() > 0) {
@@ -53,7 +54,7 @@ public class NbmhMedicalOrderController {
     @Operation(summary = "根据ID查询诊断下单记录", method = "GET")
     @PostMapping("/{id}")
     @Inner(false)
-    public Result<NbmhMedicalOrder> getById(@PathVariable(value = "id") @NotBlank Long id) {
+    public Result<NbmhMedicalOrder> getById(@PathVariable(value = "id") @NotNull(message = "动物诊断下单记录Id不能为空") Long id) {
 
         return Result.ok(nbmhMedicalOrderService.getById(id));
     }
@@ -61,40 +62,35 @@ public class NbmhMedicalOrderController {
     @Operation(summary = "更新诊断下单记录", method = "PUT")
     @PutMapping
     @Inner(false)
-    public Result update(@RequestBody NbmhMedicalOrder nbmhMedicalOrder) {
+    public Result update(@RequestBody @Validated({NbmhMedicalOrder.Update.class}) NbmhMedicalOrder nbmhMedicalOrder) {
 
         nbmhMedicalOrderService.update(Collections.singletonList(nbmhMedicalOrder));
         return Result.ok();
     }
 
     @Operation(summary = "分页查询诊断下单记录", method = "POST")
-    @Parameters({@Parameter(description = "页码", name = "pageNum"), @Parameter(description = "每页显示条数", name = "pageSize"), @Parameter(description = "排序条件集合", name = "orderItemList")})
+    @Parameters({@Parameter(description = "页码", name = "pageNum"), @Parameter(description = "每页显示条数", name = "pageSize")})
     @PostMapping("/query")
     @Inner(false)
-    public Result<IPage<NbmhMedicalOrder>> query(@RequestBody NbmhMedicalOrder nbmhMedicalOrder,
+    public Result<IPage<NbmhMedicalOrder>> query(@RequestBody QueryCondition<NbmhMedicalOrder> queryCondition,
                                                  @RequestParam @DecimalMin("1") int pageNum,
-                                                 @RequestParam @DecimalMin("1") int pageSize,
-                                                 @RequestParam(value = "orderItemList", required = false) List<OrderItem> orderItemList) {
+                                                 @RequestParam @DecimalMin("1") int pageSize) {
 
-        IPage<NbmhMedicalOrder> butcherReportPage = nbmhMedicalOrderService.query(nbmhMedicalOrder, pageNum, pageSize, orderItemList);
-
-        return Result.ok(butcherReportPage);
+        return Result.ok(nbmhMedicalOrderService.query(queryCondition.getEntity(), pageNum, pageSize, queryCondition.getOrderItemList()));
     }
 
     @Operation(summary = "查询诊断下单记录", method = "POST")
-    @Parameters({@Parameter(description = "排序条件集合", name = "orderItemList")})
     @PostMapping("/list")
     @Inner(false)
-    public Result<List<NbmhMedicalOrder>> list(@RequestBody NbmhMedicalOrder nbmhMedicalOrder,
-                                               @RequestParam(value = "orderItemList", required = false) List<OrderItem> orderItemList) {
+    public Result<List<NbmhMedicalOrder>> list(@RequestBody QueryCondition<NbmhMedicalOrder> queryCondition) {
 
-        return Result.ok(nbmhMedicalOrderService.list(nbmhMedicalOrder, orderItemList));
+        return Result.ok(nbmhMedicalOrderService.list(queryCondition.getEntity(), queryCondition.getOrderItemList()));
     }
 
+    @Operation(summary = "删除诊断下单记录", method = "DELETE")
     @DeleteMapping("delete/{id}")
-    @Operation(summary = "删除诊断下单记录")
     @Inner(false)
-    public Result delete(@PathVariable Long id) {
+    public Result delete(@PathVariable(value = "id") @NotNull(message = "动物诊断下单记录Id不能为空") Long id) {
 
         nbmhMedicalOrderService.delete(Collections.singletonList(id));
         return Result.ok();

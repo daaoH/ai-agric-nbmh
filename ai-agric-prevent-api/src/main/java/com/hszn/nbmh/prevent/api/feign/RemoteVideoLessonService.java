@@ -1,8 +1,8 @@
 package com.hszn.nbmh.prevent.api.feign;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.hszn.nbmh.common.core.constant.ServiceNameConstant;
+import com.hszn.nbmh.common.core.mould.QueryCondition;
 import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.prevent.api.constant.UrlPathConstant;
 import com.hszn.nbmh.prevent.api.entity.NbmhVideoLesson;
@@ -11,7 +11,8 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -30,16 +31,18 @@ public interface RemoteVideoLessonService {
     Result add(@RequestBody NbmhVideoLesson entity);
 
     @GetMapping("/{id}")
-    Result getById(@PathVariable(value = "id") @NotBlank Long id);
+    Result getById(@PathVariable(value = "id") @NotNull Long id);
 
     @PutMapping
     Result update(@RequestBody NbmhVideoLesson entity);
 
     @PostMapping("/query")
-    Result<IPage<NbmhVideoLesson>> query(@RequestBody NbmhVideoLesson entity, @RequestParam @DecimalMin("1") int pageNum, @RequestParam @DecimalMin("1") int pageSize, @RequestParam List<OrderItem> orderItemList);
+    Result<IPage<NbmhVideoLesson>> query(@RequestBody QueryCondition<NbmhVideoLesson> queryCondition,
+                                         @RequestParam @DecimalMin("1") int pageNum,
+                                         @RequestParam @DecimalMin("1") int pageSize);
 
     @PostMapping("/list")
-    Result<List<NbmhVideoLesson>> list(@RequestBody NbmhVideoLesson entity, @RequestParam List<OrderItem> orderItemList);
+    Result<List<NbmhVideoLesson>> list(@RequestBody QueryCondition<NbmhVideoLesson> queryCondition);
 
     @DeleteMapping("delete/{id}")
     Result delete(@PathVariable Long id);

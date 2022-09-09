@@ -8,6 +8,7 @@ import com.hszn.nbmh.prevent.api.entity.NbmhFarm;
 import com.hszn.nbmh.prevent.api.params.out.NbmhFarmResult;
 import org.springframework.validation.annotation.Validated;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -89,7 +90,7 @@ public interface INbmhFarmService extends IService<NbmhFarm> {
      * @param preventStationId 防疫站ID
      * @return the list
      */
-    List<NbmhFarmResult> listByPreventStationId(Long preventStationId);
+    List<NbmhFarmResult> listByPreventStationId(@NotNull Long preventStationId);
 
 }
 

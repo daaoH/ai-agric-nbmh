@@ -1,8 +1,8 @@
 package com.hszn.nbmh.prevent.api.fallback;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.hszn.nbmh.common.core.enums.CommonEnum;
+import com.hszn.nbmh.common.core.mould.QueryCondition;
 import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.prevent.api.entity.NbmhPrescriptionDrug;
 import com.hszn.nbmh.prevent.api.feign.RemotePrescriptionDrugService;
@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * <p>
- * 处方基础信息表 暴露接口熔断类
+ * 处方药品列表 暴露接口熔断类
  * </p>
  *
  * @author MCR
@@ -38,12 +38,12 @@ public class PrescriptionDrugServiceFallback implements RemotePrescriptionDrugSe
     }
 
     @Override
-    public Result<IPage<NbmhPrescriptionDrug>> query(NbmhPrescriptionDrug entity, int pageNum, int pageSize, List<OrderItem> orderItemList) {
+    public Result<IPage<NbmhPrescriptionDrug>> query(QueryCondition<NbmhPrescriptionDrug> queryCondition, int pageNum, int pageSize) {
         return Result.failed(CommonEnum.FALL_BACK_MSG.getMsg());
     }
 
     @Override
-    public Result<List<NbmhPrescriptionDrug>> list(NbmhPrescriptionDrug entity, List<OrderItem> orderItemList) {
+    public Result<List<NbmhPrescriptionDrug>> list(QueryCondition<NbmhPrescriptionDrug> queryCondition) {
         return Result.failed(CommonEnum.FALL_BACK_MSG.getMsg());
     }
 

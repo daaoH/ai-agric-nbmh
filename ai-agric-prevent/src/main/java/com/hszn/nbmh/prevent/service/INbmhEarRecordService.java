@@ -6,6 +6,7 @@ import com.hszn.nbmh.prevent.api.entity.NbmhEarRecord;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hszn.nbmh.prevent.api.entity.NbmhEarRecord;
 import com.hszn.nbmh.prevent.api.params.input.NbmhEarRecordParam;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -19,6 +20,7 @@ import java.util.List;
  * @author MCR
  * @since 2022-08-16
  */
+@Validated
 public interface INbmhEarRecordService extends IService<NbmhEarRecord> {
 
     /**

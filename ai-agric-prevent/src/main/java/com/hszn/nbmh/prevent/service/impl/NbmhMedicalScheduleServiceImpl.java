@@ -6,15 +6,12 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.hszn.nbmh.common.core.utils.BeanUtils;
-import com.hszn.nbmh.prevent.api.entity.NbmhMedicalSchedule;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hszn.nbmh.prevent.api.entity.NbmhMedicalSchedule;
 import com.hszn.nbmh.prevent.mapper.NbmhMedicalScheduleMapper;
 import com.hszn.nbmh.prevent.service.INbmhMedicalScheduleService;
-
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
@@ -41,7 +38,6 @@ public class NbmhMedicalScheduleServiceImpl extends ServiceImpl<NbmhMedicalSched
     @Override
     @Transactional
     public List<Integer> save(List<NbmhMedicalSchedule> nbmhMedicalScheduleList) {
-        BeanUtils.validBean(nbmhMedicalScheduleList, NbmhMedicalSchedule.Save.class);
 
         return nbmhMedicalScheduleList.stream().map(entity -> {
 
@@ -55,7 +51,6 @@ public class NbmhMedicalScheduleServiceImpl extends ServiceImpl<NbmhMedicalSched
     @Override
     @Transactional
     public int update(List<NbmhMedicalSchedule> nbmhMedicalScheduleList) {
-        BeanUtils.validBean(nbmhMedicalScheduleList, NbmhMedicalSchedule.Update.class);
 
         if (CollectionUtils.isEmpty(nbmhMedicalScheduleList)) {
             return 0;

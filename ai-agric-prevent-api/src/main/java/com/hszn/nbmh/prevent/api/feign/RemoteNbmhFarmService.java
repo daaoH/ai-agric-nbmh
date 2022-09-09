@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -30,7 +32,7 @@ public interface RemoteNbmhFarmService {
     Result add(@RequestBody NbmhFarm entity);
 
     @GetMapping("/{id}")
-    Result getById(@PathVariable(value = "id") @NotBlank Long id);
+    Result getById(@PathVariable(value = "id") @NotNull Long id);
 
     @PutMapping
      Result update(@RequestBody NbmhFarm entity);

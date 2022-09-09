@@ -9,6 +9,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import javax.validation.groups.Default;
 import java.io.Serializable;
@@ -34,8 +35,8 @@ public class NbmhUserFollowExpert implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Null(groups = {NbmhUserFollowExpert.Save.class})
-    @NotBlank(groups = {NbmhUserFollowExpert.Update.class, NbmhUserFollowExpert.Delete.class})
+    @Null(message = "新增数据时Id必须为null", groups = {Save.class})
+    @NotNull(message = "更新或删除数据时Id不能为空", groups = {Update.class, Delete.class})
     @TableId(value = "id", type = IdType.AUTO)
     @Schema(name = "id", description = "主键id")
     private Integer id;
@@ -43,24 +44,28 @@ public class NbmhUserFollowExpert implements Serializable {
     /**
      * 养殖户id
      */
+    @NotNull(message = "新增数据时养殖户userId不能为空", groups = {Save.class})
     @Schema(name = "userId", description = "养殖户id")
     private Long userId;
 
     /**
      * 养殖户真实姓名
      */
+    @NotBlank(message = "新增数据时养殖户真实姓名userName不能为空", groups = {Save.class})
     @Schema(name = "userName", description = "养殖户真实姓名")
     private String userName;
 
     /**
      * 专家用户id
      */
+    @NotNull(message = "新增数据时专家用户expertId不能为空", groups = {Save.class})
     @Schema(name = "expertId", description = "专家用户id")
     private Long expertId;
 
     /**
      * 专家真实姓名
      */
+    @NotBlank(message = "新增数据时专家真实姓名expertName不能为空", groups = {Save.class})
     @Schema(name = "expertName", description = "专家真实姓名")
     private String expertName;
 

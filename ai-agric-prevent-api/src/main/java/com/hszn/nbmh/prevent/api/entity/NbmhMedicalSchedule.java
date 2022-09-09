@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import javax.validation.groups.Default;
 import java.io.Serializable;
@@ -37,8 +37,8 @@ public class NbmhMedicalSchedule implements Serializable {
     /**
      * 主键id
      */
-    @Null(groups = {NbmhMedicalSchedule.Save.class})
-    @NotBlank(groups = {NbmhMedicalSchedule.Update.class, NbmhMedicalSchedule.Delete.class})
+    @Null(message = "新增数据时Id必须为null", groups = {Save.class})
+    @NotNull(message = "更新或删除数据时Id不能为空", groups = {Update.class, Delete.class})
     @TableId(value = "id", type = IdType.AUTO)
     @Schema(name = "id", description = "主键id")
     private Long id;
@@ -46,6 +46,7 @@ public class NbmhMedicalSchedule implements Serializable {
     /**
      * 兽医用户id
      */
+    @NotNull(message = "新增数据时兽医用户userId不能为空", groups = {Save.class})
     @Schema(name = "userId", description = "兽医用户id")
     private Long userId;
 

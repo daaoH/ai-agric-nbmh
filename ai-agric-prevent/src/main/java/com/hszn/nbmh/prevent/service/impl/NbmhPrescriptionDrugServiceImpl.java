@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hszn.nbmh.common.core.utils.BeanUtils;
 import com.hszn.nbmh.prevent.api.entity.NbmhPrescriptionDrug;
 import com.hszn.nbmh.prevent.mapper.NbmhPrescriptionDrugMapper;
 import com.hszn.nbmh.prevent.service.INbmhPrescriptionDrugService;
@@ -39,7 +38,6 @@ public class NbmhPrescriptionDrugServiceImpl extends ServiceImpl<NbmhPrescriptio
     @Override
     @Transactional
     public List<Integer> save(List<NbmhPrescriptionDrug> NbmhPrescriptionDrugList) {
-        BeanUtils.validBean(NbmhPrescriptionDrugList, NbmhPrescriptionDrug.Save.class);
 
         return NbmhPrescriptionDrugList.stream().map(entity -> {
 
@@ -53,7 +51,6 @@ public class NbmhPrescriptionDrugServiceImpl extends ServiceImpl<NbmhPrescriptio
     @Override
     @Transactional
     public int update(List<NbmhPrescriptionDrug> NbmhPrescriptionDrugList) {
-        BeanUtils.validBean(NbmhPrescriptionDrugList, NbmhPrescriptionDrug.Update.class);
 
         if (CollectionUtils.isEmpty(NbmhPrescriptionDrugList)) {
             return 0;

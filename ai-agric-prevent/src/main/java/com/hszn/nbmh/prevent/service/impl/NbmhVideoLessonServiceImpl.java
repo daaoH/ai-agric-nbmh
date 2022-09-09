@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hszn.nbmh.common.core.utils.BeanUtils;
 import com.hszn.nbmh.prevent.api.entity.NbmhVideoLesson;
 import com.hszn.nbmh.prevent.mapper.NbmhVideoLessonMapper;
 import com.hszn.nbmh.prevent.service.INbmhVideoLessonService;
@@ -39,7 +38,6 @@ public class NbmhVideoLessonServiceImpl extends ServiceImpl<NbmhVideoLessonMappe
     @Override
     @Transactional
     public List<Integer> save(List<NbmhVideoLesson> nbmhVideoLessonList) {
-        BeanUtils.validBean(nbmhVideoLessonList, NbmhVideoLesson.Save.class);
 
         return nbmhVideoLessonList.stream().map(entity -> {
 
@@ -53,7 +51,6 @@ public class NbmhVideoLessonServiceImpl extends ServiceImpl<NbmhVideoLessonMappe
     @Override
     @Transactional
     public int update(List<NbmhVideoLesson> nbmhVideoLessonList) {
-        BeanUtils.validBean(nbmhVideoLessonList, NbmhVideoLesson.Update.class);
 
         if (CollectionUtils.isEmpty(nbmhVideoLessonList)) {
             return 0;
@@ -109,7 +106,6 @@ public class NbmhVideoLessonServiceImpl extends ServiceImpl<NbmhVideoLessonMappe
     @Override
     @Transactional
     public int audit(List<NbmhVideoLesson> nbmhVideoLessonList) {
-        BeanUtils.validBean(nbmhVideoLessonList, NbmhVideoLesson.Update.class);
 
         if (CollectionUtils.isEmpty(nbmhVideoLessonList)) {
             return 0;

@@ -45,6 +45,11 @@ public interface UserPathConstant {
      * 兽医详情
      */
     String NBMH_ANIMAL_DOCTOR_DETAIL = "/nbmh-animal-doctor-detail";
+
+    /**
+     * 关注的专家
+     */
+    String NBMH_USER_FOLLOW_EXPERT = "/nbmh-user-follow-expert";
 }
 
 

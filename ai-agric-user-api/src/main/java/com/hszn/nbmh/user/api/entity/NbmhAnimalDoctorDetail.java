@@ -9,9 +9,9 @@ import io.swagger.annotations.ApiModelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
-import org.springframework.beans.factory.annotation.Value;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import javax.validation.groups.Default;
 import java.io.Serializable;
@@ -41,8 +41,8 @@ public class NbmhAnimalDoctorDetail implements Serializable {
     /**
      * 主键id
      */
-    @Null(groups = {NbmhAnimalDoctorDetail.Save.class})
-    @NotBlank(groups = {NbmhAnimalDoctorDetail.Update.class, NbmhAnimalDoctorDetail.Delete.class})
+    @Null(message = "新增数据时Id必须为null", groups = {Save.class})
+    @NotNull(message = "更新或删除数据时Id不能为空", groups = {Update.class, Delete.class})
     @TableId(value = "id", type = IdType.AUTO)
     @Schema(name = "id", description = "主键id")
     private Long id;
@@ -50,6 +50,7 @@ public class NbmhAnimalDoctorDetail implements Serializable {
     /**
      * 兽医用户id
      */
+    @NotNull(message = "新增数据时兽医用户userId不能为空", groups = {Save.class})
     @Schema(name = "userId", description = "兽医用户id")
     private Long userId;
 
@@ -74,6 +75,7 @@ public class NbmhAnimalDoctorDetail implements Serializable {
     /**
      * 擅长病症
      */
+    @NotBlank(message = "新增数据时擅长病症goodDisease不能为空", groups = {Save.class})
     @Schema(name = "goodDisease", description = "擅长病症")
     private String goodDisease;
 

@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hszn.nbmh.common.core.utils.BeanUtils;
 import com.hszn.nbmh.user.api.entity.NbmhAnimalDoctorDetail;
 import com.hszn.nbmh.user.api.entity.NbmhUser;
 import com.hszn.nbmh.user.api.entity.NbmhUserExtraInfo;
@@ -58,7 +57,6 @@ public class NbmhUserFollowExpertServiceImpl extends ServiceImpl<NbmhUserFollowE
     @Override
     @Transactional
     public List<Integer> save(List<NbmhUserFollowExpert> nbmhUserFollowExpertList) {
-        BeanUtils.validBean(nbmhUserFollowExpertList, NbmhUserFollowExpert.Save.class);
 
         return nbmhUserFollowExpertList.stream().map(entity -> {
 
@@ -72,7 +70,6 @@ public class NbmhUserFollowExpertServiceImpl extends ServiceImpl<NbmhUserFollowE
     @Override
     @Transactional
     public int update(List<NbmhUserFollowExpert> nbmhUserFollowExpertList) {
-        BeanUtils.validBean(nbmhUserFollowExpertList, NbmhUserFollowExpert.Update.class);
 
         if (nbmhUserFollowExpertList == null || nbmhUserFollowExpertList.size() == 0) {
             return 0;
@@ -100,9 +97,12 @@ public class NbmhUserFollowExpertServiceImpl extends ServiceImpl<NbmhUserFollowE
 
     @Override
     @Transactional(readOnly = true)
-    public List<NbmhUserFollowExpertInfo> list(NbmhUserFollowExpert entity) {
+    public List<NbmhUserFollowExpertInfo> list(NbmhUserFollowExpert entity, List<OrderItem> orderItemList) {
 
         QueryWrapper<NbmhUserFollowExpert> queryWrapper = Wrappers.query(entity);
+        if (orderItemList != null && orderItemList.size() > 0) {
+            orderItemList.forEach(t -> queryWrapper.orderBy(true, t.isAsc(), t.getColumn()));
+        }
 
         List<NbmhUserFollowExpert> userFollowExpertList = nbmhUserFollowExpertMapper.selectList(queryWrapper);
         if (CollectionUtils.isEmpty(userFollowExpertList)) {

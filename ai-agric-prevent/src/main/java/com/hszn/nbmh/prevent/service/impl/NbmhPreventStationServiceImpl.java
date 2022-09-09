@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hszn.nbmh.common.core.utils.BeanUtils;
 import com.hszn.nbmh.prevent.api.entity.NbmhPreventStation;
 import com.hszn.nbmh.prevent.mapper.NbmhPreventStationMapper;
 import com.hszn.nbmh.prevent.service.INbmhPreventStationService;
@@ -39,7 +38,6 @@ public class NbmhPreventStationServiceImpl extends ServiceImpl<NbmhPreventStatio
     @Override
     @Transactional
     public List<Integer> save(List<NbmhPreventStation> nbmhPreventStationList) {
-        BeanUtils.validBean(nbmhPreventStationList, NbmhPreventStation.Save.class);
 
         return nbmhPreventStationList.stream().map(entity -> {
 
@@ -53,7 +51,6 @@ public class NbmhPreventStationServiceImpl extends ServiceImpl<NbmhPreventStatio
     @Override
     @Transactional
     public int update(List<NbmhPreventStation> nbmhPreventStationList) {
-        BeanUtils.validBean(nbmhPreventStationList, NbmhPreventStation.Update.class);
 
         if (CollectionUtils.isEmpty(nbmhPreventStationList)) {
             return 0;

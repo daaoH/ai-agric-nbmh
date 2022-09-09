@@ -6,6 +6,8 @@
     <resultMap id="BaseResultMap" type="com.hszn.nbmh.prevent.api.entity.NbmhPrescriptionDrug">
         <id column="id" property="id" />
         <result column="prescription_id" property="prescriptionId" />
+        <result column="drug_id" property="drugId" />
+        <result column="drug_name" property="drugName" />
         <result column="drug_name" property="drugName" />
         <result column="drug_format" property="drugFormat" />
         <result column="drug_unit_price" property="drugUnitPrice" />

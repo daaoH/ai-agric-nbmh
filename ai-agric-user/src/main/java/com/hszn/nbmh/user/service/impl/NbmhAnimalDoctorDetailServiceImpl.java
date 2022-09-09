@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hszn.nbmh.common.core.utils.BeanUtils;
 import com.hszn.nbmh.user.api.entity.NbmhAnimalDoctorDetail;
 import com.hszn.nbmh.user.mapper.NbmhAnimalDoctorDetailMapper;
 import com.hszn.nbmh.user.service.INbmhAnimalDoctorDetailService;
@@ -40,7 +39,6 @@ public class NbmhAnimalDoctorDetailServiceImpl extends ServiceImpl<NbmhAnimalDoc
     @Override
     @Transactional
     public List<Integer> save(List<NbmhAnimalDoctorDetail> nbmhAnimalDoctorDetailList) {
-        BeanUtils.validBean(nbmhAnimalDoctorDetailList, NbmhAnimalDoctorDetail.Save.class);
 
         return nbmhAnimalDoctorDetailList.stream().map(entity -> {
 
@@ -54,7 +52,6 @@ public class NbmhAnimalDoctorDetailServiceImpl extends ServiceImpl<NbmhAnimalDoc
     @Override
     @Transactional
     public int update(List<NbmhAnimalDoctorDetail> nbmhAnimalDoctorDetailList) {
-        BeanUtils.validBean(nbmhAnimalDoctorDetailList, NbmhAnimalDoctorDetail.Update.class);
 
         if (CollectionUtils.isEmpty(nbmhAnimalDoctorDetailList)) {
             return 0;

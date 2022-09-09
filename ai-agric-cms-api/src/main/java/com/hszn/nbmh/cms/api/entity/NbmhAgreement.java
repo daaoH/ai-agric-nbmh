@@ -38,8 +38,8 @@ public class NbmhAgreement implements Serializable {
     /**
      * 主键id
      */
-    @Null(groups = {NbmhAgreement.Save.class})
-    @NotBlank(groups = {NbmhAgreement.Update.class, NbmhAgreement.Delete.class})
+    @Null(message = "新增数据时Id必须为null", groups = {Save.class})
+    @NotNull(message = "更新或删除数据时Id不能为空", groups = {Update.class, Delete.class})
     @TableId(value = "id", type = IdType.AUTO)
     @Schema(name = "id", description = "主键id")
     private Long id;
@@ -53,6 +53,7 @@ public class NbmhAgreement implements Serializable {
     /**
      * 协议内容
      */
+    @NotBlank(message = "新增数据时协议内容content不能为空", groups = {Save.class})
     @Schema(name = "content", description = "协议内容")
     private String content;
 

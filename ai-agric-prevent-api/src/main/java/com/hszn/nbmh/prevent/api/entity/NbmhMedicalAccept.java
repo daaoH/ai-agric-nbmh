@@ -9,6 +9,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import javax.validation.groups.Default;
 import java.io.Serializable;
@@ -38,8 +39,8 @@ public class NbmhMedicalAccept implements Serializable {
     /**
      * 主键id
      */
-    @Null(groups = {NbmhMedicalAccept.Save.class})
-    @NotBlank(groups = {NbmhMedicalAccept.Update.class, NbmhMedicalAccept.Delete.class})
+    @Null(message = "新增数据时Id必须为null", groups = {Save.class})
+    @NotNull(message = "更新或删除数据时Id不能为空", groups = {Update.class, Delete.class})
     @TableId(value = "id", type = IdType.AUTO)
     @Schema(name = "id", description = "主键id")
     private Long id;
@@ -53,12 +54,14 @@ public class NbmhMedicalAccept implements Serializable {
     /**
      * 兽医id
      */
+    @NotNull(message = "新增数据时兽医doctorId不能为空", groups = {Save.class})
     @Schema(name = "doctorId", description = "兽医id")
     private Long doctorId;
 
     /**
      * 兽医名称
      */
+    @NotBlank(message = "新增数据时兽医名称doctorName不能为空", groups = {Save.class})
     @Schema(name = "doctorName", description = "兽医名称")
     private String doctorName;
 
@@ -71,18 +74,21 @@ public class NbmhMedicalAccept implements Serializable {
     /**
      * 兽医头像
      */
+    @NotBlank(message = "新增数据时兽医头像doctorAvatar不能为空", groups = {Save.class})
     @Schema(name = "doctorAvatar", description = "兽医头像")
     private String doctorAvatar;
 
     /**
      * 工作年限
      */
+    @NotBlank(message = "新增数据时工作年限workYear不能为空", groups = {Save.class})
     @Schema(name = "workYear", description = "工作年限")
     private String workYear;
 
     /**
      * 技能说明
      */
+    @NotBlank(message = "新增数据时技能说明skillDesc不能为空", groups = {Save.class})
     @Schema(name = "skillDesc", description = "技能说明")
     private String skillDesc;
 
@@ -119,7 +125,7 @@ public class NbmhMedicalAccept implements Serializable {
     /**
      * 诊断收费金额
      */
-    @Schema(name="medicalMoney", description="诊断收费金额")
+    @Schema(name = "medicalMoney", description = "诊断收费金额")
     private BigDecimal medicalMoney;
 
     /**

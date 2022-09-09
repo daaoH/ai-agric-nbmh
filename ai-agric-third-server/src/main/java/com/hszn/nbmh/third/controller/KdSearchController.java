@@ -9,12 +9,15 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 /**
  * <p>
@@ -25,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2022-08-26
  */
 @Tag(name = "快递鸟--快递查询服务")
+@Validated
 @RestController
 @RequestMapping("/kd-search")
 public class KdSearchController {
@@ -33,13 +37,16 @@ public class KdSearchController {
     private KdSearchService kdSearchService;
 
     @Operation(summary = "查询快递信息", method = "POST")
-    @Parameters({@Parameter(description = "快递公司编码", name = "shipperCode"), @Parameter(description = "物流单号", name = "logisticCode"), @Parameter(description = "手机号码（顺丰快递必填）", name = "mobile")})
+    @Parameters({
+            @Parameter(description = "快递公司编码", name = "shipperCode"),
+            @Parameter(description = "物流单号", name = "logisticCode"),
+            @Parameter(description = "手机号码（顺丰快递必填）", name = "mobile")
+    })
     @PostMapping("/searchKdInfo")
     @Inner(false)
-    public Result searchKdInfo(@RequestParam String shipperCode, @RequestParam String logisticCode, @RequestParam(value = "mobile", required = false) String mobile) {
-        if (StringUtils.isBlank(logisticCode) || StringUtils.isBlank(logisticCode)) {
-            return Result.failed("快递公司编码或者物流单号不能为空");
-        }
+    public Result searchKdInfo(@RequestParam @NotBlank(message = "快递公司编码不能为空") String shipperCode,
+                               @RequestParam @NotBlank(message = "快递公司物流单号不能为空") String logisticCode,
+                               @RequestParam(value = "mobile", required = false) @Pattern(regexp = "^1[345678]\\d{9}$", message = "手机号码格式有误") String mobile) {
 
         KdSearchEntity response = kdSearchService.searchKdInfo(shipperCode, logisticCode, mobile);
         if (response != null) {

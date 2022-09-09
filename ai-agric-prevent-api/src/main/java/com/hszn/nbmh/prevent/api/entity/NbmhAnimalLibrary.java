@@ -7,6 +7,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import javax.validation.groups.Default;
 import java.io.Serializable;
@@ -36,8 +37,8 @@ public class NbmhAnimalLibrary implements Serializable {
     /**
      * 主键id
      */
-    @Null(groups = {NbmhAnimalLibrary.Save.class})
-    @NotBlank(groups = {NbmhAnimalLibrary.Update.class, NbmhAnimalLibrary.Delete.class})
+    @Null(message = "新增数据时Id必须为null", groups = {Save.class})
+    @NotNull(message = "更新或删除数据时Id不能为空", groups = {Update.class, Delete.class})
     @TableId(value = "id", type = IdType.AUTO)
     @Schema(name = "id", description = "主键id")
     private Long id;
@@ -51,6 +52,7 @@ public class NbmhAnimalLibrary implements Serializable {
     /**
      * 基因库/病例库文章标题
      */
+    @NotBlank(message = "新增数据时基因库/病例库文章标题title不能为空", groups = {Save.class})
     @Schema(name = "title", description = "基因库/病例库文章标题")
     private String title;
 
@@ -63,6 +65,7 @@ public class NbmhAnimalLibrary implements Serializable {
     /**
      * 基因库/病例库文章所属类目ID
      */
+    @NotNull(message = "新增数据时基因库/病例库文章所属类目categoryId不能为空", groups = {Save.class})
     @Schema(name = "categoryId", description = "基因库/病例库文章所属类目ID")
     private Integer categoryId;
 
@@ -81,6 +84,7 @@ public class NbmhAnimalLibrary implements Serializable {
     /**
      * 基因库/病例库文章详情
      */
+    @NotBlank(message = "新增数据时基因库/病例库文章详情detail不能为空", groups = {Save.class})
     @Schema(name = "detail", description = "基因库/病例库文章详情")
     private String detail;
 
@@ -118,18 +122,21 @@ public class NbmhAnimalLibrary implements Serializable {
     /**
      * 基因库/病例库文章发表人ID
      */
+    @NotNull(message = "新增数据时基因库/病例库文章发表人userId不能为空", groups = {Save.class})
     @Schema(name = "userId", description = "基因库/病例库文章发表人ID")
     private Long userId;
 
     /**
      * 基因库/病例库文章发表人姓名
      */
+    @NotBlank(message = "新增数据时基因库/病例库文章发表人姓名userName不能为空", groups = {Save.class})
     @Schema(name = "userName", description = "基因库/病例库文章发表人姓名")
     private String userName;
 
     /**
      * 基因库/病例库文章发表人头像
      */
+    @NotBlank(message = "新增数据时基因库/病例库文章发表人头像userAvatar不能为空", groups = {Save.class})
     @Schema(name = "userAvatar", description = "基因库/病例库文章发表人头像")
     private String userAvatar;
 

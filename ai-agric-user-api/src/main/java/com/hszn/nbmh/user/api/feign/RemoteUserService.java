@@ -15,6 +15,8 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @FeignClient(contextId = "remoteUserService", value = ServiceNameConstant.USER_SERVICE, path = UserPathConstant.NBMH_USER, fallback = UserServiceFallback.class)
@@ -49,5 +51,5 @@ public interface RemoteUserService {
     Result<List<NbmhAnimalDoctorDetail>> nearby(@RequestBody NbmhAnimalDoctorDetail nbmhAnimalDoctorDetail, @RequestParam("distance") double distance, @RequestParam("userLng") double userLng, @RequestParam("userLat") double userLat);
 
     @PostMapping("/{id}")
-    Result<NbmhUser> getById(@PathVariable(value = "id") @NotBlank Long id);
+    Result<NbmhUser> getById(@PathVariable(value = "id") @NotNull Long id);
 }

@@ -9,7 +9,6 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hszn.nbmh.common.core.exception.ServiceException;
-import com.hszn.nbmh.common.core.utils.BeanUtils;
 import com.hszn.nbmh.common.core.utils.SnowFlakeIdUtil;
 import com.hszn.nbmh.prevent.api.entity.NbmhAnimal;
 import com.hszn.nbmh.prevent.api.entity.NbmhButcherReport;
@@ -58,7 +57,6 @@ public class NbmhButcherReportServiceImpl extends ServiceImpl<NbmhButcherReportM
     @Override
     @Transactional
     public List<Integer> save(List<NbmhButcherReport> butcherReportList) {
-        BeanUtils.validBean(butcherReportList, NbmhButcherReport.Save.class);
 
         return butcherReportList.stream().map(entity -> {
 
@@ -114,7 +112,6 @@ public class NbmhButcherReportServiceImpl extends ServiceImpl<NbmhButcherReportM
     @Override
     @Transactional
     public int update(List<NbmhButcherReport> nbmhButcherReportList) {
-        BeanUtils.validBean(nbmhButcherReportList, NbmhButcherReport.Update.class);
 
         if (nbmhButcherReportList == null || nbmhButcherReportList.size() == 0) {
             return 0;

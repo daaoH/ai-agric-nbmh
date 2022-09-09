@@ -8,7 +8,6 @@ import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hszn.nbmh.common.core.utils.BeanUtils;
 import com.hszn.nbmh.common.core.utils.SnowFlakeIdUtil;
 import com.hszn.nbmh.prevent.api.entity.NbmhAnimalLibrary;
 import com.hszn.nbmh.prevent.mapper.NbmhAnimalLibraryMapper;
@@ -40,7 +39,6 @@ public class NbmhAnimalLibraryServiceImpl extends ServiceImpl<NbmhAnimalLibraryM
     @Override
     @Transactional
     public List<Integer> save(List<NbmhAnimalLibrary> nbmhAnimalLibraryList) {
-        BeanUtils.validBean(nbmhAnimalLibraryList, NbmhAnimalLibrary.Save.class);
 
         return nbmhAnimalLibraryList.stream().map(entity -> {
 
@@ -54,7 +52,6 @@ public class NbmhAnimalLibraryServiceImpl extends ServiceImpl<NbmhAnimalLibraryM
     @Override
     @Transactional
     public int update(List<NbmhAnimalLibrary> nbmhAnimalLibraryList) {
-        BeanUtils.validBean(nbmhAnimalLibraryList, NbmhAnimalLibrary.Update.class);
 
         if (CollectionUtils.isEmpty(nbmhAnimalLibraryList)) {
             return 0;
@@ -111,7 +108,6 @@ public class NbmhAnimalLibraryServiceImpl extends ServiceImpl<NbmhAnimalLibraryM
     @Override
     @Transactional
     public int audit(List<NbmhAnimalLibrary> nbmhAnimalLibraryList) {
-        BeanUtils.validBean(nbmhAnimalLibraryList, NbmhAnimalLibrary.Update.class);
 
         if (CollectionUtils.isEmpty(nbmhAnimalLibraryList)) {
             return 0;
