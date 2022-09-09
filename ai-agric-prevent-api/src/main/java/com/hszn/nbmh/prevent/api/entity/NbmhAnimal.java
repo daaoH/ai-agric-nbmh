@@ -2,7 +2,6 @@ package com.hszn.nbmh.prevent.api.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import io.swagger.annotations.ApiModelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -20,10 +19,10 @@ import java.util.Date;
  */
 @Data
 @EqualsAndHashCode(callSuper=false)
-@Builder(toBuilder = true)
+@Builder(toBuilder=true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Accessors(chain = true)
+@Accessors(chain=true)
 @Schema(name="动物对象")
 public class NbmhAnimal implements Serializable {
 
@@ -126,5 +125,10 @@ public class NbmhAnimal implements Serializable {
     @Schema(name="status", description="状态 0正常 1已抵押 2自屠宰 3无公害 4活体报备 5检疫")
     private Integer status;
 
+    /**
+     * 防疫站id
+     */
+    @Schema(name="preventStationId", description="防疫站id")
+    private Long preventStationId;
 
 }

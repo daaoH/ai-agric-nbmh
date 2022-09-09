@@ -263,6 +263,14 @@ public class NbmhUserController {
         return Result.ok();
     }
 
+    @Inner(false)
+    @Operation(summary="防疫站下人员统计")
+    @Parameter(description="type 类型 1普通用户 2专家 3站长 4防疫员 5养殖户 6商家")
+    @PostMapping("/getUserInfoCount")
+    public Result getUserInfoCount(@RequestParam("preventStationId") Long preventStationId, @RequestParam(value="type") Integer type) {
+        return Result.ok(extraInfoService.count(Wrappers.<NbmhUserExtraInfo>query().lambda().eq(NbmhUserExtraInfo::getPreventStationId, preventStationId).eq(NbmhUserExtraInfo::getStatus, 0).eq(NbmhUserExtraInfo::getType, type)));
+    }
+
 
     @Transactional
     @Operation(summary = "防疫站-注册旗下人员")

@@ -43,6 +43,11 @@ public class UserServiceFallback implements RemoteUserService {
     }
 
     @Override
+    public Result getUserInfoCount(Long preventStationId, Integer type) {
+        return Result.failed(CommonEnum.DATA_QUERY_FAILED.getMsg());
+    }
+
+    @Override
     public Result registerUser(RegisterParam param) {
         return Result.failed(CommonEnum.DATA_ADD_FAILED.getMsg());
     }

@@ -34,6 +34,9 @@ public interface RemoteUserService {
     @PostMapping("/queryCurUserInfo")
     Result<CurUserInfo> queryCurUserInfo(@RequestParam("userId") Long userId, @RequestParam(value = "type", required = false) Integer type);
 
+    @PostMapping("/getUserInfoCount")
+    Result getUserInfoCount(@RequestParam("preventStationId") Long preventStationId, @RequestParam(value="type") Integer type);
+
     @PostMapping("/registerUser")
     Result registerUser(@RequestBody RegisterParam param);
 

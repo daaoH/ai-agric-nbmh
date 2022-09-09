@@ -65,5 +65,11 @@ public class NbmhBaseConfig implements Serializable {
     @Schema(name="updateTime", description="更新时间")
     private Date updateTime;
 
+    /**
+     * 状态
+     */
+    @Schema(name="status", description="状态")
+    private Integer status;
+
 
 }

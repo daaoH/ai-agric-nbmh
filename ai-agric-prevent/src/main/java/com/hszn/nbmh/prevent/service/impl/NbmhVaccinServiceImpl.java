@@ -108,7 +108,7 @@ public class NbmhVaccinServiceImpl extends ServiceImpl<NbmhVaccinMapper, NbmhVac
         //时间 查询条件为年月日匹配
         if (ObjectUtils.isNotEmpty(vaccin.getVaccinTime())) {
             String strStart=DateFormatUtils.format(vaccin.getVaccinTime(), "yyyy-MM-dd");
-            queryWrapper.apply("UNIX_TIMESTAMP(create_time) = UNIX_TIMESTAMP('" + strStart + "')");
+            queryWrapper.apply("date_format (create_time,'%Y-%m-%d') = date_format('" + strStart + "','%Y-%m-%d')");
         }
         queryWrapper.orderByDesc(NbmhVaccin::getCreateTime);
         return this.baseMapper.selectList(queryWrapper);
@@ -135,7 +135,7 @@ public class NbmhVaccinServiceImpl extends ServiceImpl<NbmhVaccinMapper, NbmhVac
             //时间 查询条件为年月日匹配
             if (ObjectUtils.isNotEmpty(param.getVaccinTime())) {
                 String strStart=DateFormatUtils.format(param.getVaccinTime(), "yyyy-MM-dd");
-                queryWrapper.apply("UNIX_TIMESTAMP(create_time) = UNIX_TIMESTAMP('" + strStart + "')");
+                queryWrapper.apply("date_format (create_time,'%Y-%m-%d') = date_format('" + strStart + "','%Y-%m-%d')");
             }
         }
         return this.baseMapper.selectCount(queryWrapper);
