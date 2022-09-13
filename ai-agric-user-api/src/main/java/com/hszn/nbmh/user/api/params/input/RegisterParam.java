@@ -42,4 +42,7 @@ public class RegisterParam {
     @Schema(description="防疫站名称", name="preventStationName")
     private String preventStationName;
 
+    @Schema(description="手机号", name="phone")
+    private String phone;
+
 }
