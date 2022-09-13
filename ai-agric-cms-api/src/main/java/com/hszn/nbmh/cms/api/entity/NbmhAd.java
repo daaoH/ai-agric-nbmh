@@ -77,6 +77,12 @@ public class NbmhAd implements Serializable {
     private Integer position;
 
     /**
+     * 板块类型 1.兽医板块；2:
+     */
+    @Schema(name = "modelType", description = "板块类型 1.兽医板块；2:")
+    private Integer modelType;
+
+    /**
      * 活动内容
      */
     @Schema(name = "content", description = "活动内容")
