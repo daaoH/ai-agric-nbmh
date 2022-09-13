@@ -46,16 +46,16 @@ logging:
 
 oss:
   endpoint: oss-cn-shanghai.aliyuncs.com
-  keyid: LTAI5t9CVM1fxhbVcV4Jq7Rk
-  keysecret: bju9tyQ9SVWffcipLYICOHBeMJF1wV
+  keyid: XXX为安全起见请自行修改
+  keysecret: XXX为安全起见请自行修改
   fileHost: nbmhoss.oss-cn-shanghai.aliyuncs.com
   filePath: file/
   bucketname : nbmhoss
 
 
 aliyun:
-  access-key: LTAI5t9CVM1fxhbVcV4Jq7Rk
-  secret: bju9tyQ9SVWffcipLYICOHBeMJF1wV
+  access-key: XXX为安全起见请自行修改
+  secret: XXX为安全起见请自行修改
   sms:
     sign-name: 鸿顺智农
     template-code: SMS_249210080
@@ -69,7 +69,7 @@ aliyun:
     scene-id: 3700002
 
 kd:
-  api-key: dc38ebd7-3170-4a4f-b6dd-9af7b0028bed
+  api-key: XXX为安全起见请自行修改
   e-business-id: 1773231
   req-url: https://api.kdniao.com/Ebusiness/EbusinessOrderHandle.aspx
   request-type: 8002
@@ -77,5 +77,5 @@ kd:
 # 百度审核相关配置
 contentCensor:
   app_id: 27304157
-  api_key: 2HKwG2Uay18VhGRV2amew0pH
-  secret_key: mthCyUr5nlT8ezrHE52BBtBhmOpgCLrN
+  api_key: XXX为安全起见请自行修改
+  secret_key: XXX为安全起见请自行修改
