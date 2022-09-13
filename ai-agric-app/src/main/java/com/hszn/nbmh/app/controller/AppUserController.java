@@ -37,9 +37,9 @@ import java.util.Map;
  * @Date:下午6:46 22/8/20
  * @Modified By:
  */
-@Tag(name="移动端用户接口")
+@Tag(name = "移动端用户接口")
 @RestController
-@SecurityRequirement(name=HttpHeaders.AUTHORIZATION)
+@SecurityRequirement(name = HttpHeaders.AUTHORIZATION)
 @RequestMapping("/app-user")
 public class AppUserController {
 
@@ -53,29 +53,29 @@ public class AppUserController {
     private RemoteSmsService smsService;
 
     @Inner(false)
-    @Operation(summary="密码登录", description="密码登录")
+    @Operation(summary = "密码登录", description = "密码登录")
     @PostMapping("/pwd-login")
     public Result pwdLogin(@RequestBody LoginParam param) {
 
-        String userName=param.getUserName();
-        String password=param.getPassword();
+        String userName = param.getUserName();
+        String password = param.getPassword();
         //判断用户是否存在
-        Result existRet=userService.checkUserExist(userName, SecurityConstants.FROM_IN);
-        boolean exist=(boolean) existRet.getData();
+        Result existRet = userService.checkUserExist(userName, SecurityConstants.FROM_IN);
+        boolean exist = (boolean) existRet.getData();
         if (exist) {
             //用户存在，去登录
-            MultiValueMap<String, String> headers=new LinkedMultiValueMap<>();
+            MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
             headers.add("Content-Type", "multipart/form-data");
             headers.add("Authorization", "Basic YXBwOmFwcA==");
 
-            MultiValueMap<String, String> body=new LinkedMultiValueMap<>();
+            MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
             body.add("username", userName);
             body.add("password", password);
             body.add("grant_type", "password");
             body.add("scope", "server");
 
             try {
-                String rets=oauth2Api.postAccessToken(body, headers);
+                String rets = oauth2Api.postAccessToken(body, headers);
                 return getUserResult(rets);
             } catch (Exception e) {
                 return Result.failed(e.getMessage());
@@ -93,14 +93,14 @@ public class AppUserController {
             return Result.failed("用户名或密码错误");
         } else {
             //token信息解析
-            TokenInfoReturn token=JSONObject.parseObject(rets, TokenInfoReturn.class);
+            TokenInfoReturn token = JSONObject.parseObject(rets, TokenInfoReturn.class);
             if (ObjectUtils.isNotEmpty(token)) {
                 //返回数据
-                UserInfoReturn retData=new UserInfoReturn();
+                UserInfoReturn retData = new UserInfoReturn();
                 retData.setToken(token.getAccess_token());
                 retData.setRefreshToken(token.getRefresh_token());
 
-                UserInfoVo userInfo=token.getUser_info();
+                UserInfoVo userInfo = token.getUser_info();
                 if (ObjectUtils.isNotEmpty(userInfo)) {
                     retData.setMutilRole(userInfo.isMutilRole());
                     retData.setRoles(userInfo.getUserRoles());
@@ -119,11 +119,11 @@ public class AppUserController {
 
     @Inner(false)
     @Transactional
-    @Operation(summary="验证码登录", description="验证码登录")
+    @Operation(summary = "验证码登录", description = "验证码登录")
     @PostMapping("/sms-login")
     public Result smsLogin(@RequestBody SmsLoginParam param) {
-        String phone=param.getPhone();
-        String code=param.getCode();
+        String phone = param.getPhone();
+        String code = param.getCode();
         if (StringUtils.isBlank(phone)) {
             return Result.failed("手机号不能为空");
         }
@@ -133,32 +133,32 @@ public class AppUserController {
             Map<String, Object> validateEntity=(LinkedHashMap) validateRet.getData();
             if ((boolean) validateEntity.get("validateResult")) {
                 //验证码验证正确，检查手机号是否存在
-                Result existRet=userService.checkUserExist(phone, SecurityConstants.FROM);
+                Result existRet = userService.checkUserExist(phone, SecurityConstants.FROM);
                 if (existRet.getCode() == 200) {
-                    Boolean exist=(Boolean) existRet.getData();
+                    Boolean exist = (Boolean) existRet.getData();
                     if (!exist) {
                         //用户不存在，新建用户信息
-                        RegisterParam registerParam=new RegisterParam();
+                        RegisterParam registerParam = new RegisterParam();
                         registerParam.setUserName(phone);
                         registerParam.setPhone(phone);
                         registerParam.setLoginType(CredentialType.SMS.getCode());
-                        Result register=userService.registerUser(registerParam);
+                        Result register = userService.registerUser(registerParam);
                         if (register.getCode() != 200) {
                             return Result.failed(CommonEnum.DATA_ADD_FAILED.getMsg());
                         }
                     }
 
                     //去登录，返回用户信息及token
-                    MultiValueMap<String, String> headers=new LinkedMultiValueMap<>();
+                    MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
                     headers.add("Content-Type", "multipart/form-data");
                     headers.add("Authorization", "Basic YXBwOmFwcA==");
 
-                    MultiValueMap<String, String> body=new LinkedMultiValueMap<>();
+                    MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
                     body.add("mobile", phone);
                     body.add("grant_type", "app");
                     body.add("scope", "server");
                     try {
-                        String rets=oauth2Api.postAccessToken(body, headers);
+                        String rets = oauth2Api.postAccessToken(body, headers);
                         return getUserResult(rets);
                     } catch (Exception e) {
                         return Result.failed(e.getMessage());
