@@ -335,15 +335,12 @@ public class NbmhUserController {
                     }
                 }
                 if (isOpen == 1) {
-                    //站长信息获取
-                    NbmhUser stationMaster=userService.getById(param.getExtraInfo().getParentId());
-                    //防疫员
-                    NbmhUser preventOfficer=userService.getById(param.getInviteBy());
-
+                    //积分记录集合(批量上传修改)
                     List<NbmhUserIntegralRecord> userIntegralRecords=new ArrayList<>();
                     //站长邀请用户-获取全部积分
                     if (param.isStationMaster()) {
-                        stationMaster.setIntegral(stationMaster.getIntegral() + rewardAmount.intValue());
+                        //站长信息获取
+                        NbmhUser stationMaster=userService.getById(param.getExtraInfo().getUserId());
                         userIntegralRecords.add(
                                 NbmhUserIntegralRecord.builder()
                                         .userId(stationMaster.getId())
@@ -353,9 +350,20 @@ public class NbmhUserController {
                                         .vaccinUser(stationMaster.getUserName())
                                         .vaccinAvatarUrl(!ObjectUtils.isEmpty(stationMaster.getAvatarUrl()) ? stationMaster.getAvatarUrl() : "")
                                         .source(2).integral(rewardAmount.intValue()).status(0).createTime(new Date()).isIncome(1).build());
+                        stationMaster.setIntegral(stationMaster.getIntegral() + rewardAmount.intValue());
+                        userService.updateById(stationMaster);
                     } else {
+                        List<NbmhUser> NbmhUserList=new ArrayList<>();
+                        //站长信息获取
+                        NbmhUser stationMaster=userService.getById(param.getExtraInfo().getParentId());
+
+                        //防疫员
+                        NbmhUser preventOfficer=userService.getById(param.getInviteBy());
+
                         //防疫员积分换算 四舍五入
                         int newStaffRatio=rewardAmount.multiply(staffRatio).setScale(0, BigDecimal.ROUND_HALF_UP).intValue();
+                        preventOfficer.setIntegral(preventOfficer.getIntegral() + newStaffRatio);
+                        NbmhUserList.add(preventOfficer);
                         //防疫员积分记录
                         userIntegralRecords.add(
                                 NbmhUserIntegralRecord.builder()
@@ -377,14 +385,14 @@ public class NbmhUserController {
                                 .vaccinUser(stationMaster.getUserName())
                                 .vaccinAvatarUrl(!ObjectUtils.isEmpty(stationMaster.getAvatarUrl()) ? stationMaster.getAvatarUrl() : "")
                                 .source(4).integral(stationMasterIntegral).status(0).createTime(new Date()).isIncome(1).build());
-                        preventOfficer.setIntegral(preventOfficer.getIntegral() + newStaffRatio);
-                        userService.updateById(preventOfficer);
+
                         stationMaster.setIntegral(stationMaster.getIntegral() + stationMasterIntegral);
+                        NbmhUserList.add(stationMaster);
+                        userService.updateBatchById(NbmhUserList);
                     }
                     if (!ObjectUtils.isEmpty(userIntegralRecords)) {
                         userIntegralService.submit(userIntegralRecords);
                     }
-                    userService.updateById(stationMaster);
                 }
             }
         } else {
@@ -558,31 +566,31 @@ public class NbmhUserController {
         return Result.ok();
     }
 
-    @Operation(summary = "根据用户Id查询兽医名片信息", method = "POST")
+    @Operation(summary="根据用户Id查询兽医名片信息", method="POST")
     @PostMapping("/getAnimalDoctorInfoByUserId")
-    public Result<AnimalDoctorInfo> getAnimalDoctorInfoByUserId(@RequestParam(value = "userId") @NotNull(message = "兽医专家用户userId不能为空") Long userId) {
-        NbmhUser user = userService.getById(userId);
+    public Result<AnimalDoctorInfo> getAnimalDoctorInfoByUserId(@RequestParam(value="userId") @NotNull(message="兽医专家用户userId不能为空") Long userId) {
+        NbmhUser user=userService.getById(userId);
         if (ObjectUtils.isEmpty(user)) {
             return Result.failed("未获取到当前用户基础信息，请先注册账号！");
         }
 
-        AnimalDoctorInfo animalDoctorInfo = AnimalDoctorInfo.builder().build();
+        AnimalDoctorInfo animalDoctorInfo=AnimalDoctorInfo.builder().build();
         BeanUtils.copyProperties(user, animalDoctorInfo);
 
-        NbmhUserExtraInfo userExtraInfo = extraInfoService.getOne(Wrappers.query(NbmhUserExtraInfo.builder().userId(userId).build()));
+        NbmhUserExtraInfo userExtraInfo=extraInfoService.getOne(Wrappers.query(NbmhUserExtraInfo.builder().userId(userId).build()));
         if (!ObjectUtils.isEmpty(userExtraInfo)) {
             BeanUtils.copyProperties(userExtraInfo, animalDoctorInfo);
 
             if (userExtraInfo.getPreventStationId() != null) {
-                Result<NbmhPreventStation> ret = preventStationService.getById(userExtraInfo.getPreventStationId());
-                NbmhPreventStation preventStation = ret.getData();
+                Result<NbmhPreventStation> ret=preventStationService.getById(userExtraInfo.getPreventStationId());
+                NbmhPreventStation preventStation=ret.getData();
                 if (!ObjectUtils.isEmpty(preventStation)) {
                     animalDoctorInfo.setPreventStationName(preventStation.getStationName());
                 }
             }
         }
 
-        NbmhAnimalDoctorDetail doctorDetail = animalDoctorDetailService.getOne(Wrappers.query(NbmhAnimalDoctorDetail.builder().userId(userId).build()));
+        NbmhAnimalDoctorDetail doctorDetail=animalDoctorDetailService.getOne(Wrappers.query(NbmhAnimalDoctorDetail.builder().userId(userId).build()));
         if (!ObjectUtils.isEmpty(doctorDetail)) {
             BeanUtils.copyProperties(doctorDetail, animalDoctorInfo);
         }
