@@ -54,11 +54,10 @@ public class NbmhOrderController {
         return Result.ok(settlements);
     }
 
-    @Inner(false)
     @Operation(description = "生成订单")
     @PostMapping("/createOrder")
     public Result createOrder(@RequestBody CreateOrderParam order){
-        String orderId = orderService.createOrder(order);
+        String orderId = orderService.preCheckOrder(order);
         return Result.ok(orderId);
     }
 

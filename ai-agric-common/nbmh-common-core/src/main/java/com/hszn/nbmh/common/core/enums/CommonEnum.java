@@ -35,6 +35,7 @@ public enum CommonEnum {
     SMS_SEND_FAIL(610, "短信验证失败，请重试!"),
 
     CART_NUM_ERROR(1001, "购买数量必须大于0"),
+    STOCK_NUM_ERROR(1002, "库存数量不足"),
 
     ORDER_PARAM_ERROR(1101, "订单参数错误");
 

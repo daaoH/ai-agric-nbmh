@@ -90,7 +90,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             CartItemVo cartItem = JSON.parseObject(goodsValue, CartItemVo.class);
             if (cartItem.getCount() + num > goodsSku.getStock()) {
                 //选购数量大于库存量
-
+                throw new ServiceException((CommonEnum.STOCK_NUM_ERROR.getMsg()));
             } else {
                 cartItem.setCount(cartItem.getCount() + num);
             }

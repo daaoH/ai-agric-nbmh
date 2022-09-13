@@ -1,23 +1,32 @@
 package com.hszn.nbmh.order.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.hszn.nbmh.common.core.enums.CommonEnum;
+import com.hszn.nbmh.common.core.exception.ServiceException;
 import com.hszn.nbmh.common.core.mould.QueryRequest;
 import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.common.core.utils.SnowFlakeIdUtil;
+import com.hszn.nbmh.common.redis.cache.CachePrefix;
 import com.hszn.nbmh.common.security.service.AuthUser;
 import com.hszn.nbmh.common.security.util.SecurityUtils;
+import com.hszn.nbmh.good.api.entity.NbmhGoodsSku;
+import com.hszn.nbmh.good.api.feign.RemoteGoodsSkuService;
 import com.hszn.nbmh.good.api.params.vo.CartItemVo;
 import com.hszn.nbmh.good.api.params.vo.ShopCartItemVo;
 import com.hszn.nbmh.order.api.entity.NbmhOrder;
 import com.hszn.nbmh.order.api.entity.NbmhOrderItem;
 import com.hszn.nbmh.order.api.params.OrderSearchParam;
+import com.hszn.nbmh.order.api.params.input.CreateOrderMessage;
 import com.hszn.nbmh.order.api.params.input.CreateOrderParam;
+import com.hszn.nbmh.order.api.params.input.PreOrderParam;
 import com.hszn.nbmh.order.api.params.input.SettlementParam;
 import com.hszn.nbmh.order.api.params.out.SettlementReturn;
 import com.hszn.nbmh.order.mapper.NbmhOrderMapper;
+import com.hszn.nbmh.order.rabbitmq.OrderSender;
 import com.hszn.nbmh.order.service.INbmhOrderItemService;
 import com.hszn.nbmh.order.service.INbmhOrderService;
 
@@ -26,6 +35,7 @@ import com.hszn.nbmh.shop.api.entity.NbmhShopInfo;
 import com.hszn.nbmh.user.api.feign.RemoteUserService;
 import com.hszn.nbmh.user.api.params.out.CurUserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,6 +63,14 @@ public class NbmhOrderServiceImpl extends ServiceImpl<NbmhOrderMapper, NbmhOrder
     @Resource
     private INbmhOrderItemService itemService;
 
+    @Autowired
+    private RemoteGoodsSkuService goodsSkuService;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
+
+    @Autowired
+    private OrderSender sender;
 
 
     @Autowired
@@ -87,7 +105,22 @@ public class NbmhOrderServiceImpl extends ServiceImpl<NbmhOrderMapper, NbmhOrder
     }
 
     @Override
-    public String createOrder(CreateOrderParam order) {
+    public Boolean createOrder(ShopCartItemVo cartItemVo) {
+        return null;
+    }
+
+    @Override
+    public void cancelOrder(Long orderId) {
+
+    }
+
+    @Override
+    public void autoCancelOrder(Long order) {
+
+    }
+
+    @Override
+    public String preCheckOrder(CreateOrderParam order) {
         AuthUser user = SecurityUtils.getUser();
 
 //        Result<CurUserInfo> ret = userService.queryCurUserInfo(user.getId(), );
@@ -115,6 +148,10 @@ public class NbmhOrderServiceImpl extends ServiceImpl<NbmhOrderMapper, NbmhOrder
 
         //消息队列创建订单
         Long orderId = snowFlakeIdUtil.nextId();
+        CreateOrderMessage orderMessage = new CreateOrderMessage();
+        orderMessage.setOrderId(orderId);
+        orderMessage.setParam(order);
+        sender.sendCreateOrderMessage(orderMessage);
 
         return String.valueOf(orderId);
     }
@@ -148,7 +185,12 @@ public class NbmhOrderServiceImpl extends ServiceImpl<NbmhOrderMapper, NbmhOrder
     private void checkCoupon(CreateOrderParam order) {
     }
 
+    /**
+     * 检查限购
+     * @param order
+     */
     private void checkLimitBuy(CreateOrderParam order) {
+
     }
 
     /**
@@ -156,6 +198,28 @@ public class NbmhOrderServiceImpl extends ServiceImpl<NbmhOrderMapper, NbmhOrder
      * @param order
      */
     private void checkStock(CreateOrderParam order) {
+        List<PreOrderParam> orderParams =  order.getPreOrderItems();
+        for(PreOrderParam param : orderParams){
+            ShopCartItemVo cartItemVo = param.getCartItems();
+            List<CartItemVo> items = cartItemVo.getItems();
+            for(CartItemVo item : items){
+                Integer stock = (Integer) redisTemplate.opsForValue().get(CachePrefix.SKU_STOCK.getPrefix() + item.getSkuId());
+                if(stock < item.getCount()){
+                    Result<NbmhGoodsSku> ret = goodsSkuService.getGoodsSkuById(item.getSkuId());
+                    if(ret.getCode() == 200) {
+                        NbmhGoodsSku goodsSku = ret.getData();
+                        stock = goodsSku.getStock();
+                    }
+                    if(stock < 1){
+                        throw new ServiceException(CommonEnum.STOCK_NUM_ERROR.getMsg());
+                    }
+
+                }
+
+                stock = stock - item.getCount();
+                redisTemplate.opsForValue().set(CachePrefix.SKU_STOCK.getPrefix() + item.getSkuId(), stock);
+            }
+        }
 
     }
 

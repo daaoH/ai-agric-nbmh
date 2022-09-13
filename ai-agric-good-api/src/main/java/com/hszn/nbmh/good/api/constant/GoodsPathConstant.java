@@ -14,6 +14,11 @@ public interface GoodsPathConstant {
     String GOODS_CATEGORY = "/goods-category";
 
     /**
+     * 商品SKU接口
+     */
+    String GOODS_SKU = "/goods-sku";
+
+    /**
      * 商品属性接口
      */
     String GOODS_ATTR = "/goods-attribute";
