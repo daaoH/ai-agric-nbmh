@@ -31,7 +31,7 @@ public interface RemoteMedicalScheduleService {
     Result add(@RequestBody NbmhMedicalSchedule entity);
 
     @GetMapping("/{id}")
-    Result getById(@PathVariable(value = "id") @NotNull Long id);
+    Result<NbmhMedicalSchedule> getById(@PathVariable(value = "id") @NotNull Long id);
 
     @PutMapping
     Result update(@RequestBody NbmhMedicalSchedule entity);

@@ -33,7 +33,7 @@ public interface RemoteButcherReportService {
     Result add(@RequestBody NbmhButcherReport entity);
 
     @GetMapping("/{id}")
-    Result getById(@PathVariable(value = "id") @NotNull Long id);
+    Result<NbmhButcherReport> getById(@PathVariable(value = "id") @NotNull Long id);
 
     @PutMapping
     Result update(@RequestBody NbmhButcherReport entity);

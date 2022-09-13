@@ -31,7 +31,7 @@ public interface RemoteVideoLessonService {
     Result add(@RequestBody NbmhVideoLesson entity);
 
     @GetMapping("/{id}")
-    Result getById(@PathVariable(value = "id") @NotNull Long id);
+    Result<NbmhVideoLesson> getById(@PathVariable(value = "id") @NotNull Long id);
 
     @PutMapping
     Result update(@RequestBody NbmhVideoLesson entity);
@@ -47,6 +47,6 @@ public interface RemoteVideoLessonService {
     @DeleteMapping("delete/{id}")
     Result delete(@PathVariable Long id);
 
-    @PutMapping("/audit")
+    @PostMapping("/audit")
     Result audit(@RequestBody NbmhVideoLesson nbmhVideoLesson);
 }

@@ -28,7 +28,7 @@ public class NbmhArticleServiceFallback implements RemoteArticleService {
     }
 
     @Override
-    public Result getById(Long id) {
+    public Result<NbmhArticle> getById(Long id) {
         return Result.failed(CommonEnum.FALL_BACK_MSG.getMsg());
     }
 

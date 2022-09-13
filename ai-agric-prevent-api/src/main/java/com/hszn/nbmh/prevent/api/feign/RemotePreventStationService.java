@@ -11,8 +11,6 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -31,18 +29,18 @@ public interface RemotePreventStationService {
     @PostMapping("/add")
     Result add(@RequestBody NbmhPreventStation entity);
 
-    @GetMapping("/{id}")
-    Result getById(@PathVariable(value = "id") @NotNull Long id);
+    @PostMapping("/{id}")
+    Result<NbmhPreventStation> getById(@PathVariable(value = "id") @NotNull Long id);
 
     @PutMapping
-     Result update(@RequestBody NbmhPreventStation entity);
+    Result update(@RequestBody NbmhPreventStation entity);
 
     @PostMapping("/query")
-     Result<IPage<NbmhPreventStation>> query(@RequestBody NbmhPreventStation entity, @RequestParam @DecimalMin("1") int pageNum, @RequestParam @DecimalMin("1") int pageSize, @RequestParam List<OrderItem> orderItemList);
+    Result<IPage<NbmhPreventStation>> query(@RequestBody NbmhPreventStation entity, @RequestParam @DecimalMin("1") int pageNum, @RequestParam @DecimalMin("1") int pageSize, @RequestParam List<OrderItem> orderItemList);
 
     @PostMapping("/list")
-     Result<List<NbmhPreventStation>> list(@RequestBody NbmhPreventStation entity, @RequestParam List<OrderItem> orderItemList);
+    Result<List<NbmhPreventStation>> list(@RequestBody NbmhPreventStation entity, @RequestParam List<OrderItem> orderItemList);
 
     @DeleteMapping("delete/{id}")
-     Result delete(@PathVariable Long id);
+    Result delete(@PathVariable Long id);
 }

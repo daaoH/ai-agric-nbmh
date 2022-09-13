@@ -28,7 +28,7 @@ public class NbmhEarRecordFallback implements RemoteNbmhEarRecordService {
     }
 
     @Override
-    public Result getById(Long id) {
+    public Result<NbmhEarRecord> getById(Long id) {
         return Result.failed(CommonEnum.FALL_BACK_MSG.getMsg());
     }
 
