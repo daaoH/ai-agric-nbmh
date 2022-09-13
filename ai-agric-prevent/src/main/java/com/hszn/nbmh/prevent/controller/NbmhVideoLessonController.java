@@ -96,7 +96,7 @@ public class NbmhVideoLessonController {
     }
 
     @Operation(summary = "管理员审核视频课堂视频", method = "PUT")
-    @PutMapping("/audit")
+    @PostMapping("/audit")
     @Inner(false)
     public Result audit(@RequestBody NbmhVideoLesson nbmhVideoLesson) {
 

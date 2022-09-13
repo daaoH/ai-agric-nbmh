@@ -32,7 +32,7 @@ public interface RemoteTradeReportService {
     Result add(@RequestBody NbmhTradeReport entity);
 
     @GetMapping("/{id}")
-    Result getById(@PathVariable(value = "id") @NotNull Long id);
+    Result<NbmhTradeReport> getById(@PathVariable(value = "id") @NotNull Long id);
 
     @PutMapping
      Result update(@RequestBody NbmhTradeReport entity);

@@ -172,13 +172,11 @@ public class NbmhUserExtraInfo implements Serializable {
     @Schema(name="status", description="状态 0正常 -1冻结 -2离职")
     private int status;
 
-
     /**
      * 营业执照
      */
     @Schema(name="businessLicense", description="营业执照")
     private String businessLicense;
-
 
     /**
      * 防疫站id

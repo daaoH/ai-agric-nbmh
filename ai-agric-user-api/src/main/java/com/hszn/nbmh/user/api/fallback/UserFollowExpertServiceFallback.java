@@ -28,7 +28,7 @@ public class UserFollowExpertServiceFallback implements RemoteUserFollowExpertSe
     }
 
     @Override
-    public Result getById(Long id) {
+    public Result<NbmhUserFollowExpert> getById(Long id) {
         return Result.failed(CommonEnum.FALL_BACK_MSG.getMsg());
     }
 

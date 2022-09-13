@@ -31,7 +31,7 @@ public interface RemoteAnimalLibraryService {
     Result add(@RequestBody NbmhAnimalLibrary entity);
 
     @GetMapping("/{id}")
-    Result getById(@PathVariable(value = "id") @NotNull Long id);
+    Result<NbmhAnimalLibrary> getById(@PathVariable(value = "id") @NotNull Long id);
 
     @PutMapping
     Result update(@RequestBody NbmhAnimalLibrary entity);
@@ -47,6 +47,6 @@ public interface RemoteAnimalLibraryService {
     @DeleteMapping("delete/{id}")
     Result delete(@PathVariable Long id);
 
-    @PutMapping("/audit")
+    @PostMapping("/audit")
     Result audit(@RequestBody NbmhAnimalLibrary nbmhAnimalLibrary);
 }

@@ -28,7 +28,7 @@ public class PrescriptionDrugServiceFallback implements RemotePrescriptionDrugSe
     }
 
     @Override
-    public Result getById(Long id) {
+    public Result<NbmhPrescriptionDrug> getById(Long id) {
         return Result.failed(CommonEnum.FALL_BACK_MSG.getMsg());
     }
 

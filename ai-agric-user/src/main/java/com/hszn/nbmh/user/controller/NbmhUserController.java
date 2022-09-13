@@ -16,7 +16,9 @@ import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.common.core.utils.SnowFlakeIdUtil;
 import com.hszn.nbmh.common.core.utils.SortUtil;
 import com.hszn.nbmh.common.security.annotation.Inner;
+import com.hszn.nbmh.prevent.api.entity.NbmhPreventStation;
 import com.hszn.nbmh.prevent.api.entity.NbmhUserIntegralRecord;
+import com.hszn.nbmh.prevent.api.feign.RemotePreventStationService;
 import com.hszn.nbmh.prevent.api.feign.RemoteUserIntegralService;
 import com.hszn.nbmh.third.entity.NbmhBaseConfig;
 import com.hszn.nbmh.third.feign.RemoteBaseConfigService;
@@ -27,6 +29,7 @@ import com.hszn.nbmh.user.api.entity.NbmhUserCredentials;
 import com.hszn.nbmh.user.api.entity.NbmhUserExtraInfo;
 import com.hszn.nbmh.user.api.feign.RemotePreventService;
 import com.hszn.nbmh.user.api.params.input.*;
+import com.hszn.nbmh.user.api.params.out.AnimalDoctorInfo;
 import com.hszn.nbmh.user.api.params.out.CurUserInfo;
 import com.hszn.nbmh.user.api.params.out.LoginUser;
 import com.hszn.nbmh.user.service.INbmhAnimalDoctorDetailService;
@@ -81,7 +84,7 @@ public class NbmhUserController {
 
     private final INbmhUserCredentialsService userCredentialsService;
 
-
+    private final RemotePreventStationService preventStationService;
     private final RemoteCodeImageService codeImageService;
 
     private final RemotePreventService remotePreventService;
@@ -547,6 +550,38 @@ public class NbmhUserController {
         }
 
         return Result.ok();
+    }
+
+    @Operation(summary = "根据用户Id查询兽医名片信息", method = "POST")
+    @PostMapping("/getAnimalDoctorInfoByUserId")
+    public Result<AnimalDoctorInfo> getAnimalDoctorInfoByUserId(@RequestParam(value = "userId") @NotNull(message = "兽医专家用户userId不能为空") Long userId) {
+        NbmhUser user = userService.getById(userId);
+        if (ObjectUtils.isEmpty(user)) {
+            return Result.failed("未获取到当前用户基础信息，请先注册账号！");
+        }
+
+        AnimalDoctorInfo animalDoctorInfo = AnimalDoctorInfo.builder().build();
+        BeanUtils.copyProperties(user, animalDoctorInfo);
+
+        NbmhUserExtraInfo userExtraInfo = extraInfoService.getOne(Wrappers.query(NbmhUserExtraInfo.builder().userId(userId).build()));
+        if (!ObjectUtils.isEmpty(userExtraInfo)) {
+            BeanUtils.copyProperties(userExtraInfo, animalDoctorInfo);
+
+            if (userExtraInfo.getPreventStationId() != null) {
+                Result<NbmhPreventStation> ret = preventStationService.getById(userExtraInfo.getPreventStationId());
+                NbmhPreventStation preventStation = ret.getData();
+                if (!ObjectUtils.isEmpty(preventStation)) {
+                    animalDoctorInfo.setPreventStationName(preventStation.getStationName());
+                }
+            }
+        }
+
+        NbmhAnimalDoctorDetail doctorDetail = animalDoctorDetailService.getOne(Wrappers.query(NbmhAnimalDoctorDetail.builder().userId(userId).build()));
+        if (!ObjectUtils.isEmpty(doctorDetail)) {
+            BeanUtils.copyProperties(doctorDetail, animalDoctorInfo);
+        }
+
+        return Result.ok(animalDoctorInfo);
     }
 
     @Transactional

@@ -31,7 +31,7 @@ public interface RemoteAgreementService {
     Result add(@RequestBody NbmhAgreement entity);
 
     @GetMapping("/{id}")
-    Result getById(@PathVariable(value = "id") @NotNull Long id);
+    Result<NbmhAgreement> getById(@PathVariable(value = "id") @NotNull Long id);
 
     @PutMapping
     Result update(@RequestBody NbmhAgreement entity);

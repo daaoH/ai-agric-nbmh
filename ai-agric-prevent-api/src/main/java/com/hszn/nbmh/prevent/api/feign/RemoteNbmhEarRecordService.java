@@ -32,7 +32,7 @@ public interface RemoteNbmhEarRecordService {
     Result add(@RequestBody NbmhEarRecord entity);
 
     @GetMapping("/{id}")
-    Result getById(@PathVariable(value = "id") @NotNull Long id);
+    Result<NbmhEarRecord> getById(@PathVariable(value = "id") @NotNull Long id);
 
     @PutMapping
      Result update(@RequestBody NbmhEarRecord entity);

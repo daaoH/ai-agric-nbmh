@@ -31,7 +31,7 @@ public interface RemotePrescriptionService {
     Result add(@RequestBody NbmhPrescription entity);
 
     @GetMapping("/{id}")
-    Result getById(@PathVariable(value = "id") @NotNull Long id);
+    Result<NbmhPrescription> getById(@PathVariable(value = "id") @NotNull Long id);
 
     @PutMapping
     Result update(@RequestBody NbmhPrescription entity);

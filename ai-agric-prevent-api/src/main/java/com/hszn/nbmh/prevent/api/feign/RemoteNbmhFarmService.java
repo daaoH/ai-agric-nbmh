@@ -32,7 +32,7 @@ public interface RemoteNbmhFarmService {
     Result add(@RequestBody NbmhFarm entity);
 
     @GetMapping("/{id}")
-    Result getById(@PathVariable(value = "id") @NotNull Long id);
+    Result<NbmhFarm> getById(@PathVariable(value = "id") @NotNull Long id);
 
     @PutMapping
      Result update(@RequestBody NbmhFarm entity);

@@ -28,7 +28,7 @@ public class MedicalAcceptFallback implements RemoteMedicalAcceptService {
     }
 
     @Override
-    public Result getById(Long id) {
+    public Result<NbmhMedicalAccept> getById(Long id) {
         return Result.failed(CommonEnum.FALL_BACK_MSG.getMsg());
     }
 

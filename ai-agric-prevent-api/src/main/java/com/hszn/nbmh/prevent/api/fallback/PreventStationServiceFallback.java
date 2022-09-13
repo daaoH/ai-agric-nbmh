@@ -28,7 +28,7 @@ public class PreventStationServiceFallback implements RemotePreventStationServic
     }
 
     @Override
-    public Result getById(Long id) {
+    public Result<NbmhPreventStation> getById(Long id) {
         return Result.failed(CommonEnum.FALL_BACK_MSG.getMsg());
     }
 

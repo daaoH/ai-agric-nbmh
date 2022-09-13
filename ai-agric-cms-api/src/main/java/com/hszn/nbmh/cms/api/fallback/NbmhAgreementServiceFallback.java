@@ -28,7 +28,7 @@ public class NbmhAgreementServiceFallback implements RemoteAgreementService {
     }
 
     @Override
-    public Result getById(Long id) {
+    public Result<NbmhAgreement> getById(Long id) {
         return Result.failed(CommonEnum.FALL_BACK_MSG.getMsg());
     }
 

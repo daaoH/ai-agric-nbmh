@@ -32,7 +32,7 @@ public interface RemoteAdService {
     Result add(@RequestBody NbmhAd entity);
 
     @GetMapping("/{id}")
-    Result getById(@PathVariable(value = "id") @NotNull Long id);
+    Result<NbmhAd> getById(@PathVariable(value = "id") @NotNull Long id);
 
     @PutMapping
      Result update(@RequestBody NbmhAd entity);

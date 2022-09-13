@@ -31,7 +31,7 @@ public interface RemoteArticleService {
     Result add(@RequestBody NbmhArticle entity);
 
     @GetMapping("/{id}")
-    Result getById(@PathVariable(value = "id") @NotNull Long id);
+    Result<NbmhArticle> getById(@PathVariable(value = "id") @NotNull Long id);
 
     @PutMapping
     Result update(@RequestBody NbmhArticle entity);
