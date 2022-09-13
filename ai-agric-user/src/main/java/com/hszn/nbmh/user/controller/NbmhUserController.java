@@ -354,11 +354,13 @@ public class NbmhUserController {
                         userService.updateById(stationMaster);
                     } else {
                         List<NbmhUser> NbmhUserList=new ArrayList<>();
-                        //站长信息获取
-                        NbmhUser stationMaster=userService.getById(param.getExtraInfo().getParentId());
 
                         //防疫员
                         NbmhUser preventOfficer=userService.getById(param.getInviteBy());
+                        //防疫员附属信息
+                        NbmhUserExtraInfo userExtraInfo=this.getUserExtraInfo(4, param.getInviteBy());
+                        //站长信息获取
+                        NbmhUser stationMaster=userService.getById(userExtraInfo.getParentId());
 
                         //防疫员积分换算 四舍五入
                         int newStaffRatio=rewardAmount.multiply(staffRatio).setScale(0, BigDecimal.ROUND_HALF_UP).intValue();
