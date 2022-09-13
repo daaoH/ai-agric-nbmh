@@ -248,6 +248,8 @@ public class NbmhUserController {
         if (ObjectUtils.isEmpty(userExtraInfo)) {
             NbmhUserExtraInfo extraInfo=this.assembleUserExtraInfo(param.getExtraInfo());
             extraInfo.setUserId(user.getId());
+            extraInfo.setAuthStatus(1);//审核中状态
+            extraInfo.setStatus(0);
             extraInfo.setType(3);//类型站长
             if (!extraInfoService.save(extraInfo)) {
                 return Result.failed(CommonEnum.DATA_ADD_FAILED.getMsg());
@@ -262,6 +264,7 @@ public class NbmhUserController {
             preventStationParam.setCertificate(param.getExtraInfo().getCertificate());
             remotePreventService.add(preventStationParam);
         } else {
+            userExtraInfo.setAuthStatus(1);//审核中状态
             userExtraInfo.setStatus(-1);
             extraInfoService.updateById(userExtraInfo);
         }
@@ -303,6 +306,9 @@ public class NbmhUserController {
             //生成二维码基本参数
             param.getExtraInfo().setQrcode(this.generateQrCode(user.getId()));
             NbmhUserExtraInfo extraInfo=this.assembleUserExtraInfo(param.getExtraInfo());
+            extraInfo.setType(param.getInviteType());
+            extraInfo.setAuthStatus(2);//审核中状态
+            extraInfo.setStatus(0);
             extraInfo.setUserId(user.getId());
             if (!extraInfoService.save(extraInfo)) {
                 return Result.failed(CommonEnum.DATA_ADD_FAILED.getMsg());
@@ -731,8 +737,6 @@ public class NbmhUserController {
         NbmhUserExtraInfo newSerExtraInfo=new NbmhUserExtraInfo();
         BeanUtils.copyProperties(extraInfo, newSerExtraInfo);
         newSerExtraInfo.setCreateTime(new Date());
-        newSerExtraInfo.setAuthStatus(2);
-        newSerExtraInfo.setStatus(0);
         return newSerExtraInfo;
     }
 
