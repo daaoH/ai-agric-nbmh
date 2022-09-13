@@ -26,10 +26,7 @@ import com.hszn.nbmh.user.api.entity.NbmhUser;
 import com.hszn.nbmh.user.api.entity.NbmhUserCredentials;
 import com.hszn.nbmh.user.api.entity.NbmhUserExtraInfo;
 import com.hszn.nbmh.user.api.feign.RemotePreventService;
-import com.hszn.nbmh.user.api.params.input.AnimalDoctorRegisterParam;
-import com.hszn.nbmh.user.api.params.input.NbmhPreventStationParam;
-import com.hszn.nbmh.user.api.params.input.RegisterParam;
-import com.hszn.nbmh.user.api.params.input.UserPageParam;
+import com.hszn.nbmh.user.api.params.input.*;
 import com.hszn.nbmh.user.api.params.out.CurUserInfo;
 import com.hszn.nbmh.user.api.params.out.LoginUser;
 import com.hszn.nbmh.user.service.INbmhAnimalDoctorDetailService;
@@ -51,6 +48,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
@@ -69,6 +67,7 @@ import java.util.stream.Stream;
  */
 @Api(tags = "用户接口")
 @RestController
+@Validated
 @SecurityRequirement(name = HttpHeaders.AUTHORIZATION)
 @RequiredArgsConstructor
 @RequestMapping("/nbmh-user")
@@ -264,10 +263,10 @@ public class NbmhUserController {
     }
 
     @Inner(false)
-    @Operation(summary="防疫站下人员统计")
-    @Parameter(description="type 类型 1普通用户 2专家 3站长 4防疫员 5养殖户 6商家")
+    @Operation(summary = "防疫站下人员统计")
+    @Parameter(description = "type 类型 1普通用户 2专家 3站长 4防疫员 5养殖户 6商家")
     @PostMapping("/getUserInfoCount")
-    public Result getUserInfoCount(@RequestParam("preventStationId") Long preventStationId, @RequestParam(value="type") Integer type) {
+    public Result getUserInfoCount(@RequestParam("preventStationId") Long preventStationId, @RequestParam(value = "type") Integer type) {
         return Result.ok(extraInfoService.count(Wrappers.<NbmhUserExtraInfo>query().lambda().eq(NbmhUserExtraInfo::getPreventStationId, preventStationId).eq(NbmhUserExtraInfo::getStatus, 0).eq(NbmhUserExtraInfo::getType, type)));
     }
 
@@ -504,7 +503,7 @@ public class NbmhUserController {
     @Inner(value = false)
     public Result animalDoctorRegister(@RequestBody AnimalDoctorRegisterParam param) {
 
-        if (ObjectUtils.isEmpty(param.getLoginName()) || ObjectUtils.isEmpty(param.getExtraInfo()) || ObjectUtils.isEmpty(param.getExtraInfo())) {
+        if (ObjectUtils.isEmpty(param.getLoginName()) || ObjectUtils.isEmpty(param.getExtraInfo()) || ObjectUtils.isEmpty(param.getAnimalDoctorDetail())) {
             return Result.failed(CommonEnum.PARAM_MISS.getMsg());
         }
 
@@ -543,6 +542,26 @@ public class NbmhUserController {
             //更新兽医专属信息
             animalDoctorDetailService.updateById(param.getAnimalDoctorDetail().setId(animalDoctorDetail.getId()).setGeoCode(geoHashCode).setStatus(0).setUpdateTime(new Date()));
         }
+
+        return Result.ok();
+    }
+
+    @Transactional
+    @Operation(summary = "兽医专家个人资料更新")
+    @PostMapping("/animalDoctorUpdate")
+    @Inner(value = false)
+    public Result animalDoctorUpdate(@RequestBody @Validated({AnimalDoctorUpdateParam.Update.class}) AnimalDoctorUpdateParam param) {
+
+        NbmhUser user = userService.getById(param.getUserId());
+        if (ObjectUtils.isEmpty(user)) {
+            return Result.failed("未获取到当前用户基础信息，请先注册账号！");
+        }
+
+        //更新用户扩展信息
+        extraInfoService.updateById(param.getExtraInfo());
+
+        //更新兽医专属信息
+        animalDoctorDetailService.updateById(param.getAnimalDoctorDetail());
 
         return Result.ok();
     }
