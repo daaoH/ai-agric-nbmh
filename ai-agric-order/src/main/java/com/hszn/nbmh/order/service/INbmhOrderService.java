@@ -39,10 +39,10 @@ public interface INbmhOrderService extends IService<NbmhOrder> {
 
     /**
      * 生成订单
-     * @param cartItemVo
+     * @param orderParam
      * @return
      */
-    Boolean createOrder(ShopCartItemVo cartItemVo, NbmhUserAddress address, Long orderId);
+    Boolean createOrder(CreateOrderParam orderParam, NbmhUserAddress address, Long orderId);
 
     /**
      * 取消订单

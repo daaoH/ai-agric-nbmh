@@ -13,4 +13,5 @@ import java.io.Serializable;
 
 @Data
 public class OrderFailMessage implements Serializable {
+
 }

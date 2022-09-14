@@ -1,6 +1,7 @@
 package com.hszn.nbmh.order.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -18,6 +19,7 @@ import com.hszn.nbmh.good.api.entity.NbmhGoodsSku;
 import com.hszn.nbmh.good.api.feign.RemoteGoodsSkuService;
 import com.hszn.nbmh.good.api.params.vo.CartItemVo;
 import com.hszn.nbmh.good.api.params.vo.ShopCartItemVo;
+import com.hszn.nbmh.order.api.constant.OrderStatusEnum;
 import com.hszn.nbmh.order.api.entity.NbmhOrder;
 import com.hszn.nbmh.order.api.entity.NbmhOrderItem;
 import com.hszn.nbmh.order.api.params.OrderSearchParam;
@@ -65,6 +67,9 @@ public class NbmhOrderServiceImpl extends ServiceImpl<NbmhOrderMapper, NbmhOrder
     private INbmhOrderItemService itemService;
 
     @Autowired
+    private NbmhOrderMapper orderMapper;
+
+    @Autowired
     private RemoteGoodsSkuService goodsSkuService;
 
     @Autowired
@@ -105,42 +110,70 @@ public class NbmhOrderServiceImpl extends ServiceImpl<NbmhOrderMapper, NbmhOrder
         return result;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
-    public Boolean createOrder(ShopCartItemVo cartItemVo, NbmhUserAddress address, Long orderId) {
+    public Boolean createOrder(CreateOrderParam orderParam, NbmhUserAddress address, Long orderId) {
         Boolean createRet = false;
         try {
-            List<CartItemVo> cartItems = cartItemVo.getItems();
-            BigDecimal totalAmount = getTotalAmount(cartItems);
-            List<NbmhOrderItem> orderItems = getOrderItemList(cartItems, orderId);
-
-            //计算运费
-            FreightVo freightVo = getFreightAmount(cartItemVo, address);
-            BigDecimal freightAmount = freightVo.getPrice();
-            if(ObjectUtil.isNull(freightAmount)){
-                freightAmount = BigDecimal.ZERO;
-            }
-
-            //优惠金额计算
-            BigDecimal promotionAmount = BigDecimal.ZERO;
-
-            Set<SkuStockVo> skuSet = new HashSet<>();
-            skuSet.addAll(cartItems.stream().map(item -> new SkuStockVo(item.getSkuId(), item.getCount()))
-                    .collect(Collectors.toSet()));
-
-            //清除购物车数据
-
-            //扣减库存
+            List<PreOrderParam> preOrderItems = orderParam.getPreOrderItems();
+            BigDecimal totalAmount = orderParam.getAmount();
             Boolean success = false;
-            for(SkuStockVo stockVo : skuSet){
-                Result<Boolean> ret = goodsSkuService.lockstock(stockVo.getSkuId(), stockVo.getNum());
-                success = ret.getData();
-                if(!success){
+            BigDecimal totalDiscountAmount = BigDecimal.ZERO;
+            BigDecimal totalFreightAmount = BigDecimal.ZERO;
+            List<NbmhOrderItem> allItems = new ArrayList<>();
+            for(PreOrderParam preOrderParam : preOrderItems){
+                ShopCartItemVo cartItemVo = preOrderParam.getCartItems();
 
+                List<CartItemVo> cartItems = cartItemVo.getItems();
+                BigDecimal itemTotalAmount = getTotalAmount(cartItems);
+                List<NbmhOrderItem> orderItems = getOrderItemList(cartItems, orderId);
+
+                //计算运费
+                FreightVo freightVo = getFreightAmount(cartItemVo, address);
+                BigDecimal freightAmount = freightVo.getPrice();
+                if(ObjectUtil.isNull(freightAmount)){
+                    freightAmount = BigDecimal.ZERO;
                 }
+
+                //优惠金额计算
+                BigDecimal discountAmount = BigDecimal.ZERO;
+
+                Set<SkuStockVo> skuSet = new HashSet<>();
+                skuSet.addAll(cartItems.stream().map(item -> new SkuStockVo(item.getSkuId(), item.getCount()))
+                        .collect(Collectors.toSet()));
+
+                //清除购物车数据
+
+                //扣减库存
+                for(SkuStockVo stockVo : skuSet){
+                    Result<Boolean> ret = goodsSkuService.lockstock(stockVo.getSkuId(), stockVo.getNum());
+                    success = ret.getData();
+                    if(!success){
+                        throw new ServiceException(CommonEnum.STOCK_REDUCE_ERROR.getMsg());
+                    }
+                }
+                allItems.addAll(orderItems);
+                itemService.saveBatch(orderItems);
             }
 
             if(success){
                 //创建订单
+                NbmhOrder order = new NbmhOrder();
+                order.setId(orderId);
+                order.setOrderItems(allItems);
+                order.setDiscountsAmount(totalDiscountAmount);
+                order.setOrderStatus(OrderStatusEnum.WAIT_FOR_PAY.getCode());
+                order.setFreightAmount(totalFreightAmount);
+
+                //实际支付金额 = 应付金额 + 运费 -优惠金额
+                BigDecimal payAmount = NumberUtil.add(totalAmount, totalFreightAmount);
+                payAmount = NumberUtil.sub(payAmount, totalDiscountAmount);
+                order.setPayAmount(payAmount);
+
+                order.setStatus(0);
+
+                orderMapper.insert(order);
+
 
                 createRet = true;
             }else{

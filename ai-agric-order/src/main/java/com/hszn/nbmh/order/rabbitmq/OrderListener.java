@@ -91,13 +91,14 @@ public class OrderListener {
                     }
 
                 }
-                Boolean ret = orderService.createOrder(cartItemVo, address, orderId);
-                if(!ret){
-                    throw new ServiceException(CommonEnum.ORDER_CREATE_ERROR.getMsg());
-                }
             }
-            log.info("订单创建执行成功: deliveryTag{}", message.getMessageProperties().getDeliveryTag());
-            channel.basicAck(message.getMessageProperties().getDeliveryTag(), true);
+            Boolean ret = orderService.createOrder(param, address, orderId);
+            if(ret){
+                log.info("订单创建执行成功: deliveryTag{}", message.getMessageProperties().getDeliveryTag());
+                channel.basicAck(message.getMessageProperties().getDeliveryTag(), true);
+            }else{
+                throw new ServiceException(CommonEnum.ORDER_CREATE_ERROR.getMsg());
+            }
         }catch (Exception e){
             log.error(e.getMessage(), e);
             log.info("订单创建执行失败: deliveryTag{}", message.getMessageProperties().getDeliveryTag());
