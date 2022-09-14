@@ -73,34 +73,26 @@ public class NbmhAnimalDoctorDetailServiceImpl extends ServiceImpl<NbmhAnimalDoc
     @Transactional(readOnly = true)
     public IPage<NbmhAnimalDoctorDetail> query(NbmhAnimalDoctorDetail entity, int pageNum, int pageSize, List<OrderItem> orderItemList) {
 
-        Page<NbmhAnimalDoctorDetail> page = new Page<>(pageNum, pageSize);
-        page.setOrders(orderItemList);
-
-        LambdaQueryWrapper<NbmhAnimalDoctorDetail> lambdaQueryWrapper = Wrappers.lambdaQuery(entity);
-
-        return nbmhAnimalDoctorDetailMapper.selectPage(page, lambdaQueryWrapper);
+        return nbmhAnimalDoctorDetailMapper.selectPage(buildPageParam(pageNum, pageSize, orderItemList), Wrappers.lambdaQuery(entity));
     }
 
     @Override
     public IPage<NbmhAnimalDoctorDetail> query(NbmhAnimalDoctorDetail entity, int pageNum, int pageSize, Integer acceptOrderMinNum, Integer acceptOrderMaxNum, List<OrderItem> orderItemList) {
-        Page<NbmhAnimalDoctorDetail> page = new Page<>(pageNum, pageSize);
-        page.setOrders(orderItemList);
 
         LambdaQueryWrapper<NbmhAnimalDoctorDetail> lambdaQueryWrapper = Wrappers.lambdaQuery(entity);
-        if(acceptOrderMinNum != null && acceptOrderMaxNum != null){
+        if (acceptOrderMinNum != null && acceptOrderMaxNum != null) {
             lambdaQueryWrapper.between(NbmhAnimalDoctorDetail::getAcceptOrderNum, acceptOrderMinNum, acceptOrderMaxNum);
         }
 
-        return nbmhAnimalDoctorDetailMapper.selectPage(page, lambdaQueryWrapper);
+        return nbmhAnimalDoctorDetailMapper.selectPage(buildPageParam(pageNum, pageSize, orderItemList), lambdaQueryWrapper);
     }
 
     @Override
-    public IPage<NbmhAnimalDoctorDetail> query(NbmhAnimalDoctorDetail entity, int pageNum, int pageSize, Integer acceptOrderMinNum, Integer acceptOrderMaxNum, double minX, double maxX, double minY, double maxY, List<OrderItem> orderItemList) {
-        Page<NbmhAnimalDoctorDetail> page = new Page<>(pageNum, pageSize);
-        page.setOrders(orderItemList);
+    public IPage<NbmhAnimalDoctorDetail> query(NbmhAnimalDoctorDetail entity, int pageNum, int pageSize, Integer acceptOrderMinNum, Integer acceptOrderMaxNum,
+                                               double minX, double maxX, double minY, double maxY, List<OrderItem> orderItemList) {
 
         LambdaQueryWrapper<NbmhAnimalDoctorDetail> lambdaQueryWrapper = Wrappers.lambdaQuery(entity);
-        if(acceptOrderMinNum != null && acceptOrderMaxNum != null){
+        if (acceptOrderMinNum != null && acceptOrderMaxNum != null) {
             lambdaQueryWrapper.between(NbmhAnimalDoctorDetail::getAcceptOrderNum, acceptOrderMinNum, acceptOrderMaxNum);
         }
 
@@ -108,7 +100,15 @@ public class NbmhAnimalDoctorDetailServiceImpl extends ServiceImpl<NbmhAnimalDoc
 
         lambdaQueryWrapper.between(NbmhAnimalDoctorDetail::getLatitude, minY, maxY);
 
-        return nbmhAnimalDoctorDetailMapper.selectPage(page, lambdaQueryWrapper);
+        return nbmhAnimalDoctorDetailMapper.selectPage(buildPageParam(pageNum, pageSize, orderItemList), lambdaQueryWrapper);
+    }
+
+    private Page<NbmhAnimalDoctorDetail> buildPageParam(int pageNum, int pageSize, List<OrderItem> orderItemList) {
+
+        Page<NbmhAnimalDoctorDetail> page = new Page<>(pageNum, pageSize);
+        page.setOrders(orderItemList);
+
+        return page;
     }
 
     @Override
