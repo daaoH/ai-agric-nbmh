@@ -79,6 +79,14 @@ public class NbmhAnimalDoctorDetail implements Serializable {
     private String goodAnimalType;
 
     /**
+     * 兽医所属地区（例：云南省昆明市官渡区）
+     */
+    @TableField(condition = SqlCondition.LIKE)
+    @NotBlank(message = "新增数据时兽医所属地区area不能为空", groups = {Save.class})
+    @Schema(name = "area", description = "兽医所属地区（例：云南省昆明市官渡区）")
+    private String area;
+
+    /**
      * 擅长病症
      */
     @NotBlank(message = "新增数据时擅长病症goodDisease不能为空", groups = {Save.class})
@@ -122,12 +130,6 @@ public class NbmhAnimalDoctorDetail implements Serializable {
     private Double latitude;
 
     /**
-     * 经纬度所计算的geo_hash码
-     */
-    @Schema(name = "geoCode", description = "经纬度所计算的geo_hash码")
-    private String geoCode;
-
-    /**
      * 热度（推荐度）
      */
     @Schema(name = "heatWeight", description = "热度（推荐度）")
@@ -151,6 +153,9 @@ public class NbmhAnimalDoctorDetail implements Serializable {
     @Schema(name = "status", description = "状态 0正常 -1冻结")
     private Integer status;
 
+    /**
+     * 是否接诊（0：休息中；1：可接诊）
+     */
     @ApiModelProperty(value = "是否接诊（0：休息中；1：可接诊）", hidden = true)
     @TableField(exist = false)
     private Integer medicalStatus;

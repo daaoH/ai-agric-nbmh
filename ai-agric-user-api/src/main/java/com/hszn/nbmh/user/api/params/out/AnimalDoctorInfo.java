@@ -1,6 +1,7 @@
 package com.hszn.nbmh.user.api.params.out;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.hszn.nbmh.user.api.entity.NbmhAnimalDoctorDetail;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -167,6 +168,13 @@ public class AnimalDoctorInfo implements Serializable {
     private String goodAnimalType;
 
     /**
+     * 兽医所属地区（例：云南省昆明市官渡区）
+     */
+    @TableField(condition = SqlCondition.LIKE)
+    @Schema(name = "area", description = "兽医所属地区（例：云南省昆明市官渡区）")
+    private String area;
+
+    /**
      * 擅长病症
      */
     @Schema(name = "goodDisease", description = "擅长病症")
@@ -207,12 +215,6 @@ public class AnimalDoctorInfo implements Serializable {
      */
     @Schema(name = "latitude", description = "纬度")
     private Double latitude;
-
-    /**
-     * 经纬度所计算的geo_hash码
-     */
-    @Schema(name = "geoCode", description = "经纬度所计算的geo_hash码")
-    private String geoCode;
 
     /**
      * 热度（推荐度）

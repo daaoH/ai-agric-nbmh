@@ -10,6 +10,7 @@
         <result column="accept_order_num" property="acceptOrderNum"/>
         <result column="doctor_type" property="doctorType"/>
         <result column="good_animal_type" property="goodAnimalType"/>
+        <result column="area" property="area"/>
         <result column="good_disease" property="goodDisease"/>
         <result column="certificate_no" property="certificateNo"/>
         <result column="video_medical_price" property="videoMedicalPrice"/>
@@ -17,7 +18,6 @@
         <result column="door_medical_price" property="doorMedicalPrice"/>
         <result column="longitude" property="longitude"/>
         <result column="latitude" property="latitude"/>
-        <result column="geo_code" property="geoCode"/>
         <result column="heat_weight" property="heatWeight"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
