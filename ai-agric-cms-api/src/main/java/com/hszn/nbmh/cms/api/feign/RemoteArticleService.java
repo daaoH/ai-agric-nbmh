@@ -11,7 +11,6 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -24,7 +23,7 @@ import java.util.List;
  * @since 2022-08-20
  */
 
-@FeignClient(value = ServiceNameConstant.PREVENT_SERVICE, path = UrlPathConstant.NBMH_ARTICLE, fallback = NbmhArticleServiceFallback.class)
+@FeignClient(value = ServiceNameConstant.CMS_SERVICE, path = UrlPathConstant.NBMH_ARTICLE, fallback = NbmhArticleServiceFallback.class)
 public interface RemoteArticleService {
 
     @PostMapping("/add")

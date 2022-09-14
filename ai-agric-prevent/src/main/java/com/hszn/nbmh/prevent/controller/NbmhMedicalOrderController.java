@@ -41,7 +41,7 @@ public class NbmhMedicalOrderController {
     @Operation(summary = "新增诊断下单记录", method = "POST")
     @PostMapping("/add")
     @Inner(false)
-    public Result add(@RequestBody @Validated({NbmhMedicalOrder.Save.class}) NbmhMedicalOrderParam medicalOrderParam) {
+    public Result add(@RequestBody @Validated({NbmhMedicalOrderParam.Save.class}) NbmhMedicalOrderParam medicalOrderParam) {
 
         List<Integer> idList = nbmhMedicalOrderService.save(Collections.singletonList(medicalOrderParam));
         if (idList != null && idList.size() > 0) {
@@ -95,6 +95,5 @@ public class NbmhMedicalOrderController {
         nbmhMedicalOrderService.delete(Collections.singletonList(id));
         return Result.ok();
     }
-
 
 }

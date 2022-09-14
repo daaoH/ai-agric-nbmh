@@ -6,6 +6,7 @@ import com.hszn.nbmh.cms.service.INbmhAgreementService;
 import com.hszn.nbmh.common.core.enums.CommonEnum;
 import com.hszn.nbmh.common.core.mould.QueryCondition;
 import com.hszn.nbmh.common.core.utils.Result;
+import com.hszn.nbmh.common.security.annotation.Inner;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -38,6 +39,7 @@ public class NbmhAgreementController {
 
     @Operation(summary = "新增用户协议", method = "POST")
     @PostMapping("/add")
+    @Inner(false)
     public Result add(@RequestBody @Validated({NbmhAgreement.Save.class}) NbmhAgreement nbmhAgreement) {
 
         List<Integer> idList = nbmhAgreementService.save(Collections.singletonList(nbmhAgreement));
@@ -51,6 +53,7 @@ public class NbmhAgreementController {
     @Operation(summary = "根据ID查询用户协议", method = "GET")
     @Parameters({@Parameter(description = "用户协议Id", name = "id")})
     @GetMapping("/{id}")
+    @Inner(false)
     public Result<NbmhAgreement> getById(@PathVariable(value = "id") @NotNull(message = "用户协议id不能为空") Long id) {
 
         return Result.ok(nbmhAgreementService.getById(id));
@@ -58,6 +61,7 @@ public class NbmhAgreementController {
 
     @Operation(summary = "更新用户协议", method = "PUT")
     @PutMapping
+    @Inner(false)
     public Result update(@RequestBody @Validated({NbmhAgreement.Update.class}) NbmhAgreement nbmhAgreement) {
 
         nbmhAgreementService.update(Collections.singletonList(nbmhAgreement));
@@ -67,6 +71,7 @@ public class NbmhAgreementController {
     @Operation(summary = "分页查询用户协议", method = "POST")
     @Parameters({@Parameter(description = "页码", name = "pageNum"), @Parameter(description = "每页显示条数", name = "pageSize")})
     @PostMapping("/query")
+    @Inner(false)
     public Result<IPage<NbmhAgreement>> query(@RequestBody QueryCondition<NbmhAgreement> queryCondition,
                                               @RequestParam @DecimalMin("1") int pageNum,
                                               @RequestParam @DecimalMin("1") int pageSize) {
@@ -76,6 +81,7 @@ public class NbmhAgreementController {
 
     @Operation(summary = "查询用户协议", method = "POST")
     @PostMapping("/list")
+    @Inner(false)
     public Result<List<NbmhAgreement>> list(@RequestBody QueryCondition<NbmhAgreement> queryCondition) {
 
         return Result.ok(nbmhAgreementService.list(queryCondition.getEntity(), queryCondition.getOrderItemList()));
@@ -83,6 +89,7 @@ public class NbmhAgreementController {
 
     @Operation(summary = "删除用户协议", method = "DELETE")
     @DeleteMapping("delete/{id}")
+    @Inner(false)
     public Result delete(@PathVariable(value = "id") @NotNull(message = "用户协议id不能为空") Long id) {
 
         nbmhAgreementService.delete(Collections.singletonList(id));

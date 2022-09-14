@@ -11,8 +11,6 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -25,7 +23,7 @@ import java.util.List;
  * @since 2022-08-20
  */
 
-@FeignClient(value = ServiceNameConstant.PREVENT_SERVICE, path = UrlPathConstant.NBMH_AD, fallback = NbmhAdServiceFallback.class)
+@FeignClient(value = ServiceNameConstant.CMS_SERVICE, path = UrlPathConstant.NBMH_AD, fallback = NbmhAdServiceFallback.class)
 public interface RemoteAdService {
 
     @PostMapping("/add")
@@ -35,14 +33,14 @@ public interface RemoteAdService {
     Result<NbmhAd> getById(@PathVariable(value = "id") @NotNull Long id);
 
     @PutMapping
-     Result update(@RequestBody NbmhAd entity);
+    Result update(@RequestBody NbmhAd entity);
 
     @PostMapping("/query")
-     Result<IPage<NbmhAd>> query(@RequestBody NbmhAd entity, @RequestParam @DecimalMin("1") int pageNum, @RequestParam @DecimalMin("1") int pageSize, @RequestParam List<OrderItem> orderItemList);
+    Result<IPage<NbmhAd>> query(@RequestBody NbmhAd entity, @RequestParam @DecimalMin("1") int pageNum, @RequestParam @DecimalMin("1") int pageSize, @RequestParam List<OrderItem> orderItemList);
 
     @PostMapping("/list")
-     Result<List<NbmhAd>> list(@RequestBody NbmhAd entity, @RequestParam List<OrderItem> orderItemList);
+    Result<List<NbmhAd>> list(@RequestBody NbmhAd entity, @RequestParam List<OrderItem> orderItemList);
 
     @DeleteMapping("delete/{id}")
-     Result delete(@PathVariable Long id);
+    Result delete(@PathVariable Long id);
 }

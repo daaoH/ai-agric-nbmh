@@ -6,6 +6,7 @@
     <resultMap id="BaseResultMap" type="com.hszn.nbmh.user.api.entity.NbmhAnimalDoctorDetail">
         <id column="id" property="id"/>
         <result column="user_id" property="userId"/>
+        <result column="user_name" property="userName"/>
         <result column="accept_order_num" property="acceptOrderNum"/>
         <result column="doctor_type" property="doctorType"/>
         <result column="good_animal_type" property="goodAnimalType"/>

@@ -124,27 +124,27 @@ public class NbmhMedicalOrder implements Serializable {
     private Integer freeStatus;
 
     /**
-     * 诊断金额
+     * 诊疗费用总金额
      */
-    @Schema(name = "medicalMoney", description = "诊断金额")
+    @Schema(name = "medicalMoney", description = "诊疗费用总金额")
     private BigDecimal medicalMoney;
 
     /**
-     * 诊断定金
+     * 诊疗费用定金
      */
-    @Schema(name = "frontMoney", description = "诊断定金")
+    @Schema(name = "frontMoney", description = "诊疗费用定金")
     private BigDecimal frontMoney;
 
     /**
      * 是否已支付定金
      */
-    @Schema(name = "isPayFrontMoney", description = "是否已支付定金")
+    @Schema(name = "isPayFrontMoney", description = "是否已支付定金,0:否；1：是；")
     private Integer isPayFrontMoney;
 
     /**
      * 是否已支付所有费用
      */
-    @Schema(name = "isPayMedicalMoney", description = "是否已支付所有费用")
+    @Schema(name = "isPayMedicalMoney", description = "是否已支付所有费用,0:否；1：是；")
     private Integer isPayMedicalMoney;
 
     /**

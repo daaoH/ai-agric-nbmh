@@ -1,10 +1,17 @@
 package com.hszn.nbmh.prevent.api.params.input;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.hszn.nbmh.prevent.api.entity.NbmhMedicalAccept;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
+import javax.validation.groups.Default;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -31,6 +38,12 @@ public class NbmhMedicalOrderParam implements Serializable {
     /**
      * 主键id
      */
+    /**
+     * 主键id
+     */
+    @Null(message = "新增数据时Id必须为null", groups = {Save.class})
+    @TableId(value = "id", type = IdType.AUTO)
+    @Schema(name = "id", description = "主键id")
     private Long id;
 
     /**
@@ -42,30 +55,34 @@ public class NbmhMedicalOrderParam implements Serializable {
     /**
      * 养殖户id
      */
+    @NotNull(message = "新增数据时养殖户farmerId不能为空", groups = {Save.class})
     @Schema(name = "farmerId", description = "养殖户id")
     private Long farmerId;
 
     /**
      * 养殖户名称
      */
-    @Schema(name = "farmerName", description = "养殖户名称")
+    @NotBlank(message = "新增数据时养殖户名称farmerName不能为空", groups = {Save.class})
     private String farmerName;
 
     /**
      * 养殖户电话
      */
+    @NotBlank(message = "新增数据时养殖户电话farmerPhone不能为空", groups = {Save.class})
     @Schema(name = "farmerPhone", description = "养殖户电话")
     private String farmerPhone;
 
     /**
      * 养殖户头像
      */
+    @NotBlank(message = "新增数据时养殖户头像farmerAvatar不能为空", groups = {Save.class})
     @Schema(name = "farmerAvatar", description = "养殖户头像")
     private String farmerAvatar;
 
     /**
      * 养殖户地址
      */
+    @NotBlank(message = "新增数据时养殖户地址farmerAddress不能为空", groups = {Save.class})
     @Schema(name = "farmerAddress", description = "养殖户地址")
     private String farmerAddress;
 
@@ -90,6 +107,7 @@ public class NbmhMedicalOrderParam implements Serializable {
     /**
      * 病情描述
      */
+    @NotBlank(message = "新增数据时病情描述illnessDesc不能为空", groups = {Save.class})
     @Schema(name = "illnessDesc", description = "病情描述")
     private String illnessDesc;
 
@@ -106,28 +124,28 @@ public class NbmhMedicalOrderParam implements Serializable {
     private Integer freeStatus;
 
     /**
-     * 诊断金额
+     * 诊疗费用总金额
      */
-    @Schema(name = "medicalMoney", description = "诊断金额")
+    @Schema(name = "medicalMoney", description = "诊疗费用总金额")
     private BigDecimal medicalMoney;
 
     /**
-     * 诊断定金
+     * 诊疗费用定金
      */
-    @Schema(name = "frontMoney", description = "诊断定金")
+    @Schema(name = "frontMoney", description = "诊疗费用定金")
     private BigDecimal frontMoney;
 
     /**
      * 是否已支付定金
      */
-    @Schema(name = "payFrontMoney", description = "是否已支付定金")
-    private Integer payFrontMoney;
+    @Schema(name = "isPayFrontMoney", description = "是否已支付定金")
+    private Integer isPayFrontMoney;
 
     /**
      * 是否已支付所有费用
      */
-    @Schema(name = "payMedicalMoney", description = "是否已支付所有费用")
-    private Integer payMedicalMoney;
+    @Schema(name = "isPayMedicalMoney", description = "是否已支付所有费用")
+    private Integer isPayMedicalMoney;
 
     /**
      * 创建时间
@@ -150,7 +168,11 @@ public class NbmhMedicalOrderParam implements Serializable {
     /**
      * 会诊接单记录列表
      */
+    @NotEmpty(message = "新增数据时会诊接单专家列表medicalAcceptList不能为空", groups = {Save.class})
     @Schema(name = "medicalAcceptList", description = "会诊接单记录列表")
     List<NbmhMedicalAccept> medicalAcceptList;
+
+    public interface Save extends Default {
+    }
 
 }

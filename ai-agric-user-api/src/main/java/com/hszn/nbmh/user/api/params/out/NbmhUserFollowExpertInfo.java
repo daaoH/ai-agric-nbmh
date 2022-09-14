@@ -1,5 +1,7 @@
 package com.hszn.nbmh.user.api.params.out;
 
+import com.baomidou.mybatisplus.annotation.SqlCondition;
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -73,9 +75,10 @@ public class NbmhUserFollowExpertInfo implements Serializable {
     private Integer doctorType;
 
     /**
-     * 擅长畜种0:猪，1:牛
+     * 擅长畜种0:猪，1:牛，2：羊；3：鸡；4：鸭；5：鹅；6：狗，以逗号分割
      */
-    @Schema(name = "goodAnimalType", description = "擅长畜种0:猪，1:牛")
-    private Integer goodAnimalType;
+    @TableField(condition = SqlCondition.LIKE)
+    @Schema(name = "goodAnimalType", description = "擅长畜种0:猪，1:牛，2：羊；3：鸡；4：鸭；5：鹅；6：狗")
+    private String goodAnimalType;
 
 }

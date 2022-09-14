@@ -11,6 +11,7 @@ import com.hszn.nbmh.user.api.params.out.CurUserInfo;
 import com.hszn.nbmh.user.api.params.out.LoginUser;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -75,6 +76,11 @@ public class UserServiceFallback implements RemoteUserService {
     @Override
     public Result<NbmhUser> getById(Long id) {
         return Result.failed(CommonEnum.DATA_QUERY_FAILED.getMsg());
+    }
+
+    @Override
+    public Result coinUpdate(Long userId, Integer payType, BigDecimal payMoney) {
+        return Result.failed(CommonEnum.FALL_BACK_MSG.getMsg());
     }
 
 }

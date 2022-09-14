@@ -11,6 +11,11 @@ public interface UrlPathConstant {
     /**
      * 支付
      */
-    String PAYMENT="/nbmh-payment";
+    String PAYMENT = "/nbmh-payment";
+
+    /**
+     * 虚拟币/积分支付
+     */
+    String UNREAL_PAYMENT = "/nbmh-unreal-payment";
 
 }

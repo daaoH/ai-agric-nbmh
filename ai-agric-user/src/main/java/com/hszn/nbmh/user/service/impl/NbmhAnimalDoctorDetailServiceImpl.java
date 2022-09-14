@@ -19,6 +19,8 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 /**
@@ -35,6 +37,8 @@ import java.util.stream.Collectors;
 public class NbmhAnimalDoctorDetailServiceImpl extends ServiceImpl<NbmhAnimalDoctorDetailMapper, NbmhAnimalDoctorDetail> implements INbmhAnimalDoctorDetailService {
     @Resource
     private NbmhAnimalDoctorDetailMapper nbmhAnimalDoctorDetailMapper;
+
+    private static Lock lock = new ReentrantLock();
 
     @Override
     @Transactional
@@ -104,15 +108,23 @@ public class NbmhAnimalDoctorDetailServiceImpl extends ServiceImpl<NbmhAnimalDoc
 
     @Override
     @Transactional
-    public synchronized int updateAcceptOrderNum(Long doctorId) {
+    public int updateAcceptOrderNum(Long doctorId) {
 
-        NbmhAnimalDoctorDetail animalDoctorDetail = nbmhAnimalDoctorDetailMapper.selectOne(Wrappers.lambdaQuery(NbmhAnimalDoctorDetail.builder().id(doctorId).build()));
-        if (ObjectUtils.isEmpty(animalDoctorDetail)) {
-            return 0;
+        int ret;
+        try {
+            lock.lock();
+            NbmhAnimalDoctorDetail animalDoctorDetail = nbmhAnimalDoctorDetailMapper.selectOne(Wrappers.lambdaQuery(NbmhAnimalDoctorDetail.builder().id(doctorId).build()));
+            if (ObjectUtils.isEmpty(animalDoctorDetail)) {
+                ret = 0;
+            } else {
+                animalDoctorDetail.setAcceptOrderNum(animalDoctorDetail.getAcceptOrderNum() + 1);
+                ret = nbmhAnimalDoctorDetailMapper.updateById(animalDoctorDetail);
+            }
+        } finally {
+            lock.unlock();
         }
 
-        animalDoctorDetail.setAcceptOrderNum(animalDoctorDetail.getAcceptOrderNum() + 1);
-        return nbmhAnimalDoctorDetailMapper.updateById(animalDoctorDetail);
+        return ret;
     }
 
 }

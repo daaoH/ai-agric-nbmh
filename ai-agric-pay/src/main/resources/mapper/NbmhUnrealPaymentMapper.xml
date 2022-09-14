@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hszn.nbmh.pay.mapper.NbmhUnrealPaymentMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hszn.nbmh.pay.api.entity.NbmhUnrealPayment">
+        <id column="id" property="id" />
+        <result column="tenant_id" property="tenantId" />
+        <result column="pay_channel" property="payChannel" />
+        <result column="pay_user_id" property="payUserId" />
+        <result column="income_user_id" property="incomeUserId" />
+        <result column="order_id" property="orderId" />
+        <result column="total_money" property="totalMoney" />
+        <result column="pay_end_time" property="payEndTime" />
+        <result column="tran_type" property="tranType" />
+        <result column="trade_status" property="tradeStatus" />
+        <result column="remark" property="remark" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="status" property="status" />
+    </resultMap>
+
+</mapper>

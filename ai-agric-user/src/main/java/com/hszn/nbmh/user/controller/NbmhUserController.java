@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hszn.nbmh.common.core.constant.SecurityConstants;
 import com.hszn.nbmh.common.core.enums.CommonEnum;
+import com.hszn.nbmh.common.core.exception.ServiceException;
 import com.hszn.nbmh.common.core.mould.CodeImageRequest;
 import com.hszn.nbmh.common.core.mould.QueryRequest;
 import com.hszn.nbmh.common.core.utils.Result;
@@ -59,6 +60,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -105,6 +108,8 @@ public class NbmhUserController {
     private static final String GEO_CODE="geo_code";
 
     private static final int LEN=3;
+
+    private static Lock lock = new ReentrantLock();
 
     @Inner(false)
     @ApiOperation("根据用户名查询用户信息")
@@ -548,9 +553,9 @@ public class NbmhUserController {
     }
 
     @Transactional
-    @Operation(summary="兽医注册认证")
+    @Operation(summary = "兽医注册认证")
     @PostMapping("/animalDoctorRegister")
-    @Inner(value=false)
+    @Inner(value = false)
     public Result animalDoctorRegister(@RequestBody AnimalDoctorRegisterParam param) {
 
         if (ObjectUtils.isEmpty(param.getLoginName()) || ObjectUtils.isEmpty(param.getExtraInfo()) || ObjectUtils.isEmpty(param.getAnimalDoctorDetail())) {
@@ -559,9 +564,9 @@ public class NbmhUserController {
 
         NbmhUser user;
         if (param.getLoginType() == 0) {
-            user=userService.getOne(Wrappers.<NbmhUser>query().lambda().eq(NbmhUser::getUserName, param.getLoginName()));
+            user = userService.getOne(Wrappers.<NbmhUser>query().lambda().eq(NbmhUser::getUserName, param.getLoginName()));
         } else {
-            user=userService.getOne(Wrappers.<NbmhUser>query().lambda().eq(NbmhUser::getPhone, param.getLoginName()));
+            user = userService.getOne(Wrappers.<NbmhUser>query().lambda().eq(NbmhUser::getPhone, param.getLoginName()));
         }
 
         if (ObjectUtils.isEmpty(user)) {
@@ -570,7 +575,7 @@ public class NbmhUserController {
 
         param.getExtraInfo().setParentId(0L).setQrcode(this.generateQrCode(user.getId()));
 
-        NbmhUserExtraInfo userExtraInfo=this.getUserExtraInfo(param.getExtraInfo().getType(), user.getId());
+        NbmhUserExtraInfo userExtraInfo = this.getUserExtraInfo(param.getExtraInfo().getType(), user.getId());
         if (ObjectUtils.isEmpty(userExtraInfo)) {
 
             //保存用户扩展信息
@@ -581,8 +586,8 @@ public class NbmhUserController {
             extraInfoService.updateById(param.getExtraInfo().setId(userExtraInfo.getId()).setStatus(0).setUpdateTime(new Date()));
         }
 
-        NbmhAnimalDoctorDetail animalDoctorDetail=this.getAnimalDoctorDetail(user.getId());
-        String geoHashCode=GeohashUtils.encodeLatLon(param.getAnimalDoctorDetail().getLatitude(), param.getAnimalDoctorDetail().getLongitude());
+        NbmhAnimalDoctorDetail animalDoctorDetail = this.getAnimalDoctorDetail(user.getId());
+        String geoHashCode = GeohashUtils.encodeLatLon(param.getAnimalDoctorDetail().getLatitude(), param.getAnimalDoctorDetail().getLongitude());
         if (ObjectUtils.isEmpty(animalDoctorDetail)) {
 
             //保存兽医专属信息
@@ -596,31 +601,32 @@ public class NbmhUserController {
         return Result.ok();
     }
 
-    @Operation(summary="根据用户Id查询兽医名片信息", method="POST")
+    @Operation(summary = "根据用户Id查询兽医名片信息", method = "POST")
     @PostMapping("/getAnimalDoctorInfoByUserId")
-    public Result<AnimalDoctorInfo> getAnimalDoctorInfoByUserId(@RequestParam(value="userId") @NotNull(message="兽医专家用户userId不能为空") Long userId) {
-        NbmhUser user=userService.getById(userId);
+    @Inner(value = false)
+    public Result<AnimalDoctorInfo> getAnimalDoctorInfoByUserId(@RequestParam(value = "userId") @NotNull(message = "兽医专家用户userId不能为空") Long userId) {
+        NbmhUser user = userService.getById(userId);
         if (ObjectUtils.isEmpty(user)) {
             return Result.failed("未获取到当前用户基础信息，请先注册账号！");
         }
 
-        AnimalDoctorInfo animalDoctorInfo=AnimalDoctorInfo.builder().build();
+        AnimalDoctorInfo animalDoctorInfo = AnimalDoctorInfo.builder().build();
         BeanUtils.copyProperties(user, animalDoctorInfo);
 
-        NbmhUserExtraInfo userExtraInfo=extraInfoService.getOne(Wrappers.query(NbmhUserExtraInfo.builder().userId(userId).build()));
+        NbmhUserExtraInfo userExtraInfo = extraInfoService.getOne(Wrappers.query(NbmhUserExtraInfo.builder().userId(userId).type(2).build()));
         if (!ObjectUtils.isEmpty(userExtraInfo)) {
             BeanUtils.copyProperties(userExtraInfo, animalDoctorInfo);
 
             if (userExtraInfo.getPreventStationId() != null) {
-                Result<NbmhPreventStation> ret=preventStationService.getById(userExtraInfo.getPreventStationId());
-                NbmhPreventStation preventStation=ret.getData();
+                Result<NbmhPreventStation> ret = preventStationService.getById(userExtraInfo.getPreventStationId());
+                NbmhPreventStation preventStation = ret.getData();
                 if (!ObjectUtils.isEmpty(preventStation)) {
                     animalDoctorInfo.setPreventStationName(preventStation.getStationName());
                 }
             }
         }
 
-        NbmhAnimalDoctorDetail doctorDetail=animalDoctorDetailService.getOne(Wrappers.query(NbmhAnimalDoctorDetail.builder().userId(userId).build()));
+        NbmhAnimalDoctorDetail doctorDetail = animalDoctorDetailService.getOne(Wrappers.query(NbmhAnimalDoctorDetail.builder().userId(userId).build()));
         if (!ObjectUtils.isEmpty(doctorDetail)) {
             BeanUtils.copyProperties(doctorDetail, animalDoctorInfo);
         }
@@ -629,12 +635,12 @@ public class NbmhUserController {
     }
 
     @Transactional
-    @Operation(summary="兽医专家个人资料更新")
+    @Operation(summary = "兽医专家个人资料更新")
     @PostMapping("/animalDoctorUpdate")
-    @Inner(value=false)
+    @Inner(value = false)
     public Result animalDoctorUpdate(@RequestBody @Validated({AnimalDoctorUpdateParam.Update.class}) AnimalDoctorUpdateParam param) {
 
-        NbmhUser user=userService.getById(param.getUserId());
+        NbmhUser user = userService.getById(param.getUserId());
         if (ObjectUtils.isEmpty(user)) {
             return Result.failed("未获取到当前用户基础信息，请先注册账号！");
         }
@@ -648,75 +654,129 @@ public class NbmhUserController {
         return Result.ok();
     }
 
-    @Operation(summary="获取推荐专家列表", method="POST")
+    @Operation(summary = "获取推荐专家列表", method = "POST")
     @PostMapping("/animalDoctor/popular")
-    @Inner(value=false)
-    public Result<List<NbmhAnimalDoctorDetail>> popular(@RequestBody NbmhAnimalDoctorDetail nbmhAnimalDoctorDetail) {
+    @Inner(value = false)
+    public Result<List<AnimalDoctorInfo>> popular(@RequestBody NbmhAnimalDoctorDetail nbmhAnimalDoctorDetail) {
 
-        QueryWrapper<NbmhAnimalDoctorDetail> queryWrapper=Wrappers.query(nbmhAnimalDoctorDetail);
+        QueryWrapper<NbmhAnimalDoctorDetail> queryWrapper = Wrappers.query(nbmhAnimalDoctorDetail);
         queryWrapper.orderBy(true, false, "heat_weight");
 
-        List<NbmhAnimalDoctorDetail> animalDoctorList=animalDoctorDetailService.list(queryWrapper);
+        List<NbmhAnimalDoctorDetail> animalDoctorList = animalDoctorDetailService.list(queryWrapper);
 
         if (CollectionUtils.isEmpty(animalDoctorList)) {
             return Result.ok();
         }
 
-        if (animalDoctorList.size() > 20) {
+        if (animalDoctorList.size() > 100) {
             animalDoctorList.forEach(animalDoctor -> animalDoctor.setMedicalStatus(1));
-            Result.ok(animalDoctorList.stream().limit(20).collect(Collectors.toList()));
+            Result.ok(animalDoctorList.stream().limit(100).collect(Collectors.toList()));
         }
 
-        animalDoctorList.forEach(animalDoctor -> animalDoctor.setMedicalStatus(1));
-
-        return Result.ok(animalDoctorList);
+        return Result.ok(buildAnimalDoctorInfo(animalDoctorList));
     }
 
-    @Operation(summary="查找指定范围内的兽医", method="POST")
-    @Parameters({@Parameter(description="距离范围 单位km", name="distance"), @Parameter(description="当前经度", name="userLng"), @Parameter(description="当前纬度", name="userLat")})
+    @Operation(summary = "查找指定范围内的兽医", method = "POST")
+    @Parameters({@Parameter(description = "距离范围 单位km", name = "distance"), @Parameter(description = "当前经度", name = "userLng"), @Parameter(description = "当前纬度", name = "userLat")})
     @PostMapping("/animalDoctor/nearby")
-    @Inner(value=false)
-    public Result<List<NbmhAnimalDoctorDetail>> nearby(@RequestBody NbmhAnimalDoctorDetail nbmhAnimalDoctorDetail, @RequestParam("distance") double distance,
-                                                       @RequestParam("userLng") double userLng, @RequestParam("userLat") double userLat) {
+    @Inner(value = false)
+    public Result<List<AnimalDoctorInfo>> nearby(@RequestBody NbmhAnimalDoctorDetail nbmhAnimalDoctorDetail, @RequestParam("distance") double distance,
+                                                 @RequestParam("userLng") double userLng, @RequestParam("userLat") double userLat) {
 
         //1.根据要求的范围，确定geoHash码的精度，获取到当前用户坐标的geoHash码
-        GeoHash geoHash=GeoHash.withCharacterPrecision(userLat, userLng, LEN);
+        GeoHash geoHash = GeoHash.withCharacterPrecision(userLat, userLng, LEN);
         //2.获取到用户周边8个方位的geoHash码
-        GeoHash[] adjacent=geoHash.getAdjacent();
+        GeoHash[] adjacent = geoHash.getAdjacent();
 
-        QueryWrapper<NbmhAnimalDoctorDetail> queryWrapper=new QueryWrapper<NbmhAnimalDoctorDetail>().likeRight(GEO_CODE, geoHash.toBase32());
+        QueryWrapper<NbmhAnimalDoctorDetail> queryWrapper = new QueryWrapper<NbmhAnimalDoctorDetail>().likeRight(GEO_CODE, geoHash.toBase32());
         Stream.of(adjacent).forEach(a -> queryWrapper.or().likeRight(GEO_CODE, a.toBase32()));
 
         //3.匹配指定精度的geoHash码
-        List<NbmhAnimalDoctorDetail> animalDoctorList=animalDoctorDetailService.list(queryWrapper);
+        List<NbmhAnimalDoctorDetail> animalDoctorList = animalDoctorDetailService.list(queryWrapper);
 
         if (CollectionUtils.isEmpty(animalDoctorList)) {
             return Result.ok();
         }
 
         //4.过滤超出距离的
-        animalDoctorList=animalDoctorList.stream().filter(animalDoctor -> getDistance(animalDoctor.getLongitude(), animalDoctor.getLatitude(), userLng, userLat) <= distance).collect(Collectors.toList());
+        animalDoctorList = animalDoctorList.stream().filter(animalDoctor -> getDistance(animalDoctor.getLongitude(), animalDoctor.getLatitude(), userLng, userLat) <= distance).collect(Collectors.toList());
 
         if (nbmhAnimalDoctorDetail.getDoctorType() != null) {
-            animalDoctorList=animalDoctorList.stream().filter(animalDoctor -> animalDoctor.getDoctorType().equals(nbmhAnimalDoctorDetail.getDoctorType())).collect(Collectors.toList());
+            animalDoctorList = animalDoctorList.stream().filter(animalDoctor -> animalDoctor.getDoctorType().equals(nbmhAnimalDoctorDetail.getDoctorType())).collect(Collectors.toList());
         }
 
         if (nbmhAnimalDoctorDetail.getGoodAnimalType() != null) {
-            animalDoctorList=animalDoctorList.stream().filter(animalDoctor -> animalDoctor.getGoodAnimalType().equals(nbmhAnimalDoctorDetail.getGoodAnimalType())).collect(Collectors.toList());
+            animalDoctorList = animalDoctorList.stream().filter(animalDoctor -> animalDoctor.getGoodAnimalType().equals(nbmhAnimalDoctorDetail.getGoodAnimalType())).collect(Collectors.toList());
         }
 
-        animalDoctorList.forEach(animalDoctor -> animalDoctor.setMedicalStatus(1));
-
-        return Result.ok(animalDoctorList);
+        return Result.ok(buildAnimalDoctorInfo(animalDoctorList));
     }
 
-    @Operation(summary="根据ID查询用户基础信息", method="GET")
-    @Parameters({@Parameter(description="根据ID查询用户基础信息", name="id")})
+    private List<AnimalDoctorInfo> buildAnimalDoctorInfo(List<NbmhAnimalDoctorDetail> animalDoctorList) {
+        List<AnimalDoctorInfo> animalDoctorInfoList = new ArrayList<>();
+
+        animalDoctorList.forEach(animalDoctor -> {
+            //TODO: 判断兽医接诊状态后期实现
+            animalDoctor.setMedicalStatus(1);
+
+            AnimalDoctorInfo animalDoctorInfo = AnimalDoctorInfo.builder().build();
+            BeanUtils.copyProperties(animalDoctor, animalDoctorInfo);
+
+            NbmhUser user = userService.getById(animalDoctor.getUserId());
+            BeanUtils.copyProperties(user, animalDoctorInfo);
+
+            NbmhUserExtraInfo userExtraInfo = extraInfoService.getOne(Wrappers.query(NbmhUserExtraInfo.builder().userId(animalDoctor.getUserId()).type(2).build()));
+            BeanUtils.copyProperties(userExtraInfo, animalDoctorInfo);
+
+            animalDoctorInfoList.add(animalDoctorInfo);
+        });
+
+        return animalDoctorInfoList;
+    }
+
+    @Operation(summary = "根据ID查询用户基础信息", method = "GET")
+    @Parameters({@Parameter(description = "根据ID查询用户基础信息", name = "id")})
     @PostMapping("/{id}")
     @Inner(false)
-    public Result<NbmhUser> getById(@PathVariable(value="id") @NotNull Long id) {
+    public Result<NbmhUser> getById(@PathVariable(value = "id") @NotNull Long id) {
 
         return Result.ok(userService.getById(id));
+    }
+
+
+    @Transactional
+    @Operation(summary = "修改用户农牧币")
+    @PostMapping("/coinUpdate")
+    @Inner(false)
+    public Result coinUpdate(@RequestParam(value = "userId") @NotNull(message = "用户userId不能为空") Long userId,
+                             @RequestParam(value = "payType") @NotNull(message = "变更类型（0：扣减；1：增加）不能为空") Integer payType,
+                             @RequestParam(value = "payMoney") @NotNull(message = "变更金额不能为空") BigDecimal payMoney) {
+        boolean res;
+        try {
+            lock.lock();
+            NbmhUser farmer = userService.getById(userId);
+            if (ObjectUtils.isEmpty(farmer)) {
+                throw new ServiceException("养殖户基础信息不存在，支付失败！");
+            }
+
+            if (payType == 0) {
+                if (payMoney.compareTo(BigDecimal.valueOf(farmer.getCoin())) > 0) {
+                    throw new ServiceException("用户农牧币余额不足，支付失败！");
+                }
+                res = userService.updateById(NbmhUser.builder().id(farmer.getId()).coin(farmer.getCoin() - payMoney.intValue()).build());
+            } else {
+                res = userService.updateById(NbmhUser.builder().id(farmer.getId()).coin(farmer.getCoin() + payMoney.intValue()).build());
+            }
+
+        } finally {
+            lock.unlock();
+        }
+
+        if (res) {
+            return Result.ok();
+        }
+
+        return Result.failed(CommonEnum.DATA_UPDATE_FAILED.getMsg());
     }
 
     /***

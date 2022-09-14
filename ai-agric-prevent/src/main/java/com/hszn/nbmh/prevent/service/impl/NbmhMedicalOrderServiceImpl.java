@@ -9,12 +9,15 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hszn.nbmh.common.core.exception.ServiceException;
 import com.hszn.nbmh.common.core.utils.SnowFlakeIdUtil;
+import com.hszn.nbmh.pay.api.entity.NbmhUnrealPayment;
+import com.hszn.nbmh.pay.api.feign.RemoteUnrealPaymentService;
 import com.hszn.nbmh.prevent.api.entity.NbmhMedicalAccept;
 import com.hszn.nbmh.prevent.api.entity.NbmhMedicalOrder;
 import com.hszn.nbmh.prevent.api.params.input.NbmhMedicalOrderParam;
 import com.hszn.nbmh.prevent.mapper.NbmhMedicalOrderMapper;
 import com.hszn.nbmh.prevent.service.INbmhMedicalAcceptService;
 import com.hszn.nbmh.prevent.service.INbmhMedicalOrderService;
+import com.hszn.nbmh.user.api.feign.RemoteUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +48,12 @@ public class NbmhMedicalOrderServiceImpl extends ServiceImpl<NbmhMedicalOrderMap
     @Autowired
     private INbmhMedicalAcceptService nbmhMedicalAcceptService;
 
+    @Autowired
+    private RemoteUserService remoteUserService;
+
+    @Autowired
+    private RemoteUnrealPaymentService remoteUnrealPaymentService;
+
     @Override
     @Transactional
     public List<Integer> save(List<NbmhMedicalOrderParam> nbmhMedicalOrderParamList) {
@@ -57,19 +66,75 @@ public class NbmhMedicalOrderServiceImpl extends ServiceImpl<NbmhMedicalOrderMap
             NbmhMedicalOrder nbmhMedicalOrder = new NbmhMedicalOrder();
             BeanUtils.copyProperties(entity, nbmhMedicalOrder);
 
-            int ret = nbmhMedicalOrderMapper.insert(nbmhMedicalOrder);
+            int ret = 0;
 
-            List<NbmhMedicalAccept> medicalAcceptList = entity.getMedicalAcceptList();
-            if (CollectionUtils.isEmpty(medicalAcceptList)) {
-                throw new ServiceException("未指定接诊专家，无法下单");
+            if (entity.getAnimalType() == 0 || entity.getAnimalType() == 1) {
+                ret = nbmhMedicalOrderMapper.insert(nbmhMedicalOrder.setIsPayFrontMoney(0).setIsPayMedicalMoney(1));
+                decreaseCoin(entity);
+                savePaymentRecord(entity);
             }
 
-            medicalAcceptList.forEach(item -> item.setMedicalOrderNumber(entity.getId()).setOrderStatus(0).setCreateTime(createTime).setUpdateTime(createTime).setStatus(1));
+            if (entity.getAnimalType() == 2) {
+                ret = nbmhMedicalOrderMapper.insert(nbmhMedicalOrder.setIsPayFrontMoney(1).setIsPayMedicalMoney(0));
+                decreaseCoin(entity);
+                savePaymentRecord(entity);
+            }
 
-            nbmhMedicalAcceptService.saveBatch(medicalAcceptList);
+            //TODO: 使用消息队列RabbitMq更新订单支付状态
+
 
             return ret;
         }).collect(Collectors.toList());
+    }
+
+    /**
+     * 生成农牧币支付流水记录以及兽医专家派单记录
+     */
+    public void savePaymentRecord(NbmhMedicalOrderParam entity) {
+
+        List<NbmhMedicalAccept> medicalAcceptList = entity.getMedicalAcceptList();
+        if (CollectionUtils.isEmpty(medicalAcceptList)) {
+            throw new ServiceException("未指定接诊专家，无法下单");
+        }
+
+        Date createTime = new Date();
+
+        for (NbmhMedicalAccept item : medicalAcceptList) {
+            if (item.getMeetingAdminStatus() != 1) {
+                continue;
+            }
+
+            NbmhUnrealPayment unrealPayment = NbmhUnrealPayment.builder().orderId(entity.getId()).payUserId(entity.getFarmerId()).payChannel(1)
+                    .tranType(0).tradeStatus(3).incomeUserId(item.getDoctorId()).payEndTime(createTime).createTime(createTime).status(0).build();
+
+            if (entity.getAnimalType() == 0  || entity.getAnimalType() == 1) {
+                unrealPayment.setTotalMoney(entity.getMedicalMoney());
+            }
+
+            if (entity.getAnimalType() == 2) {
+                unrealPayment.setTotalMoney(entity.getFrontMoney());
+            }
+
+            remoteUnrealPaymentService.add(unrealPayment);
+        }
+
+        medicalAcceptList.forEach(item -> item.setMedicalOrderNumber(entity.getId()).setOrderStatus(0).setCreateTime(createTime).setUpdateTime(createTime).setStatus(1));
+
+        nbmhMedicalAcceptService.saveBatch(medicalAcceptList);
+    }
+
+    /**
+     * 扣减养殖户农牧币
+     */
+    public void decreaseCoin(NbmhMedicalOrderParam entity) {
+
+        if (entity.getMedicalType() == 0) {
+            remoteUserService.coinUpdate(entity.getFarmerId(), 0, entity.getMedicalMoney());
+        }
+
+        if (entity.getMedicalType() == 2) {
+            remoteUserService.coinUpdate(entity.getFarmerId(), 0, entity.getFrontMoney());
+        }
     }
 
     @Override
