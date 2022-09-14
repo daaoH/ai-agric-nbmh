@@ -5,6 +5,7 @@ import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.hszn.nbmh.common.core.constant.TimeConstant;
 import com.hszn.nbmh.common.core.enums.CommonEnum;
 import com.hszn.nbmh.common.core.exception.ServiceException;
 import com.hszn.nbmh.common.core.mould.QueryRequest;
@@ -20,11 +21,10 @@ import com.hszn.nbmh.good.api.params.vo.ShopCartItemVo;
 import com.hszn.nbmh.order.api.entity.NbmhOrder;
 import com.hszn.nbmh.order.api.entity.NbmhOrderItem;
 import com.hszn.nbmh.order.api.params.OrderSearchParam;
-import com.hszn.nbmh.order.api.params.input.CreateOrderMessage;
-import com.hszn.nbmh.order.api.params.input.CreateOrderParam;
-import com.hszn.nbmh.order.api.params.input.PreOrderParam;
-import com.hszn.nbmh.order.api.params.input.SettlementParam;
+import com.hszn.nbmh.order.api.params.input.*;
 import com.hszn.nbmh.order.api.params.out.SettlementReturn;
+import com.hszn.nbmh.order.api.params.vo.FreightVo;
+import com.hszn.nbmh.order.api.params.vo.SkuStockVo;
 import com.hszn.nbmh.order.mapper.NbmhOrderMapper;
 import com.hszn.nbmh.order.rabbitmq.OrderSender;
 import com.hszn.nbmh.order.service.INbmhOrderItemService;
@@ -32,6 +32,7 @@ import com.hszn.nbmh.order.service.INbmhOrderService;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hszn.nbmh.shop.api.entity.NbmhShopInfo;
+import com.hszn.nbmh.user.api.entity.NbmhUserAddress;
 import com.hszn.nbmh.user.api.feign.RemoteUserService;
 import com.hszn.nbmh.user.api.params.out.CurUserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,9 +43,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -105,8 +106,107 @@ public class NbmhOrderServiceImpl extends ServiceImpl<NbmhOrderMapper, NbmhOrder
     }
 
     @Override
-    public Boolean createOrder(ShopCartItemVo cartItemVo) {
-        return null;
+    public Boolean createOrder(ShopCartItemVo cartItemVo, NbmhUserAddress address, Long orderId) {
+        Boolean createRet = false;
+        try {
+            List<CartItemVo> cartItems = cartItemVo.getItems();
+            BigDecimal totalAmount = getTotalAmount(cartItems);
+            List<NbmhOrderItem> orderItems = getOrderItemList(cartItems, orderId);
+
+            //计算运费
+            FreightVo freightVo = getFreightAmount(cartItemVo, address);
+            BigDecimal freightAmount = freightVo.getPrice();
+            if(ObjectUtil.isNull(freightAmount)){
+                freightAmount = BigDecimal.ZERO;
+            }
+
+            //优惠金额计算
+            BigDecimal promotionAmount = BigDecimal.ZERO;
+
+            Set<SkuStockVo> skuSet = new HashSet<>();
+            skuSet.addAll(cartItems.stream().map(item -> new SkuStockVo(item.getSkuId(), item.getCount()))
+                    .collect(Collectors.toSet()));
+
+            //清除购物车数据
+
+            //扣减库存
+            Boolean success = false;
+            for(SkuStockVo stockVo : skuSet){
+                Result<Boolean> ret = goodsSkuService.lockstock(stockVo.getSkuId(), stockVo.getNum());
+                success = ret.getData();
+                if(!success){
+
+                }
+            }
+
+            if(success){
+                //创建订单
+
+                createRet = true;
+            }else{
+                OrderFailMessage failMessage = new OrderFailMessage();
+                sender.sendCreateOrderFailMessage(failMessage);
+                redisTemplate.opsForValue().setIfPresent("Order:Failed:" + orderId.toString(), CommonEnum.STOCK_REDUCE_ERROR.getMsg(), TimeConstant.ONE_DAY, TimeUnit.SECONDS);
+            }
+
+        }catch (Exception e){
+            log.error(e.getMessage(), e);
+            redisTemplate.opsForValue().setIfPresent("Order:Failed:" + orderId.toString(), e.getMessage(), TimeConstant.ONE_DAY, TimeUnit.SECONDS);
+        }
+
+        return createRet;
+    }
+
+    /**
+     * 计算运费
+     * @param cartItemVo
+     * @param address
+     * @return
+     */
+    private FreightVo getFreightAmount(ShopCartItemVo cartItemVo, NbmhUserAddress address) {
+        FreightVo freightVo = new FreightVo();
+
+        return freightVo;
+    }
+
+    /**
+     * 获取订单项列表
+     * @param cartItems
+     * @param orderId
+     * @return
+     */
+    private List<NbmhOrderItem> getOrderItemList(List<CartItemVo> cartItems, Long orderId) {
+        List<NbmhOrderItem> itemList = new LinkedList<>();
+        for(CartItemVo itemVo : cartItems){
+            NbmhOrderItem orderItem = new NbmhOrderItem();
+            orderItem.setOrderId(orderId);
+            orderItem.setShopId(itemVo.getShopId());
+            orderItem.setGoodsSkuId(itemVo.getSkuId());
+            orderItem.setGoodsName(itemVo.getTitle());
+            orderItem.setGoodsPic(itemVo.getImage());
+            orderItem.setGoodsPrice(itemVo.getPrice());
+            orderItem.setGoodsQuantity(itemVo.getCount());
+            orderItem.setStatus(0);
+            orderItem.setRealAmount(orderItem.getGoodsPrice().multiply(BigDecimal.valueOf(itemVo.getCount())));
+            itemList.add(orderItem);
+        }
+        itemList.sort(Comparator.comparing(NbmhOrderItem::getRealAmount).reversed());
+
+        return itemList;
+    }
+
+    /**
+     * 计算购物项总价
+     * @param cartItems
+     * @return
+     */
+    private BigDecimal getTotalAmount(List<CartItemVo> cartItems) {
+        BigDecimal totalAmount = BigDecimal.ZERO;
+        for(CartItemVo itemVo : cartItems){
+            BigDecimal itemTotal = itemVo.getTotalPrice();
+            totalAmount = totalAmount.add(itemTotal);
+        }
+        return totalAmount;
     }
 
     @Override

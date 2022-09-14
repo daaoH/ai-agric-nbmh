@@ -3,6 +3,7 @@ package com.hszn.nbmh.order.rabbitmq;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.hszn.nbmh.common.core.constant.TimeConstant;
+import com.hszn.nbmh.common.core.enums.CommonEnum;
 import com.hszn.nbmh.common.core.exception.ServiceException;
 import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.common.redis.cache.CachePrefix;
@@ -15,6 +16,7 @@ import com.hszn.nbmh.order.api.params.input.CreateOrderMessage;
 import com.hszn.nbmh.order.api.params.input.CreateOrderParam;
 import com.hszn.nbmh.order.api.params.input.PreOrderParam;
 import com.hszn.nbmh.order.service.INbmhOrderService;
+import com.hszn.nbmh.user.api.entity.NbmhUserAddress;
 import com.rabbitmq.client.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
@@ -64,6 +66,7 @@ public class OrderListener {
         try{
            CreateOrderParam param = orderMessage.getParam();
            Long orderId = orderMessage.getOrderId();
+           NbmhUserAddress address = param.getUserAddress();
             List<PreOrderParam> orderItems = param.getPreOrderItems();
             for(PreOrderParam orderParam : orderItems){
                 ShopCartItemVo cartItemVo = orderParam.getCartItems();
@@ -88,10 +91,13 @@ public class OrderListener {
                     }
 
                 }
-
-                orderService.createOrder(cartItemVo);
-
+                Boolean ret = orderService.createOrder(cartItemVo, address, orderId);
+                if(!ret){
+                    throw new ServiceException(CommonEnum.ORDER_CREATE_ERROR.getMsg());
+                }
             }
+            log.info("订单创建执行成功: deliveryTag{}", message.getMessageProperties().getDeliveryTag());
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(), true);
         }catch (Exception e){
             log.error(e.getMessage(), e);
             log.info("订单创建执行失败: deliveryTag{}", message.getMessageProperties().getDeliveryTag());

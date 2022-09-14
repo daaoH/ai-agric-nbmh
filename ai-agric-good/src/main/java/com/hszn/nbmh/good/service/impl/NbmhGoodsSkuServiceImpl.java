@@ -65,6 +65,16 @@ public class NbmhGoodsSkuServiceImpl extends ServiceImpl<NbmhGoodsSkuMapper, Nbm
         return null;
     }
 
+    @Override
+    public Boolean lockStock(Long skuId, Integer num) {
+        return skuMapper.lockSkuStock(skuId, num);
+    }
+
+    @Override
+    public Boolean unlockStock(Long skuId, Integer num) {
+        return skuMapper.unLockStock(skuId, num);
+    }
+
     @Autowired
     private RedisTemplate redisTemplate;
 

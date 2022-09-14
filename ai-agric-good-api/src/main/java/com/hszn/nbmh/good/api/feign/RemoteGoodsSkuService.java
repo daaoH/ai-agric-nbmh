@@ -20,4 +20,10 @@ public interface RemoteGoodsSkuService {
 
     @PostMapping("/getGoodsSkuById")
     Result<NbmhGoodsSku> getGoodsSkuById(@RequestParam("skuId") Long skuId);
+
+    @PostMapping("/lock/stock")
+    Result<Boolean> lockstock(@RequestParam("skuId") Long skuId, @RequestParam("num") Integer num);
+
+    @PostMapping("/unlock/stock")
+    Result<Boolean> unlockstock(@RequestParam("skuId") Long skuId, @RequestParam("num") Integer num);
 }

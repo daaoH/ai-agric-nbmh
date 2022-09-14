@@ -28,7 +28,7 @@ public class NbmhOrderItem implements Serializable {
     /**
      * 商铺ID
      */
-    private String shopId;
+    private Long shopId;
 
     /**
      * 租户ID

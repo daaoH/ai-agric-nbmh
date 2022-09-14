@@ -127,6 +127,12 @@ public class NbmhGoodsSku implements Serializable {
     private Integer stock;
 
     /**
+     * 库存
+     */
+    @Schema(description = "锁定库存数")
+    private Integer lockedStock;
+
+    /**
      * 商品状态(默认上架，0--下架（仓库中），1--上架，2--已售完)
      */
     @Schema(description = "商品状态(默认上架，0--下架（仓库中），1--上架，2--已售完)")

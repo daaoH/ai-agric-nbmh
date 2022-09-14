@@ -1,19 +1,17 @@
 package com.hszn.nbmh.good.controller;
 
 
-import com.hszn.nbmh.common.core.enums.CommonEnum;
-import com.hszn.nbmh.common.core.exception.ServiceException;
 import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.good.api.entity.NbmhGoodsSku;
-import com.hszn.nbmh.good.api.enums.GoodAuthEnum;
-import com.hszn.nbmh.good.api.enums.GoodStatusEnum;
-import com.hszn.nbmh.good.api.params.input.AddGoodsParams;
 import com.hszn.nbmh.good.service.INbmhGoodsSkuService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.util.ObjectUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
@@ -32,8 +30,28 @@ public class NbmhGoodsSkuController {
 
     @Operation(description = "根据id获取商品sku")
     @PostMapping("/getGoodsSkuById")
-    public Result<NbmhGoodsSku> getGoodsSkuById(@RequestParam("skuId") Long skuId){
+    public Result<NbmhGoodsSku> getGoodsSkuById(@RequestParam("skuId") Long skuId) {
         NbmhGoodsSku goodsSku = goodsSkuService.getGoodsSkuFromCache(skuId);
         return Result.ok(goodsSku);
+    }
+
+    @Operation(description = "锁定库存")
+    @Parameters({
+            @Parameter(name = "skuId", description = "skuId"),
+            @Parameter(name = "num", description = "数量")
+    })
+    @PostMapping("/lock/stock")
+    public Result<Boolean> lockstock(@RequestParam("skuId") Long skuId, @RequestParam("num") Integer num) {
+        return Result.ok(goodsSkuService.lockStock(skuId, num));
+    }
+
+    @Operation(description = "释放库存")
+    @Parameters({
+            @Parameter(name = "skuId", description = "skuId"),
+            @Parameter(name = "num", description = "数量")
+    })
+    @PostMapping("/unlock/stock")
+    public Result<Boolean> unlockstock(@RequestParam("skuId") Long skuId, @RequestParam("num") Integer num) {
+        return Result.ok(goodsSkuService.unlockStock(skuId, num));
     }
 }

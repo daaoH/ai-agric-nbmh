@@ -36,8 +36,10 @@ public enum CommonEnum {
 
     CART_NUM_ERROR(1001, "购买数量必须大于0"),
     STOCK_NUM_ERROR(1002, "库存数量不足"),
+    STOCK_REDUCE_ERROR(1003, "减库存失败"),
 
-    ORDER_PARAM_ERROR(1101, "订单参数错误");
+    ORDER_CREATE_ERROR(1101, "创建订单错误"),
+    ORDER_PARAM_ERROR(1102, "订单参数错误");
 
 
     @Setter

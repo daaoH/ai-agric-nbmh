@@ -3,6 +3,7 @@ package com.hszn.nbmh.order.rabbitmq;
 import cn.hutool.core.util.IdUtil;
 import com.hszn.nbmh.order.api.constant.OrderQueueEnum;
 import com.hszn.nbmh.order.api.params.input.CreateOrderMessage;
+import com.hszn.nbmh.order.api.params.input.OrderFailMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.MessagePostProcessor;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
@@ -34,6 +35,15 @@ public class OrderSender {
     public void sendCreateOrderMessage(CreateOrderMessage orderMessage) {
         log.info("sendCreateOrderMessage:" + orderMessage.toString());
         convertAndSend(OrderQueueEnum.QUEUE_ORDER_CREATE, orderMessage);
+    }
+
+    /**
+     * 订单失败
+     * @param orderMessage
+     */
+    public void sendCreateOrderFailMessage(OrderFailMessage orderMessage) {
+        log.info("sendCreateOrderFailMessage:" + orderMessage.toString());
+        convertAndSend(OrderQueueEnum.QUEUE_ORDER_CREATE_FAIL, orderMessage);
     }
 
 

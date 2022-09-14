@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 /**
  * @Author：袁德民
- * @Description:
+ * @Description: 创建订单消息体
  * @Date:下午8:16 22/9/13
  * @Modified By:
  */

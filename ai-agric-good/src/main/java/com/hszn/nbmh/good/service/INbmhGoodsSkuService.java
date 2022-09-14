@@ -40,4 +40,18 @@ public interface INbmhGoodsSkuService extends IService<NbmhGoodsSku> {
     NbmhGoodsSku getGoodsSkuFromCache(Long id);
 
     List<SkuVo> querySkuByGoodId(Long goodId);
+
+    /**
+     * 锁定库存
+     * @param skuId
+     * @param num
+     */
+    Boolean lockStock(Long skuId, Integer num);
+
+    /**
+     * 解锁订单
+     * @param skuId
+     * @param num
+     */
+    Boolean unlockStock(Long skuId, Integer num);
 }

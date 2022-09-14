@@ -9,6 +9,7 @@ import com.hszn.nbmh.order.api.params.OrderSearchParam;
 import com.hszn.nbmh.order.api.params.input.CreateOrderParam;
 import com.hszn.nbmh.order.api.params.input.SettlementParam;
 import com.hszn.nbmh.order.api.params.out.SettlementReturn;
+import com.hszn.nbmh.user.api.entity.NbmhUserAddress;
 
 import java.util.List;
 
@@ -41,7 +42,7 @@ public interface INbmhOrderService extends IService<NbmhOrder> {
      * @param cartItemVo
      * @return
      */
-    Boolean createOrder(ShopCartItemVo cartItemVo);
+    Boolean createOrder(ShopCartItemVo cartItemVo, NbmhUserAddress address, Long orderId);
 
     /**
      * 取消订单

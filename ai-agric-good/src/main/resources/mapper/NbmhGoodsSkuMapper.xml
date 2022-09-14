@@ -22,6 +22,7 @@
         <result column="price" property="price" />
         <result column="original_price" property="originalPrice" />
         <result column="stock" property="stock" />
+        <result column="locked_stock" property="lockedStock" />
         <result column="goods_status" property="goodsStatus" />
         <result column="low_stock" property="lowStock" />
         <result column="sale_num" property="saleNum" />
@@ -35,4 +36,18 @@
         <result column="status" property="status" />
     </resultMap>
 
+    <update id="lockSkuStock">
+        UPDATE nbmh_goods_sku
+        SET stock_locked = stock_locked + #{num}
+        WHERE
+            id = #{skuId}
+          AND stock - stock_locked > 0
+    </update>
+
+    <update id="unLockStock">
+        UPDATE nbmh_goods_sku
+        SET stock_locked = stock_locked - #{num}
+        WHERE
+            id = ${skuId}
+    </update>
 </mapper>
