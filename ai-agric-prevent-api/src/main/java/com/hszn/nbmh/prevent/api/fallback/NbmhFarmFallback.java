@@ -23,6 +23,11 @@ import java.util.List;
 public class NbmhFarmFallback implements RemoteNbmhFarmService {
 
     @Override
+    public Result submitList(List<NbmhFarm> farms) {
+        return Result.failed(CommonEnum.FALL_BACK_MSG.getMsg());
+    }
+
+    @Override
     public Result add(NbmhFarm entity) {
         return Result.failed(CommonEnum.FALL_BACK_MSG.getMsg());
     }
