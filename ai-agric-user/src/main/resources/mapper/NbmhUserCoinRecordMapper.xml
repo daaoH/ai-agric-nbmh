@@ -3,7 +3,7 @@
 <mapper namespace="com.hszn.nbmh.user.mapper.NbmhUserCoinRecordMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.hszn.nbmh.user.entity.NbmhUserCoinRecord">
+    <resultMap id="BaseResultMap" type="com.hszn.nbmh.user.api.entity.NbmhUserCoinRecord">
         <id column="id" property="id" />
         <result column="biz_id" property="bizId" />
         <result column="biz_type" property="bizType" />
