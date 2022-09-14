@@ -50,6 +50,11 @@ public interface UserPathConstant {
      * 关注的专家
      */
     String NBMH_USER_FOLLOW_EXPERT = "/nbmh-user-follow-expert";
+
+    /**
+     * 农牧币
+     */
+    String NBMH_USER_COIN_EXPERT = "/nbmh-user-coin-record";
 }
 
 
