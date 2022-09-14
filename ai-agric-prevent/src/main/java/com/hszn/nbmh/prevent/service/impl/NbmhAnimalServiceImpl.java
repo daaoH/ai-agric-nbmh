@@ -65,17 +65,21 @@ public class NbmhAnimalServiceImpl extends ServiceImpl<NbmhAnimalMapper, NbmhAni
         if (ObjectUtils.isNotEmpty(param.getQueryEntity())) {
             //耳标
             if (ObjectUtils.isNotEmpty(param.getQueryEntity().getEarNo())) {
-                queryWrapper.eq(NbmhAnimal::getEarNo, param.getQueryEntity().getEarNo());
+                queryWrapper.like(NbmhAnimal::getEarNo, param.getQueryEntity().getEarNo());
             }
             //抵押状态
             if (ObjectUtils.isNotEmpty(param.getQueryEntity().getStatus())) {
                 queryWrapper.eq(NbmhAnimal::getStatus, param.getQueryEntity().getStatus());
             }
             //抵押状态
+            if (ObjectUtils.isNotEmpty(param.getQueryEntity().getFarmId())) {
+                queryWrapper.eq(NbmhAnimal::getFarmId, param.getQueryEntity().getFarmId());
+            }
+            //类型
             if (ObjectUtils.isNotEmpty(param.getQueryEntity().getType())) {
                 queryWrapper.eq(NbmhAnimal::getType, param.getQueryEntity().getType());
             }
-            //农户8
+            //农户id
             if (ObjectUtils.isNotEmpty(param.getQueryEntity().getUserId())) {
                 queryWrapper.eq(NbmhAnimal::getUserId, param.getQueryEntity().getUserId());
             }

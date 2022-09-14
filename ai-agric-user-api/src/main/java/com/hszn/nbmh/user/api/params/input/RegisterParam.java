@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import java.util.List;
+
 
 /**
  * @Author：袁德民
@@ -44,5 +46,8 @@ public class RegisterParam {
 
     @Schema(description="手机号", name="phone")
     private String phone;
+
+    @Schema(description="养殖场", name="farmParams")
+    private List<FarmParam> farmParams;
 
 }

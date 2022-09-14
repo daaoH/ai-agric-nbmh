@@ -11,8 +11,6 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -27,6 +25,9 @@ import java.util.List;
 
 @FeignClient(value = ServiceNameConstant.PREVENT_SERVICE, path = UrlPathConstant.FARM, fallback = NbmhFarmFallback.class)
 public interface RemoteNbmhFarmService {
+
+    @PostMapping("/submitList")
+    Result submitList(@RequestBody List<NbmhFarm> farms);
 
     @PostMapping("/add")
     Result add(@RequestBody NbmhFarm entity);

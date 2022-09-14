@@ -42,6 +42,13 @@ public class NbmhAnimalController {
     //防疫
     private final INbmhVaccinService nbmhVaccinService;
 
+    @PostMapping("/getByPage")
+    @Operation(summary="动物列表")
+    public Result getByPage(@RequestBody QueryRequest<NbmhAnimal> param) {
+        //获取防疫记录分页数据集
+        return Result.ok(this.nbmhAnimalService.getByPage(param).getRecords());
+    }
+
 
     @PostMapping("/breederCensus")
     @Operation(summary="防疫员端(农户详情-动物列表,防疫记录,信用抵押)+(动物信息统计)")

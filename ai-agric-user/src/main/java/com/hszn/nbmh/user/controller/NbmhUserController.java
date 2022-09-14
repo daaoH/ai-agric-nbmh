@@ -16,8 +16,10 @@ import com.hszn.nbmh.common.core.utils.Result;
 import com.hszn.nbmh.common.core.utils.SnowFlakeIdUtil;
 import com.hszn.nbmh.common.core.utils.SortUtil;
 import com.hszn.nbmh.common.security.annotation.Inner;
+import com.hszn.nbmh.prevent.api.entity.NbmhFarm;
 import com.hszn.nbmh.prevent.api.entity.NbmhPreventStation;
 import com.hszn.nbmh.prevent.api.entity.NbmhUserIntegralRecord;
+import com.hszn.nbmh.prevent.api.feign.RemoteNbmhFarmService;
 import com.hszn.nbmh.prevent.api.feign.RemotePreventStationService;
 import com.hszn.nbmh.prevent.api.feign.RemoteUserIntegralService;
 import com.hszn.nbmh.third.entity.NbmhBaseConfig;
@@ -92,6 +94,9 @@ public class NbmhUserController {
     private final RemoteUserIntegralService userIntegralService;
 
     private final RemoteBaseConfigService baseConfigService;
+
+
+    private final RemoteNbmhFarmService farmService;
 
     SnowFlakeIdUtil snowFlakeId=new SnowFlakeIdUtil(1L, 1L);
 
@@ -315,6 +320,29 @@ public class NbmhUserController {
             }
 
             if (param.getInviteType() == 5) {
+                /**
+                 * 创建养殖场(参数不为空--创建)
+                 */
+                if (!ObjectUtils.isEmpty(param.getFarmParams())) {
+                    List<NbmhFarm> farms=new ArrayList<>();
+                    param.getFarmParams().forEach(f -> {
+                        NbmhFarm nbmhFarm=new NbmhFarm();
+                        nbmhFarm.setStatus(0);
+                        nbmhFarm.setCreateTime(new Date());
+                        nbmhFarm.setFarmAddress(f.getFarmAddress());
+                        nbmhFarm.setFarmAnimalJson(f.getFarmAnimalJson());
+                        nbmhFarm.setFarmName(f.getFarmName());
+                        nbmhFarm.setFarmerId(user.getId());
+                        nbmhFarm.setFarmScale(f.getFarmScale());
+                        nbmhFarm.setManageYear(f.getManageYear());
+                        nbmhFarm.setPreventStationId(f.getPreventStationId());
+                        nbmhFarm.setUserId(f.getUserId());
+                        nbmhFarm.setUserName(f.getUserName());
+                        farms.add(nbmhFarm);
+                    });
+                    farmService.submitList(farms);
+                }
+
                 //邀请用户积分-分配
                 Result configData=baseConfigService.getBySubject("invite");
                 List<NbmhBaseConfig> configs=JSON.parseArray(JSON.toJSONString(configData.getData()), NbmhBaseConfig.class);
