@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hszn.nbmh.admin.api.params.vo.SysAuthUser;
 import com.hszn.nbmh.common.core.utils.SnowFlakeIdUtil;
+import com.hszn.nbmh.common.security.service.AuthUser;
 import com.hszn.nbmh.common.security.util.SecurityUtils;
 import com.hszn.nbmh.marketing.api.entity.NbmhCoupon;
 import com.hszn.nbmh.marketing.api.entity.NbmhCouponCategoryRelation;
@@ -98,13 +99,13 @@ public class NbmhCouponServiceImpl extends ServiceImpl<NbmhCouponMapper, NbmhCou
         Integer level = couponInfo.getUserLevel();
         //领取限制数量
         Integer perLimit = couponInfo.getPerLimit();
-        SysAuthUser sysUser = SecurityUtils.getSysUser();
-        if (sysUser == null) {
+        AuthUser user = SecurityUtils.getUser();
+        if (user == null) {
             throw new RuntimeException("获取用户信息失败");
         }
-        Long userId = sysUser.getId();
+        Long userId = user.getId();
         int userLevel = 5;
-        String userName = sysUser.getName();
+        String userName = user.getName();
         //只有达到领取等级才继续 目前没有涉及用户等级
 //        if (userLevel >= level) {
         //过滤userId,查看已领取数量

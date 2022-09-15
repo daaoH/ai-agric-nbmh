@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hszn.nbmh.admin.api.params.vo.SysAuthUser;
 import com.hszn.nbmh.common.core.mould.QueryRequest;
 import com.hszn.nbmh.common.core.utils.SortUtil;
+import com.hszn.nbmh.common.security.service.AuthUser;
 import com.hszn.nbmh.common.security.util.SecurityUtils;
 import com.hszn.nbmh.shop.api.entity.NbmhShopInfo;
 import com.hszn.nbmh.shop.api.params.input.ShopEditParam;
@@ -43,7 +44,13 @@ public class NbmhShopInfoServiceImpl extends ServiceImpl<NbmhShopInfoMapper, Nbm
         //新开店铺为审核状态
         info.setStatus(0);
         info.setTenantId("text");
-        return save(info);
+        AuthUser user = SecurityUtils.getUser();
+        if (user == null) {
+            throw new RuntimeException("获取用户信息失败");
+        }
+        Long userId = user.getId();
+        info.setUserId(userId);
+        return saveOrUpdate(info);
     }
 
     @Override
@@ -73,15 +80,15 @@ public class NbmhShopInfoServiceImpl extends ServiceImpl<NbmhShopInfoMapper, Nbm
 
     @Override
     public NbmhShopInfo currentShopInfo() {
-        SysAuthUser sysUser = SecurityUtils.getSysUser();
-        if (sysUser == null) {
+        AuthUser user = SecurityUtils.getUser();
+        if (user == null) {
             throw new RuntimeException("获取用户信息失败");
         }
-        Long userId = sysUser.getId();
+        Long userId = user.getId();
         LambdaQueryWrapper<NbmhShopInfo> wrapper = Wrappers.lambdaQuery(NbmhShopInfo.class).eq(NbmhShopInfo::getUserId, userId);
         List<NbmhShopInfo> shopInfos = baseMapper.selectList(wrapper);
         if (CollectionUtils.isEmpty(shopInfos)) {
-            return null;
+            return new NbmhShopInfo();
         }
         return shopInfos.get(0);
     }

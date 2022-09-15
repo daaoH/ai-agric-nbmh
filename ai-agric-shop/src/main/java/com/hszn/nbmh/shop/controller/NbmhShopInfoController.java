@@ -48,7 +48,6 @@ public class NbmhShopInfoController {
      *
      * @return
      */
-    @Inner(false)
     @Operation(summary = "开店接口")
     @PostMapping("/openShop")
     public Result<String> openShop(@RequestBody @Validated ShopInfoParam shopInfo) {
@@ -97,7 +96,6 @@ public class NbmhShopInfoController {
         return Result.failed("提交失败,请重试");
     }
 
-    @Inner(false)
     @Operation(summary = "获取当前登录用户店铺详情")
     @GetMapping("/currentShopInfo")
     public Result<NbmhShopInfo> currentShopInfo() {
