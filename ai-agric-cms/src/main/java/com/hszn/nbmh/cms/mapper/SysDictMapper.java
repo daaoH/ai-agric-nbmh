@@ -1,5 +1,4 @@
 package com.hszn.nbmh.cms.mapper;
-
 import com.hszn.nbmh.cms.api.entity.SysDict;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 

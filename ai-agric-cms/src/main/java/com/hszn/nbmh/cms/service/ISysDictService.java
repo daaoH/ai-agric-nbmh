@@ -1,8 +1,7 @@
 package com.hszn.nbmh.cms.service;
-
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.hszn.nbmh.cms.api.entity.SysDict;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.hszn.nbmh.cms.api.entity.SysDict;
 import com.hszn.nbmh.common.core.mould.QueryRequest;
 
 /**

@@ -1,5 +1,4 @@
 package com.hszn.nbmh.cms.service.impl;
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
@@ -28,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(rollbackFor = Exception.class)
 public class SysDictItemServiceImpl extends ServiceImpl<SysDictItemMapper, SysDictItem> implements ISysDictItemService {
 
-    public IPage<SysDictItem> getByPage(QueryRequest<SysDictItem> param) {
+    public IPage<SysDictItem>getByPage(QueryRequest<SysDictItem> param) {
         //添加条件
         LambdaQueryWrapper<SysDictItem> queryWrapper = new LambdaQueryWrapper<>();
         if (ObjectUtils.isNotEmpty(param.getQueryEntity())) {
