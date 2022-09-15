@@ -6,10 +6,12 @@ import com.hszn.nbmh.user.api.entity.NbmhAnimalDoctorDetail;
 import com.hszn.nbmh.user.api.entity.NbmhUser;
 import com.hszn.nbmh.user.api.feign.RemoteUserService;
 import com.hszn.nbmh.user.api.params.input.AnimalDoctorRegisterParam;
+import com.hszn.nbmh.user.api.params.input.CoinParam;
 import com.hszn.nbmh.user.api.params.input.RegisterParam;
 import com.hszn.nbmh.user.api.params.out.CurUserInfo;
 import com.hszn.nbmh.user.api.params.out.LoginUser;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -79,7 +81,7 @@ public class UserServiceFallback implements RemoteUserService {
     }
 
     @Override
-    public Result coinUpdate(Long userId, Integer payType, BigDecimal payMoney) {
+    public Result coinUpdate(CoinParam coinParam) {
         return Result.failed(CommonEnum.FALL_BACK_MSG.getMsg());
     }
 

@@ -18,6 +18,7 @@ import com.hszn.nbmh.prevent.mapper.NbmhMedicalOrderMapper;
 import com.hszn.nbmh.prevent.service.INbmhMedicalAcceptService;
 import com.hszn.nbmh.prevent.service.INbmhMedicalOrderService;
 import com.hszn.nbmh.user.api.feign.RemoteUserService;
+import com.hszn.nbmh.user.api.params.input.CoinParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,7 +108,7 @@ public class NbmhMedicalOrderServiceImpl extends ServiceImpl<NbmhMedicalOrderMap
             NbmhUnrealPayment unrealPayment = NbmhUnrealPayment.builder().orderId(entity.getId()).payUserId(entity.getFarmerId()).payChannel(1)
                     .tranType(0).tradeStatus(3).incomeUserId(item.getDoctorId()).payEndTime(createTime).createTime(createTime).status(0).build();
 
-            if (entity.getAnimalType() == 0  || entity.getAnimalType() == 1) {
+            if (entity.getAnimalType() == 0 || entity.getAnimalType() == 1) {
                 unrealPayment.setTotalMoney(entity.getMedicalMoney());
             }
 
@@ -129,11 +130,11 @@ public class NbmhMedicalOrderServiceImpl extends ServiceImpl<NbmhMedicalOrderMap
     public void decreaseCoin(NbmhMedicalOrderParam entity) {
 
         if (entity.getMedicalType() == 0) {
-            remoteUserService.coinUpdate(entity.getFarmerId(), 0, entity.getMedicalMoney());
+            remoteUserService.coinUpdate(CoinParam.builder().userId(entity.getFarmerId()).payType(0).payMoney(entity.getMedicalMoney()).bizId(entity.getId()).bizType("支付视频问诊费用").build());
         }
 
         if (entity.getMedicalType() == 2) {
-            remoteUserService.coinUpdate(entity.getFarmerId(), 0, entity.getFrontMoney());
+            remoteUserService.coinUpdate(CoinParam.builder().userId(entity.getFarmerId()).payType(0).payMoney(entity.getFrontMoney()).bizId(entity.getId()).bizType("支付上门问诊定金费用").build());
         }
     }
 

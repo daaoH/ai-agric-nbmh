@@ -8,6 +8,7 @@ import com.hszn.nbmh.user.api.entity.NbmhAnimalDoctorDetail;
 import com.hszn.nbmh.user.api.entity.NbmhUser;
 import com.hszn.nbmh.user.api.fallback.UserServiceFallback;
 import com.hszn.nbmh.user.api.params.input.AnimalDoctorRegisterParam;
+import com.hszn.nbmh.user.api.params.input.CoinParam;
 import com.hszn.nbmh.user.api.params.input.RegisterParam;
 import com.hszn.nbmh.user.api.params.out.CurUserInfo;
 import com.hszn.nbmh.user.api.params.out.LoginUser;
@@ -56,5 +57,6 @@ public interface RemoteUserService {
     Result<NbmhUser> getById(@PathVariable(value = "id") @NotNull Long id);
 
     @PostMapping("/coinUpdate")
-    Result coinUpdate(@RequestParam(value = "userId") Long userId, @RequestParam(value = "payType") Integer payType, @RequestParam(value = "payMoney") BigDecimal payMoney);
+    Result coinUpdate(@RequestBody CoinParam coinParam);
+
 }
