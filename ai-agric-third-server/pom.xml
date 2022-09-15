@@ -35,8 +35,14 @@
         </dependency>
 
         <dependency>
-            <groupId>com.hszn.nbmh.third</groupId>
-            <artifactId>ai-agric-third-api</artifactId>
+            <groupId>com.hszn.nbmh.shop.api</groupId>
+            <artifactId>ai-agric-shop-api</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.hszn.nbmh.user.api</groupId>
+            <artifactId>ai-agric-user-api</artifactId>
             <version>1.0</version>
         </dependency>
 
