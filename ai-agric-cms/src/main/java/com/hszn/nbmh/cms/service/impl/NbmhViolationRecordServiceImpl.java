@@ -4,18 +4,17 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.hszn.nbmh.cms.api.entity.NbmhRuleExplain;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hszn.nbmh.cms.api.entity.NbmhViolationRecord;
 import com.hszn.nbmh.cms.mapper.NbmhViolationRecordMapper;
 import com.hszn.nbmh.cms.service.INbmhViolationRecordService;
-
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hszn.nbmh.common.core.mould.QueryRequest;
 import com.hszn.nbmh.common.core.utils.SortUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.stereotype.Service;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.annotation.Resource;
 
 /**
@@ -32,6 +31,7 @@ import javax.annotation.Resource;
 public class NbmhViolationRecordServiceImpl extends ServiceImpl<NbmhViolationRecordMapper, NbmhViolationRecord> implements INbmhViolationRecordService {
     @Resource
     private NbmhViolationRecordMapper nbmhViolationRecordMapper;
+
     @Override
     public IPage<NbmhViolationRecord> getByPage(QueryRequest<NbmhViolationRecord> nbmhViolationRecord) {
         //添加条件

@@ -1,6 +1,7 @@
 package com.hszn.nbmh.cms.mapper;
-import com.hszn.nbmh.cms.api.entity.SysDictItem;
+
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.hszn.nbmh.cms.api.entity.SysDictItem;
 
 /**
  * <p>

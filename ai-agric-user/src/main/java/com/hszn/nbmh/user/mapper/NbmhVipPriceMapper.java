@@ -1,7 +1,7 @@
 package com.hszn.nbmh.user.mapper;
 
-import com.hszn.nbmh.user.api.entity.NbmhVipPrice;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.hszn.nbmh.user.api.entity.NbmhVipPrice;
 
 /**
  * <p>

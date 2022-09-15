@@ -1,7 +1,4 @@
 package com.hszn.nbmh.cms.controller;
-
-
-import com.hszn.nbmh.cms.api.entity.NbmhRuleExplain;
 import com.hszn.nbmh.cms.api.entity.NbmhViolationRecord;
 import com.hszn.nbmh.cms.service.INbmhViolationRecordService;
 import com.hszn.nbmh.common.core.enums.CommonEnum;
@@ -46,6 +43,7 @@ public class NbmhViolationRecordController {
         }
         return Result.failed(CommonEnum.DATA_ADD_FAILED.getMsg());
     }
+
     @PostMapping("/update")
     @Operation(summary = "更新违规记录")
     @Inner(false)

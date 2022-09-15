@@ -1,16 +1,9 @@
 package com.hszn.nbmh.cms.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.metadata.OrderItem;
-import com.hszn.nbmh.cms.api.entity.NbmhRuleExplain;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.hszn.nbmh.cms.api.entity.SysDict;
-import com.hszn.nbmh.cms.api.entity.SysDictItem;
+import com.hszn.nbmh.cms.api.entity.NbmhRuleExplain;
 import com.hszn.nbmh.common.core.mould.QueryRequest;
-
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import java.util.List;
 
 /**
  * <p>
