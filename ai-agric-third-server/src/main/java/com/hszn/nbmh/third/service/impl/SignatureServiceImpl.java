@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.hszn.nbmh.common.security.service.AuthUser;
 import com.hszn.nbmh.common.security.util.SecurityUtils;
 import com.hszn.nbmh.shop.api.feign.RemoteShopInfoService;
+import com.hszn.nbmh.shop.api.params.input.ShopEditParam;
 import com.hszn.nbmh.third.entity.NbmhSignatureHistory;
 import com.hszn.nbmh.third.entity.NbmhSignatureInfo;
 import com.hszn.nbmh.third.service.INbmhSignatureHistoryService;
@@ -24,6 +25,7 @@ import com.hszn.nbmh.third.utils.signature.factory.signfile.CreateFlowOneStep;
 import com.hszn.nbmh.third.utils.signature.factory.signfile.signfields.QrySignField;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
@@ -193,10 +195,22 @@ public class SignatureServiceImpl implements SignatureService {
         if (Objects.equals("SIGN_FLOW_FINISH", history.getAction())) {
             QrySignField qrySignField = new QrySignField(history.getFlowId());
             QrySignFieldResponse execute = qrySignField.execute();
+            String fileUrl = "";
+            if (!CollectionUtils.isEmpty(execute.getData().getDocs())) {
+                fileUrl = execute.getData().getDocs().get(0).getFileUrl();
+            }
+            //修改签约状态2已签约
             UpdateWrapper<NbmhSignatureInfo> wrapper = new UpdateWrapper<>();
             wrapper.lambda().set(NbmhSignatureInfo::getStatus, 2)
-                    .set(NbmhSignatureInfo::getFileUrl, execute.getData().getFileUrl()).eq(NbmhSignatureInfo::getFlowId, history.getFlowId());
+                    .set(NbmhSignatureInfo::getFileUrl, fileUrl).eq(NbmhSignatureInfo::getFlowId, history.getFlowId());
             signatureInfoService.update(wrapper);
+            //修改店铺状态3正常(审核通过并签约成功)
+            QueryWrapper<NbmhSignatureInfo> qw = new QueryWrapper<>();
+            qw.lambda().eq(NbmhSignatureInfo::getFlowId, history.getFlowId());
+            ShopEditParam param = new ShopEditParam();
+            param.setId(signatureInfoService.getOne(qw).getShopId());
+            param.setStatus(3);
+            shopInfoService.update(param);
         }
     }
 

@@ -7,31 +7,13 @@ package com.hszn.nbmh.third.utils.signature.factory.response.data;
  * @date 2020/10/30 11:11
  */
 public class QrySignFieldsData {
-    private String fileId;
-    private String fileName;
-    private String fileUrl;
+    private QrySignFields docs;
 
-    public String getFileId() {
-        return fileId;
+    public QrySignFields getDocs() {
+        return docs;
     }
 
-    public void setFileId(String fileId) {
-        this.fileId = fileId;
-    }
-
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    public String getFileUrl() {
-        return fileUrl;
-    }
-
-    public void setFileUrl(String fileUrl) {
-        this.fileUrl = fileUrl;
+    public void setDocs(QrySignFields docs) {
+        this.docs = docs;
     }
 }

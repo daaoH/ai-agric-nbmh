@@ -61,4 +61,10 @@ public class ShopEditParam {
     @Schema(description = "店铺简介")
     private String remark;
 
+    /**
+     * 店铺状态
+     */
+    @Schema(description = "店铺状态")
+    private Integer status;
+
 }
