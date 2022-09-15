@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hszn.nbmh.user.mapper.NbmhUserExtractMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hszn.nbmh.user.api.entity.NbmhUserExtract">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="real_name" property="realName" />
+        <result column="extract_type" property="extractType" />
+        <result column="bank_code" property="bankCode" />
+        <result column="bank_address" property="bankAddress" />
+        <result column="alipay_code" property="alipayCode" />
+        <result column="wechat" property="wechat" />
+        <result column="extract_price" property="extractPrice" />
+        <result column="remark" property="remark" />
+        <result column="balance" property="balance" />
+        <result column="fail_msg" property="failMsg" />
+        <result column="fail_time" property="failTime" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="status" property="status" />
+    </resultMap>
+
+</mapper>
