@@ -3,15 +3,21 @@
 <mapper namespace="com.hszn.nbmh.user.mapper.NbmhVipPriceMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.hszn.nbmh.user.api.entity.NbmhVipPrice">
+    <resultMap id="BaseResultMap" type="com.hszn.nbmh.user.entity.NbmhVipPrice">
         <id column="id" property="id" />
         <result column="level" property="level" />
         <result column="title" property="title" />
         <result column="price" property="price" />
+        <result column="value" property="value" />
+        <result column="introduction" property="introduction" />
+        <result column="unit" property="unit" />
+        <result column="type" property="type" />
         <result column="valid_date" property="validDate" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
         <result column="status" property="status" />
+        <result column="vip_rights_and_interests_id" property="vipRightsAndInterestsId" />
+        <result column="sort" property="sort" />
     </resultMap>
 
 </mapper>

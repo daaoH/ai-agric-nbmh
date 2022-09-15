@@ -6,12 +6,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 
 /**
  * <p>
- * 用户vip价格对照表
+ * 用户vip价格绑定表
  * </p>
  *
  * @author wangjun
@@ -19,7 +18,7 @@ import java.util.Date;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class NbmhVipPrice implements Serializable {
+public class NbmhUserVip implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -30,44 +29,39 @@ public class NbmhVipPrice implements Serializable {
     private Integer id;
 
     /**
-     * 等级
+     * 用户id
      */
-    private String level;
+    private Long userId;
 
     /**
-     * 名称
+     * 用户名称
      */
-    private String title;
+    private String userName;
 
     /**
-     * 价格
-     */
-    private BigDecimal price;
-
-    /**
-     * 计算值
-     */
-    private String value;
-
-    /**
-     * 介绍
-     */
-    private String introduction;
-
-    /**
-     * 单元(例:个,天,次 )
-     */
-    private String unit;
-
-    /**
-     * 类型 1:次(每次活动给的个数),2:天,3:月 4:年,5:%(百分比保留两位)6:个(人数)7:套(模板)
-     */
-    private Integer type;
-
-    /**
-     * 有效期
+     * 有效期(月,年)描述
      */
     private String validDate;
+
+    /**
+     * 开始时间
+     */
+    private Date startTime;
+
+    /**
+     * 结束时间
+     */
+    private Date endTime;
+
+    /**
+     * 权益id
+     */
+    private Long vipRightsAndInterestsId;
+
+    /**
+     * 权益明细id
+     */
+    private Long vipPriceId;
 
     /**
      * 创建日期
@@ -80,19 +74,9 @@ public class NbmhVipPrice implements Serializable {
     private Date updateTime;
 
     /**
-     * 状态 0正常 -1删除
+     * 状态 0:有效  1无效
      */
     private Integer status;
-
-    /**
-     * 权益id
-     */
-    private Long vipRightsAndInterestsId;
-
-    /**
-     * 排序值 默认0
-     */
-    private Integer sort;
 
 
 }
