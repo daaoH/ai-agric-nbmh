@@ -10,7 +10,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
 
-@FeignClient(contextId="remoteUserService", value=ServiceNameConstant.USER_SERVICE, path=UserPathConstant.NBMH_USER_COIN_EXPERT, fallback=UserCoinServiceFallback.class)
+@FeignClient(value=ServiceNameConstant.USER_SERVICE, path=UserPathConstant.NBMH_USER_COIN_EXPERT, fallback=UserCoinServiceFallback.class)
 public interface RemoteUserCoinService {
 
     @PostMapping("/getByPage")

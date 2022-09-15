@@ -55,6 +55,16 @@ public interface UserPathConstant {
      * 农牧币
      */
     String NBMH_USER_COIN_EXPERT = "/nbmh-user-coin-record";
+
+    /**
+     * 用户提现
+     */
+    String NBMH_USER_EXTRACT = "/nbmh-user-extract";
+
+    /**
+     * 用户提现
+     */
+    String NBMH_USER_RECHARGE = "/nbmh-recharge";
 }
 
 
