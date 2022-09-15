@@ -20,6 +20,8 @@ import com.hszn.nbmh.prevent.mapper.NbmhVaccinMapper;
 import com.hszn.nbmh.prevent.service.INbmhAnimalService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hszn.nbmh.user.api.entity.NbmhUser;
+import com.hszn.nbmh.user.api.feign.RemoteUserService;
+import com.hszn.nbmh.user.api.params.out.CurUserInfo;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.BeanUtils;
@@ -50,6 +52,9 @@ public class NbmhAnimalServiceImpl extends ServiceImpl<NbmhAnimalMapper, NbmhAni
     private final NbmhInspectMapper inspectMapper;
 
     private final NbmhVaccinMapper vaccinMapper;
+
+    //用户
+    private final RemoteUserService remoteUserService;
 
 
     /**
@@ -190,10 +195,9 @@ public class NbmhAnimalServiceImpl extends ServiceImpl<NbmhAnimalMapper, NbmhAni
         NbmhAnimal animal=baseMapper.selectOne(Wrappers.<NbmhAnimal>query().lambda().eq(NbmhAnimal::getEarNo, earNo));
         if (ObjectUtils.isNotEmpty(animal)) {
             animalDetailsResult.setAnimal(animal);
-            NbmhInspect inspect=inspectMapper.selectOne(Wrappers.<NbmhInspect>query().lambda().eq(NbmhInspect::getEarNo, earNo));
-            animalDetailsResult.setInspect(inspect);
-            List<NbmhVaccin> vaccinList=vaccinMapper.selectList(Wrappers.<NbmhVaccin>query().lambda().eq(NbmhVaccin::getAnimalId, animal.getId()));
-            animalDetailsResult.setVaccinList(vaccinList);
+            animalDetailsResult.setInspect(inspectMapper.selectOne(Wrappers.<NbmhInspect>query().lambda().eq(NbmhInspect::getEarNo, earNo)));
+            animalDetailsResult.setVaccinList(vaccinMapper.selectList(Wrappers.<NbmhVaccin>query().lambda().eq(NbmhVaccin::getAnimalId, animal.getId())));
+            animalDetailsResult.setCurUserInfo(remoteUserService.queryCurUserInfo(animal.getUserId(), 5).getData());
         }
         return animalDetailsResult;
     }
