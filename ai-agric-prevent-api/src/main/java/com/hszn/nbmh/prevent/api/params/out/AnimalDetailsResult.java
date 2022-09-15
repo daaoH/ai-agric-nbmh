@@ -3,6 +3,7 @@ package com.hszn.nbmh.prevent.api.params.out;
 import com.hszn.nbmh.prevent.api.entity.NbmhAnimal;
 import com.hszn.nbmh.prevent.api.entity.NbmhInspect;
 import com.hszn.nbmh.prevent.api.entity.NbmhVaccin;
+import com.hszn.nbmh.user.api.params.out.CurUserInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -34,4 +35,8 @@ public class AnimalDetailsResult extends NbmhAnimal implements Serializable {
 
     @Schema(name="vaccinList", description="防疫信息")
     private List<NbmhVaccin> vaccinList;
+
+    @Schema(name="curUserInfo", description="养殖户信息")
+    private CurUserInfo curUserInfo;
+
 }
