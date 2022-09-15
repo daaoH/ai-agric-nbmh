@@ -3,7 +3,7 @@
 <mapper namespace="com.hszn.nbmh.user.mapper.NbmhVipPriceMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.hszn.nbmh.user.entity.NbmhVipPrice">
+    <resultMap id="BaseResultMap" type="com.hszn.nbmh.user.api.entity.NbmhVipPrice">
         <id column="id" property="id" />
         <result column="level" property="level" />
         <result column="title" property="title" />

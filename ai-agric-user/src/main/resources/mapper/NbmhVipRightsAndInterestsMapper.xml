@@ -3,7 +3,7 @@
 <mapper namespace="com.hszn.nbmh.user.mapper.NbmhVipRightsAndInterestsMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.hszn.nbmh.user.entity.NbmhVipRightsAndInterests">
+    <resultMap id="BaseResultMap" type="com.hszn.nbmh.user.api.entity.NbmhVipRightsAndInterests">
         <id column="id" property="id" />
         <result column="title" property="title" />
         <result column="introduction" property="introduction" />
