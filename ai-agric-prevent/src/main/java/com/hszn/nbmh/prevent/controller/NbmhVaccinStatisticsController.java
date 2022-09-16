@@ -61,14 +61,20 @@ public class NbmhVaccinStatisticsController {
 
 
     @PostMapping("/totality")
-    @Operation(summary="站长-总体统计数据")
+    @Operation(summary = "站长-总体统计数据")
     @Inner(false)
     public Result totality(@RequestBody StatistissParam params) {
 
+        //相应结果
+        VaccinStatisticsResult result = new VaccinStatisticsResult();
+
         //返回值组转对象
-        List<MapAndDataResult> mapAndDataResults=new ArrayList<>();
+        List<MapAndDataResult> mapAndDataResults = new ArrayList<>();
 
         //养殖户人数
+        Result result1 = userService.getUserInfoCount(params.getPreventStationId(), 5);
+        result.setUserCount(Long.parseLong(result1.getData().toString()));
+
         Callable<Long> userInfoCount=() -> Long.parseLong(userService.getUserInfoCount(params.getPreventStationId(), 5).getData().toString());
 //        result.setUserCount((Long) userService.getUserInfoCount(params.getPreventStationId(), 5).getData());
         //免疫接种总数量
@@ -91,8 +97,6 @@ public class NbmhVaccinStatisticsController {
         executor.execute(animalCountTask);
         executor.execute(butcherCountTask);
         executor.execute(harmlessCountTask);
-        //相应结果
-        VaccinStatisticsResult result=new VaccinStatisticsResult();
 
         try {
             result.setUserCount(userInfoCountTask.get());
@@ -104,30 +108,30 @@ public class NbmhVaccinStatisticsController {
         }
 
         //开始时间
-        String date="";
+        String date = "";
         if (params.isHalfYear()) {
-            date=DateUtils.getDateHHMMSSScope("halfYear", null).get("halfYear");
+            date = DateUtils.getDateHHMMSSScope("halfYear", null).get("halfYear");
         } else if (params.isOneYear()) {
-            date=DateUtils.getDateHHMMSSScope("oneYear", null).get("oneYear");
+            date = DateUtils.getDateHHMMSSScope("oneYear", null).get("oneYear");
         } else {
             System.out.println("待增加参数");
         }
         //当前时间
-        String endTime=DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss");
+        String endTime = DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss");
         // *************************************************************************************************************************************************
         //防疫数据
-        List<NbmhVaccin> vaccins=nbmhVaccinService.list(Wrappers.<NbmhVaccin>query().lambda().eq(NbmhVaccin::getPreventStationId, params.getPreventStationId())
+        List<NbmhVaccin> vaccins = nbmhVaccinService.list(Wrappers.<NbmhVaccin>query().lambda().eq(NbmhVaccin::getPreventStationId, params.getPreventStationId())
                 .apply("date_format (create_time,'%Y-%m-%d %H:%i:%s') >= date_format('" + date + "','%Y-%m-%d %H:%i:%s')")
                 .apply("date_format (create_time,'%Y-%m-%d %H:%i:%s') <= date_format('" + endTime + "','%Y-%m-%d %H:%i:%s')"));
         //数据分组
-        Map<String, List<NbmhVaccin>> vGroupMap=vaccins.stream()
+        Map<String, List<NbmhVaccin>> vGroupMap = vaccins.stream()
                 .sorted(Comparator.comparing(NbmhVaccin::getCreateTime, Comparator.nullsLast(Date::compareTo)))
                 .collect(Collectors.groupingBy(o -> DateFormatUtils.format(o.getCreateTime(), "MM")));
 
         //返回值对象组装
-        MapAndDataResult vaccinMapAndData=new MapAndDataResult();
+        MapAndDataResult vaccinMapAndData = new MapAndDataResult();
         //数组数值
-        List<Integer> vaccinDataList=new ArrayList<>();
+        List<Integer> vaccinDataList = new ArrayList<>();
         //分组处理数据
         for (Map.Entry<String, List<NbmhVaccin>> entry : vGroupMap.entrySet()) {
             vaccinDataList.add(entry.getValue().size());
@@ -137,19 +141,19 @@ public class NbmhVaccinStatisticsController {
         mapAndDataResults.add(vaccinMapAndData);
         // *************************************************************************************************************************************************
         //检疫数据
-        List<NbmhInspect> inspects=inspectService.list(Wrappers.<NbmhInspect>query().lambda().eq(NbmhInspect::getPreventStationId, params.getPreventStationId())
+        List<NbmhInspect> inspects = inspectService.list(Wrappers.<NbmhInspect>query().lambda().eq(NbmhInspect::getPreventStationId, params.getPreventStationId())
                 .apply("date_format (create_time,'%Y-%m-%d %H:%i:%s') >= date_format('" + date + "','%Y-%m-%d %H:%i:%s')")
                 .apply("date_format (create_time,'%Y-%m-%d %H:%i:%s') <= date_format('" + endTime + "','%Y-%m-%d %H:%i:%s')"));
 
         //数据分组
-        Map<String, List<NbmhInspect>> iGroupMap=inspects.stream()
+        Map<String, List<NbmhInspect>> iGroupMap = inspects.stream()
                 .sorted(Comparator.comparing(NbmhInspect::getCreateTime, Comparator.nullsLast(Date::compareTo)))
                 .collect(Collectors.groupingBy(o -> DateFormatUtils.format(o.getCreateTime(), "MM")));
 
         //返回值对象组装
-        MapAndDataResult inspectMapAndData=new MapAndDataResult();
+        MapAndDataResult inspectMapAndData = new MapAndDataResult();
         //数组数值
-        List<Integer> inspectDataList=new ArrayList<>();
+        List<Integer> inspectDataList = new ArrayList<>();
         //分组处理数据
         for (Map.Entry<String, List<NbmhInspect>> entry : iGroupMap.entrySet()) {
             inspectDataList.add(entry.getValue().size());
@@ -159,18 +163,18 @@ public class NbmhVaccinStatisticsController {
         mapAndDataResults.add(inspectMapAndData);
         // *************************************************************************************************************************************************
         //自屠宰数量
-        List<NbmhButcherReport> butchers=butcherReportService.list(Wrappers.<NbmhButcherReport>query().lambda().eq(NbmhButcherReport::getPreventStationId, params.getPreventStationId()).eq(NbmhButcherReport::getReportType, 0)
+        List<NbmhButcherReport> butchers = butcherReportService.list(Wrappers.<NbmhButcherReport>query().lambda().eq(NbmhButcherReport::getPreventStationId, params.getPreventStationId()).eq(NbmhButcherReport::getReportType, 0)
                 .apply("date_format (create_time,'%Y-%m-%d %H:%i:%s') >= date_format('" + date + "','%Y-%m-%d %H:%i:%s')")
                 .apply("date_format (create_time,'%Y-%m-%d %H:%i:%s') <= date_format('" + endTime + "','%Y-%m-%d %H:%i:%s')"));
         //数据分组
-        Map<String, List<NbmhButcherReport>> bGroupMap=butchers.stream()
+        Map<String, List<NbmhButcherReport>> bGroupMap = butchers.stream()
                 .sorted(Comparator.comparing(NbmhButcherReport::getCreateTime, Comparator.nullsLast(Date::compareTo)))
                 .collect(Collectors.groupingBy(o -> DateFormatUtils.format(o.getCreateTime(), "MM")));
 
         //返回值对象组装
-        MapAndDataResult butchersMapAndData=new MapAndDataResult();
+        MapAndDataResult butchersMapAndData = new MapAndDataResult();
         //数组数值
-        List<Integer> butchersDataList=new ArrayList<>();
+        List<Integer> butchersDataList = new ArrayList<>();
         //分组处理数据
         for (Map.Entry<String, List<NbmhButcherReport>> entry : bGroupMap.entrySet()) {
             butchersDataList.add(entry.getValue().size());
@@ -180,18 +184,18 @@ public class NbmhVaccinStatisticsController {
         mapAndDataResults.add(butchersMapAndData);
         // *************************************************************************************************************************************************
         //无害化数据
-        List<NbmhButcherReport> harmless=butcherReportService.list(Wrappers.<NbmhButcherReport>query().lambda().eq(NbmhButcherReport::getPreventStationId, params.getPreventStationId()).eq(NbmhButcherReport::getReportType, 1)
+        List<NbmhButcherReport> harmless = butcherReportService.list(Wrappers.<NbmhButcherReport>query().lambda().eq(NbmhButcherReport::getPreventStationId, params.getPreventStationId()).eq(NbmhButcherReport::getReportType, 1)
                 .apply("date_format (create_time,'%Y-%m-%d %H:%i:%s') >= date_format('" + date + "','%Y-%m-%d %H:%i:%s')")
                 .apply("date_format (create_time,'%Y-%m-%d %H:%i:%s') <= date_format('" + endTime + "','%Y-%m-%d %H:%i:%s')"));
         //数据分组
-        Map<String, List<NbmhButcherReport>> hGroupMap=harmless.stream()
+        Map<String, List<NbmhButcherReport>> hGroupMap = harmless.stream()
                 .sorted(Comparator.comparing(NbmhButcherReport::getCreateTime, Comparator.nullsLast(Date::compareTo)))
                 .collect(Collectors.groupingBy(o -> DateFormatUtils.format(o.getCreateTime(), "MM")));
 
         //返回值对象组装
-        MapAndDataResult harmlessMapAndData=new MapAndDataResult();
+        MapAndDataResult harmlessMapAndData = new MapAndDataResult();
         //数组数值
-        List<Integer> harmlessDataList=new ArrayList<>();
+        List<Integer> harmlessDataList = new ArrayList<>();
         //分组处理数据
         for (Map.Entry<String, List<NbmhButcherReport>> entry : hGroupMap.entrySet()) {
             harmlessDataList.add(entry.getValue().size());
@@ -201,18 +205,18 @@ public class NbmhVaccinStatisticsController {
         mapAndDataResults.add(harmlessMapAndData);
         // *************************************************************************************************************************************************
         //稽查举报数据
-        List<NbmhCheck> checks=checkService.list(Wrappers.<NbmhCheck>query().lambda().eq(NbmhCheck::getPreventStationId, params.getPreventStationId())
+        List<NbmhCheck> checks = checkService.list(Wrappers.<NbmhCheck>query().lambda().eq(NbmhCheck::getPreventStationId, params.getPreventStationId())
                 .apply("date_format (create_time,'%Y-%m-%d %H:%i:%s') >= date_format('" + date + "','%Y-%m-%d %H:%i:%s')")
                 .apply("date_format (create_time,'%Y-%m-%d %H:%i:%s') <= date_format('" + endTime + "','%Y-%m-%d %H:%i:%s')"));
         //数据分组
-        Map<String, List<NbmhCheck>> cGroupMap=checks.stream()
+        Map<String, List<NbmhCheck>> cGroupMap = checks.stream()
                 .sorted(Comparator.comparing(NbmhCheck::getCreateTime, Comparator.nullsLast(Date::compareTo)))
                 .collect(Collectors.groupingBy(o -> DateFormatUtils.format(o.getCreateTime(), "MM")));
 
         //返回值对象组装
-        MapAndDataResult checksMapAndData=new MapAndDataResult();
+        MapAndDataResult checksMapAndData = new MapAndDataResult();
         //数组数值
-        List<Integer> checksDataList=new ArrayList<>();
+        List<Integer> checksDataList = new ArrayList<>();
         //分组处理数据
         for (Map.Entry<String, List<NbmhCheck>> entry : cGroupMap.entrySet()) {
             checksDataList.add(entry.getValue().size());
