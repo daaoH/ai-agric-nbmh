@@ -18,6 +18,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.FutureTask;
 import java.util.stream.Collectors;
 
 /**
@@ -53,30 +57,51 @@ public class NbmhVaccinStatisticsController {
     //举报接口
     private final INbmhCheckService checkService;
 
+    private final Executor executor;
+
 
     @PostMapping("/totality")
     @Operation(summary="站长-总体统计数据")
     @Inner(false)
     public Result totality(@RequestBody StatistissParam params) {
 
-        //相应结果
-        VaccinStatisticsResult result=new VaccinStatisticsResult();
-
         //返回值组转对象
         List<MapAndDataResult> mapAndDataResults=new ArrayList<>();
 
-
         //养殖户人数
-        result.setUserCount((Long) userService.getUserInfoCount(params.getPreventStationId(), 5).getData());
-
+        Callable<Long> userInfoCount=() -> Long.parseLong(userService.getUserInfoCount(params.getPreventStationId(), 5).getData().toString());
+//        result.setUserCount((Long) userService.getUserInfoCount(params.getPreventStationId(), 5).getData());
         //免疫接种总数量
-        result.setAnimalCount(nbmhAnimalService.count(Wrappers.<NbmhAnimal>query().lambda().eq(NbmhAnimal::getPreventStationId, params.getPreventStationId())));
-
+        Callable<Long> animalCount=() -> nbmhAnimalService.count(Wrappers.<NbmhAnimal>query().lambda().eq(NbmhAnimal::getPreventStationId, params.getPreventStationId()));
+//        result.setAnimalCount(nbmhAnimalService.count(Wrappers.<NbmhAnimal>query().lambda().eq(NbmhAnimal::getPreventStationId, params.getPreventStationId())));
         //自屠宰数量
-        result.setButcherCount(butcherReportService.count(Wrappers.<NbmhButcherReport>query().lambda().eq(NbmhButcherReport::getPreventStationId, params.getPreventStationId()).eq(NbmhButcherReport::getReportType, 0)));
-
+        Callable<Long> butcherCount=() -> butcherReportService.count(Wrappers.<NbmhButcherReport>query().lambda().eq(NbmhButcherReport::getPreventStationId, params.getPreventStationId()).eq(NbmhButcherReport::getReportType, 0));
+        //result.setButcherCount(butcherReportService.count(Wrappers.<NbmhButcherReport>query().lambda().eq(NbmhButcherReport::getPreventStationId, params.getPreventStationId()).eq(NbmhButcherReport::getReportType, 0)));
         //无害化数量
-        result.setHarmlessCount(butcherReportService.count(Wrappers.<NbmhButcherReport>query().lambda().eq(NbmhButcherReport::getPreventStationId, params.getPreventStationId()).eq(NbmhButcherReport::getReportType, 1)));
+        Callable<Long> harmlessCount=() -> butcherReportService.count(Wrappers.<NbmhButcherReport>query().lambda().eq(NbmhButcherReport::getPreventStationId, params.getPreventStationId()).eq(NbmhButcherReport::getReportType, 1));
+        //result.setHarmlessCount(butcherReportService.count(Wrappers.<NbmhButcherReport>query().lambda().eq(NbmhButcherReport::getPreventStationId, params.getPreventStationId()).eq(NbmhButcherReport::getReportType, 1)));
+
+        //异步
+        FutureTask<Long> userInfoCountTask=new FutureTask<>(userInfoCount);
+        FutureTask<Long> animalCountTask=new FutureTask<>(animalCount);
+        FutureTask<Long> butcherCountTask=new FutureTask<>(butcherCount);
+        FutureTask<Long> harmlessCountTask=new FutureTask<>(harmlessCount);
+
+        executor.execute(userInfoCountTask);
+        executor.execute(animalCountTask);
+        executor.execute(butcherCountTask);
+        executor.execute(harmlessCountTask);
+        //相应结果
+        VaccinStatisticsResult result=new VaccinStatisticsResult();
+
+        try {
+            result.setUserCount(userInfoCountTask.get());
+            result.setAnimalCount(animalCountTask.get());
+            result.setButcherCount(butcherCountTask.get());
+            result.setHarmlessCount(harmlessCountTask.get());
+        } catch (Exception e) {
+            return Result.failed(e.getMessage());
+        }
 
         //开始时间
         String date="";

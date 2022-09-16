@@ -63,7 +63,9 @@ public class NbmhUserVipController {
             //分组处理数据
             for (Map.Entry<Long, List<NbmhVipPrice>> entry : groupMap.entrySet()) {
                 NbmhVipRightsAndInterests vipRightsAndInterests=vipRightsAndInterestsService.getById(entry.getKey());
-                vipRightsAndInterests.getVipPrices().add((NbmhVipPrice) entry.getValue());
+                List<NbmhVipPrice> vipPriceList=new ArrayList<>();
+                vipPriceList.addAll(entry.getValue());
+                vipRightsAndInterests.setVipPrices(vipPriceList);
                 //权益明细数据排序(正序)
                 vipRightsAndInterests.getVipPrices().stream().sorted(Comparator.comparing(NbmhVipPrice::getSort));
                 resultList.add(vipRightsAndInterests);

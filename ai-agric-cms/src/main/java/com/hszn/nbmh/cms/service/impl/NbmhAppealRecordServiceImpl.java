@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.hszn.nbmh.cms.api.entity.NbmhAgreement;
 import com.hszn.nbmh.cms.api.entity.NbmhAppealRecord;
 import com.hszn.nbmh.cms.mapper.NbmhAppealRecordMapper;
 import com.hszn.nbmh.cms.service.INbmhAppealRecordService;
@@ -36,7 +35,6 @@ public class NbmhAppealRecordServiceImpl extends ServiceImpl<NbmhAppealRecordMap
 
     @Override
     public List<Integer> save(List<NbmhAppealRecord> nbmhAppealRecordList) {
-        BeanUtils.validBean(nbmhAppealRecordList, NbmhAppealRecord.Save.class);
 
         return nbmhAppealRecordList.stream().map(entity -> {
 
@@ -50,7 +48,6 @@ public class NbmhAppealRecordServiceImpl extends ServiceImpl<NbmhAppealRecordMap
     @Override
     @Transactional
     public int update(List<NbmhAppealRecord> nbmhAppealRecordList) {
-        BeanUtils.validBean(nbmhAppealRecordList, NbmhAppealRecord.Update.class);
 
         if (nbmhAppealRecordList == null || nbmhAppealRecordList.size() == 0) {
             return 0;

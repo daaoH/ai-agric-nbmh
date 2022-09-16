@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.Parameters;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -91,19 +92,21 @@ public class NbmhVipRightsAndInterestsController {
     }
 
 
-    @PostMapping("/getAllAndDetails")
+    @GetMapping("/getAllAndDetails")
     @Operation(summary="VIP权益及旗下权益明细获取")
     @Inner(false)
     public Result getAllAndDetails() {
         //获取数据 组装数据
         List<NbmhVipRightsAndInterests> vipRightsAndInterests=vipRightsAndInterestsService.list();
         List<NbmhVipPrice> vipPrices=vipPriceService.list();
-        vipRightsAndInterests.forEach(vi -> {
-            vipPrices.forEach(vp -> {
-                if (vi.getId().equals(vp.getVipRightsAndInterestsId())) {
-                    vi.getVipPrices().add(vp);
-                }
-            });
+        vipRightsAndInterests.stream().forEach(vi -> {
+            List<NbmhVipPrice> vipPriceList=new ArrayList<>();
+            vipPrices.stream()
+                    .filter(vp -> vp.getVipRightsAndInterestsId().longValue() == vi.getId().longValue())
+                    .forEach(vp -> {
+                        vipPriceList.add(vp);
+                    });
+            vi.setVipPrices(vipPriceList);
         });
         //权益明细数据排序(正序)
         vipRightsAndInterests.forEach(v -> {

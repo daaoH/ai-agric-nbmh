@@ -6,13 +6,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.hszn.nbmh.cms.api.entity.NbmhAppealRecord;
 import com.hszn.nbmh.cms.api.entity.NbmhFeedback;
 import com.hszn.nbmh.cms.mapper.NbmhFeedbackMapper;
 import com.hszn.nbmh.cms.service.INbmhFeedbackService;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hszn.nbmh.common.core.utils.BeanUtils;
 import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +36,6 @@ public class NbmhFeedbackServiceImpl extends ServiceImpl<NbmhFeedbackMapper, Nbm
 
     @Override
     public List<Integer> save(List<NbmhFeedback> nbmhFeedbackList) {
-        BeanUtils.validBean(nbmhFeedbackList, NbmhFeedback.Save.class);
 
         return nbmhFeedbackList.stream().map(entity -> {
 
@@ -52,7 +49,6 @@ public class NbmhFeedbackServiceImpl extends ServiceImpl<NbmhFeedbackMapper, Nbm
     @Override
     @Transactional
     public int update(List<NbmhFeedback> nbmhFeedbackList) {
-        BeanUtils.validBean(nbmhFeedbackList, NbmhFeedback.Update.class);
 
         if (nbmhFeedbackList == null || nbmhFeedbackList.size() == 0) {
             return 0;
